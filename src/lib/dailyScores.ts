@@ -60,6 +60,20 @@ export async function getWeeklyLeaderboard(): Promise<LeaderboardEntry[]> {
     .map((entry, i) => ({ ...entry, rank: i + 1 }))
 }
 
+export async function getMyTodayScore(
+  userId: string,
+  date: string,
+): Promise<{ score: number; correct: number } | null> {
+  const { data } = await supabase
+    .from('daily_scores')
+    .select('score, correct')
+    .eq('user_id', userId)
+    .eq('date', date)
+    .maybeSingle()
+  if (!data) return null
+  return { score: data.score as number, correct: data.correct as number }
+}
+
 export async function getUserWeekScore(userId: string): Promise<number> {
   const { start, end } = getParisWeekBounds()
   const { data, error } = await supabase

@@ -5,10 +5,15 @@ import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
 import { supabase } from '../lib/supabase'
+import { ServerPlayed } from '../App'
+
+const QUESTION_COUNT = 3
 
 interface Props {
   user: User | null
   username: string | null
+  serverPlayed: ServerPlayed | null
+  serverPlayedChecked: boolean
   onStartQuiz: () => void
   onAuthChange: (user: User | null) => void
 }
@@ -17,13 +22,23 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, username, onStartQuiz, onAuthChange }: Props) {
+export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, onStartQuiz, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
   const weekend = isWeekend()
-  const played = getTodayPlayedData()
   const dateStr = getParisDate()
+
+  // For logged-in users: server record is authoritative (cross-device gate).
+  // While it's loading, show a spinner to avoid a flash of the start button.
+  // For anonymous users: fall back to localStorage.
+  const localPlayed = getTodayPlayedData()
+  const played = user
+    ? serverPlayed
+      ? { ...serverPlayed, total: QUESTION_COUNT }
+      : localPlayed
+    : localPlayed
+  const checkingServer = user !== null && !serverPlayedChecked
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -131,6 +146,8 @@ export default function HomePage({ user, username, onStartQuiz, onAuthChange }: 
       >
         {weekend ? (
           <WeekendView nextMonday={getNextMondayLabel()} username={username} />
+        ) : checkingServer ? (
+          <CheckingView />
         ) : played ? (
           <AlreadyPlayedView played={played} dateStr={dateStr} />
         ) : (
@@ -277,6 +294,24 @@ function WeekendView({ nextMonday, username }: { nextMonday: string; username: s
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+function CheckingView() {
+  return (
+    <div
+      style={{
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: 24,
+        padding: 48,
+        textAlign: 'center',
+        marginBottom: 28,
+      }}
+    >
+      <div style={{ fontSize: 32, marginBottom: 12 }}>⏳</div>
+      <div style={{ fontSize: 15, color: 'var(--text-muted)' }}>Kontrollerar spelstatus…</div>
     </div>
   )
 }

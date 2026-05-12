@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
+import { getMyTodayScore } from './lib/dailyScores'
+import { getParisDate } from './lib/dailyUtils'
 import HomePage from './pages/HomePage'
 import QuizPage from './pages/QuizPage'
 import ResultsPage from './pages/ResultsPage'
@@ -14,21 +16,39 @@ interface QuizResult {
   dateStr: string
 }
 
+export interface ServerPlayed {
+  score: number
+  correct: number
+}
+
 export default function App() {
   const [view, setView] = useState<View>('home')
   const [user, setUser] = useState<User | null>(null)
   const [username, setUsername] = useState<string | null>(null)
   const [result, setResult] = useState<QuizResult | null>(null)
+  const [serverPlayed, setServerPlayed] = useState<ServerPlayed | null>(null)
+  const [serverPlayedChecked, setServerPlayedChecked] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
-      if (session?.user) fetchUsername(session.user.id)
+      if (session?.user) {
+        fetchUsername(session.user.id)
+        fetchServerPlayed(session.user.id)
+      } else {
+        setServerPlayedChecked(true)
+      }
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setUser(session?.user ?? null)
-      if (session?.user) fetchUsername(session.user.id)
-      else setUsername(null)
+      if (session?.user) {
+        fetchUsername(session.user.id)
+        fetchServerPlayed(session.user.id)
+      } else {
+        setUsername(null)
+        setServerPlayed(null)
+        setServerPlayedChecked(true)
+      }
     })
     return () => subscription.unsubscribe()
   }, [])
@@ -38,10 +58,28 @@ export default function App() {
     setUsername((data?.username as string | null) ?? null)
   }
 
+  const fetchServerPlayed = async (uid: string) => {
+    setServerPlayedChecked(false)
+    try {
+      const data = await getMyTodayScore(uid, getParisDate())
+      setServerPlayed(data)
+    } catch {
+      setServerPlayed(null)
+    } finally {
+      setServerPlayedChecked(true)
+    }
+  }
+
   const handleAuthChange = (u: User | null) => {
     setUser(u)
-    if (u) fetchUsername(u.id)
-    else setUsername(null)
+    if (u) {
+      fetchUsername(u.id)
+      fetchServerPlayed(u.id)
+    } else {
+      setUsername(null)
+      setServerPlayed(null)
+      setServerPlayedChecked(true)
+    }
   }
 
   return (
@@ -50,6 +88,8 @@ export default function App() {
         <HomePage
           user={user}
           username={username}
+          serverPlayed={serverPlayed}
+          serverPlayedChecked={serverPlayedChecked}
           onStartQuiz={() => setView('quiz')}
           onAuthChange={handleAuthChange}
         />
