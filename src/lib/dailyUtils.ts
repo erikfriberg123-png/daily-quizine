@@ -32,7 +32,7 @@ export function getNextMondayLabel(): string {
   })
 }
 
-// Linear congruential generator — deterministic per date seed
+// Linear congruential generator — deterministic per seed
 function seededRandom(seed: number) {
   let s = seed >>> 0
   return () => {
@@ -41,15 +41,30 @@ function seededRandom(seed: number) {
   }
 }
 
-function dateSeed(dateStr: string): number {
-  return dateStr.split('').reduce((a, c) => Math.imul(a, 31) + c.charCodeAt(0), 0)
+function dateSeed(str: string): number {
+  return str.split('').reduce((a, c) => Math.imul(a, 31) + c.charCodeAt(0), 0)
 }
 
+// How many weekdays (Mon–Fri) have passed before `day` in that month (0-based index)
+function weekdayIndexInMonth(dateStr: string): number {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  let count = 0
+  for (let d = 1; d < day; d++) {
+    const dow = new Date(year, month - 1, d).getDay()
+    if (dow !== 0 && dow !== 6) count++
+  }
+  return count
+}
+
+// Questions are shuffled once per month (seeded by YYYY-MM) then sliced in
+// non-overlapping windows of `count` — no question repeats within the same month.
 export function pickDailyQuestions<T>(items: T[], dateStr: string, count: number): T[] {
   if (items.length <= count) return [...items]
-  const rand = seededRandom(dateSeed(dateStr))
+  const yearMonth = dateStr.slice(0, 7)           // "2026-05"
+  const rand = seededRandom(dateSeed(yearMonth))
   const shuffled = [...items].sort(() => rand() - 0.5)
-  return shuffled.slice(0, count)
+  const start = (weekdayIndexInMonth(dateStr) * count) % shuffled.length
+  return Array.from({ length: count }, (_, i) => shuffled[(start + i) % shuffled.length])
 }
 
 export interface PlayedData {

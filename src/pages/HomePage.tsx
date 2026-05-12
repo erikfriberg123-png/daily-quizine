@@ -3,6 +3,7 @@ import { User } from '@supabase/supabase-js'
 import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate } from '../lib/dailyUtils'
 import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
+import { CreateQuestionModal } from '../components/CreateQuestionModal'
 import { supabase } from '../lib/supabase'
 
 interface Props {
@@ -18,6 +19,8 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
 
 export default function HomePage({ user, username, onStartQuiz, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
+  const [createVisible, setCreateVisible] = useState(false)
+  const [loginThenCreate, setLoginThenCreate] = useState(false)
   const weekend = isWeekend()
   const played = getTodayPlayedData()
   const dateStr = getParisDate()
@@ -140,6 +143,39 @@ export default function HomePage({ user, username, onStartQuiz, onAuthChange }: 
           />
         )}
 
+        {/* Create question button — always visible */}
+        <div style={{ marginTop: 20 }}>
+          <button
+            onClick={() => setCreateVisible(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              width: '100%',
+              padding: '13px',
+              background: 'transparent',
+              color: 'var(--text-muted)',
+              border: '1px solid var(--border)',
+              borderRadius: 14,
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--orange)'
+              e.currentTarget.style.color = 'var(--orange)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border)'
+              e.currentTarget.style.color = 'var(--text-muted)'
+            }}
+          >
+            ✏️  Skicka in en egen fråga
+          </button>
+        </div>
+
         {/* Leaderboard always visible below */}
         <div style={{ marginTop: 32 }}>
           <Leaderboard highlightUsername={username} />
@@ -178,9 +214,25 @@ export default function HomePage({ user, username, onStartQuiz, onAuthChange }: 
 
       {loginVisible && (
         <LoginModal
-          hint="Logga in för att synas på topplistan!"
-          onSuccess={(u) => { onAuthChange(u); setLoginVisible(false) }}
-          onClose={() => setLoginVisible(false)}
+          hint={loginThenCreate ? 'Logga in för att skicka in en fråga.' : 'Logga in för att synas på topplistan!'}
+          onSuccess={(u) => {
+            onAuthChange(u)
+            setLoginVisible(false)
+            if (loginThenCreate) { setLoginThenCreate(false); setCreateVisible(true) }
+          }}
+          onClose={() => { setLoginVisible(false); setLoginThenCreate(false) }}
+        />
+      )}
+
+      {createVisible && (
+        <CreateQuestionModal
+          user={user}
+          onClose={() => setCreateVisible(false)}
+          onNeedLogin={() => {
+            setCreateVisible(false)
+            setLoginThenCreate(true)
+            setLoginVisible(true)
+          }}
         />
       )}
     </div>

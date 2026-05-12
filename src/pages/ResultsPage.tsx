@@ -3,6 +3,7 @@ import { User } from '@supabase/supabase-js'
 import { submitDailyScore } from '../lib/dailyScores'
 import { Leaderboard } from '../components/Leaderboard'
 import { LoginModal } from '../components/LoginModal'
+import { CreateQuestionModal } from '../components/CreateQuestionModal'
 
 interface Props {
   result: { score: number; correct: number; total: number; dateStr: string }
@@ -32,6 +33,8 @@ function scoreMessage(correct: number, total: number) {
 
 export default function ResultsPage({ result, user, username, onPlayAgain, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
+  const [createVisible, setCreateVisible] = useState(false)
+  const [loginThenCreate, setLoginThenCreate] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
@@ -280,6 +283,29 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
         {/* Actions */}
         <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <button
+            onClick={() => setCreateVisible(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '14px',
+              background: 'transparent',
+              color: 'var(--orange)',
+              border: '1.5px solid rgba(255,107,43,0.4)',
+              borderRadius: 14,
+              fontSize: 15,
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,107,43,0.08)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+          >
+            ✏️  Skicka in en egen fråga
+          </button>
+
+          <button
             onClick={onPlayAgain}
             style={{
               padding: '14px',
@@ -321,22 +347,36 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
 
       {loginVisible && (
         <LoginModal
-          hint="Logga in för att spara din poäng på topplistan!"
+          hint={loginThenCreate ? 'Logga in för att skicka in en fråga.' : 'Logga in för att spara din poäng på topplistan!'}
           onSuccess={async (u) => {
             setLoginVisible(false)
             onAuthChange(u)
-            // Fetch username from profiles
-            const { data } = await (await import('../lib/supabase')).supabase
-              .from('profiles')
-              .select('username')
-              .eq('id', u.id)
-              .single()
-            const uname = data?.username as string | null
-            if (uname) {
-              await handlePostLoginSubmit(u, uname)
+            if (loginThenCreate) {
+              setLoginThenCreate(false)
+              setCreateVisible(true)
+            } else {
+              const { data } = await (await import('../lib/supabase')).supabase
+                .from('profiles')
+                .select('username')
+                .eq('id', u.id)
+                .single()
+              const uname = data?.username as string | null
+              if (uname) await handlePostLoginSubmit(u, uname)
             }
           }}
-          onClose={() => setLoginVisible(false)}
+          onClose={() => { setLoginVisible(false); setLoginThenCreate(false) }}
+        />
+      )}
+
+      {createVisible && (
+        <CreateQuestionModal
+          user={user}
+          onClose={() => setCreateVisible(false)}
+          onNeedLogin={() => {
+            setCreateVisible(false)
+            setLoginThenCreate(true)
+            setLoginVisible(true)
+          }}
         />
       )}
     </div>

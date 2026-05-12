@@ -6,7 +6,7 @@ import { submitDailyScore } from '../lib/dailyScores'
 import { Timer } from '../components/Timer'
 import { AnswerButton } from '../components/AnswerButton'
 
-const QUESTION_COUNT = 10
+const QUESTION_COUNT = 3
 const TIMER_SECONDS = 15
 
 interface Props {
