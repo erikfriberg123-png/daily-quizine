@@ -190,7 +190,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: '#091A10',
+  background: '#0A1628',
   border: '1.5px solid var(--border)',
   borderRadius: 12,
   padding: '12px 14px',

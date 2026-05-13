@@ -5,28 +5,28 @@
 }
 
 :root {
-  --bg:           #071410;
-  --bg-card:      #0E2219;
-  --bg-card-2:    #142C20;
-  --border:       #1E4530;
-  --border-light: #2B5E40;
+  --bg:           #030C1A;
+  --bg-card:      #0C1E35;
+  --bg-card-2:    #112540;
+  --border:       #1B3A5C;
+  --border-light: #254A72;
 
-  --blue:         #60D890;
-  --blue-light:   #88EAB0;
-  --blue-dark:    #40BF72;
-  --blue-glow:    rgba(96, 216, 144, 0.28);
+  --blue:         #1D6FE8;
+  --blue-light:   #3B8AF5;
+  --blue-dark:    #1558C0;
+  --blue-glow:    rgba(29, 111, 232, 0.3);
 
-  --orange:       #F9A05A;
-  --orange-light: #FBC08A;
-  --orange-dark:  #E07A30;
-  --orange-glow:  rgba(249, 160, 90, 0.25);
+  --orange:       #FF6B2B;
+  --orange-light: #FF8C55;
+  --orange-dark:  #E05520;
+  --orange-glow:  rgba(255, 107, 43, 0.25);
 
   --white:        #FFFFFF;
-  --text-muted:   #7AC89A;
-  --text-dim:     #385A44;
+  --text-muted:   #7B9EC4;
+  --text-dim:     #3E5F82;
 
-  --success:      #60D890;
-  --success-bg:   rgba(96, 216, 144, 0.12);
+  --success:      #10D48E;
+  --success-bg:   rgba(16, 212, 142, 0.12);
   --error:        #FF4757;
   --error-bg:     rgba(255, 71, 87, 0.12);
 }

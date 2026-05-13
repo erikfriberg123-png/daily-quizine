@@ -110,9 +110,9 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
                 fontSize: 13,
                 fontWeight: 600,
                 color: 'var(--blue-light)',
-                background: 'rgba(96,216,144,0.1)',
+                background: 'rgba(29,111,232,0.1)',
                 padding: '7px 14px',
-                border: '1px solid rgba(96,216,144,0.3)',
+                border: '1px solid rgba(29,111,232,0.3)',
                 borderRadius: 10,
                 cursor: 'pointer',
               }}
@@ -274,7 +274,7 @@ function WeekendView({ nextMonday, username }: { nextMonday: string; username: s
               gap: 6,
               fontSize: 13,
               color: 'var(--blue-light)',
-              background: 'rgba(96,216,144,0.1)',
+              background: 'rgba(29,111,232,0.1)',
               padding: '6px 14px',
               borderRadius: 20,
             }}
@@ -351,8 +351,8 @@ function AlreadyPlayedView({
           <div
             style={{
               flex: 1,
-              background: 'rgba(96,216,144,0.08)',
-              border: '1px solid rgba(96,216,144,0.25)',
+              background: 'rgba(29,111,232,0.08)',
+              border: '1px solid rgba(29,111,232,0.25)',
               borderRadius: 12,
               padding: '10px 14px',
             }}
@@ -389,7 +389,7 @@ function StartView({
       {/* Hero */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #0A2A18 0%, #0E2219 60%, var(--bg-card) 100%)',
+          background: 'linear-gradient(135deg, #0A2A5C 0%, #0C1E35 60%, var(--bg-card) 100%)',
           border: '1px solid var(--border)',
           borderRadius: 24,
           padding: 28,
@@ -407,7 +407,7 @@ function StartView({
             width: 160,
             height: 160,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(96,216,144,0.2) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(29,111,232,0.2) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
