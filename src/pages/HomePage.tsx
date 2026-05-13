@@ -88,7 +88,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
               Quizine Daily
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-              Quiz för restaurangfolk
+              Quiz om krogen
             </div>
           </div>
         </div>
