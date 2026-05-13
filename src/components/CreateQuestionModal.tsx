@@ -27,7 +27,7 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
   const [question, setQuestion] = useState('')
   const [answers, setAnswers] = useState(['', '', '', ''])
   const [correctIndex, setCorrectIndex] = useState<0 | 1 | 2 | 3>(0)
-  const [categoryId, setCategoryId] = useState('food')
+  const [categoryId, setCategoryId] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -38,7 +38,17 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
 
   const isValid =
     question.trim().length >= 10 &&
-    answers.every((a) => a.trim().length > 0)
+    answers.every((a) => a.trim().length > 0) &&
+    categoryId !== ''
+
+  const handleNewQuestion = () => {
+    setQuestion('')
+    setAnswers(['', '', '', ''])
+    setCorrectIndex(0)
+    setCategoryId('')
+    setError('')
+    setSuccess(false)
+  }
 
   const handleSubmit = async () => {
     if (!user) { onNeedLogin(); return }
@@ -100,24 +110,41 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
             <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--white)', marginBottom: 8 }}>
               Tack för din fråga!
             </div>
-            <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 24 }}>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 28 }}>
               Din fråga är inskickad och granskas av admin innan den publiceras.
             </div>
-            <button
-              onClick={onClose}
-              style={{
-                padding: '13px 32px',
-                background: 'var(--blue)',
-                color: '#fff',
-                borderRadius: 14,
-                fontSize: 15,
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: 'none',
-              }}
-            >
-              Stäng
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                onClick={handleNewQuestion}
+                style={{
+                  padding: '13px',
+                  background: 'var(--orange)',
+                  color: '#fff',
+                  borderRadius: 14,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  border: 'none',
+                }}
+              >
+                ✏️  Skapa en ny fråga
+              </button>
+              <button
+                onClick={onClose}
+                style={{
+                  padding: '13px',
+                  background: 'transparent',
+                  color: 'var(--text-muted)',
+                  borderRadius: 14,
+                  fontSize: 15,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                ← Tillbaka till startsidan
+              </button>
+            </div>
           </div>
         ) : (
           <>
@@ -158,20 +185,6 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
                 </button>
               </div>
             )}
-
-            {/* Category */}
-            <div style={{ marginBottom: 16 }}>
-              <label style={labelStyle}>Kategori</label>
-              <select
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                style={selectStyle}
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
 
             {/* Question */}
             <div style={{ marginBottom: 16 }}>
@@ -240,6 +253,42 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
               ))}
             </div>
 
+            {/* Category */}
+            <div style={{ marginBottom: 16 }}>
+              <label style={labelStyle}>
+                Kategori
+                {!categoryId && (
+                  <span style={{ color: 'var(--orange)', marginLeft: 6, fontWeight: 700 }}>— välj en *</span>
+                )}
+              </label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {CATEGORIES.map((c) => {
+                  const selected = categoryId === c.id
+                  return (
+                    <button
+                      key={c.id}
+                      onClick={() => setCategoryId(c.id)}
+                      style={{
+                        padding: '10px 14px',
+                        borderRadius: 10,
+                        border: selected ? '1.5px solid var(--orange)' : '1.5px solid var(--border)',
+                        background: selected ? 'rgba(255,107,43,0.12)' : '#0A1628',
+                        color: selected ? 'var(--orange)' : 'var(--text-muted)',
+                        fontSize: 14,
+                        fontWeight: selected ? 700 : 500,
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        fontFamily: 'DM Sans, sans-serif',
+                      }}
+                    >
+                      {c.name}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
             {error && (
               <div style={{ color: 'var(--error)', fontSize: 13, fontWeight: 600, marginBottom: 12 }}>
                 {error}
@@ -263,7 +312,7 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
                 transition: 'all 0.2s',
               }}
             >
-              {submitting ? 'Skickar...' : 'Skicka in fråga'}
+              {submitting ? 'Skickar...' : 'Lägg till fråga'}
             </button>
           </>
         )}
@@ -294,15 +343,3 @@ const inputStyle: React.CSSProperties = {
   outline: 'none',
 }
 
-const selectStyle: React.CSSProperties = {
-  width: '100%',
-  background: '#0A1628',
-  border: '1.5px solid var(--border)',
-  borderRadius: 10,
-  padding: '11px 13px',
-  color: 'var(--white)',
-  fontSize: 14,
-  fontFamily: 'DM Sans, sans-serif',
-  outline: 'none',
-  cursor: 'pointer',
-}
