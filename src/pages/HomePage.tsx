@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react'
 import { User } from '@supabase/supabase-js'
+import logo from '../assets/logo.png'
 import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate } from '../lib/dailyUtils'
 import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
@@ -66,23 +67,11 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 18,
-              fontWeight: 900,
-              color: '#fff',
-              letterSpacing: -1,
-            }}
-          >
-            Q
-          </div>
+          <img
+            src={logo}
+            alt="Quizine logo"
+            style={{ width: 40, height: 40, objectFit: 'contain' }}
+          />
           <div>
             <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)', lineHeight: 1 }}>
               Quizine Daily
