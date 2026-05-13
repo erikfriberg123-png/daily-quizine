@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 
@@ -272,7 +272,7 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
                         padding: '10px 14px',
                         borderRadius: 10,
                         border: selected ? '1.5px solid var(--orange)' : '1.5px solid var(--border)',
-                        background: selected ? 'rgba(255,107,43,0.12)' : '#0A1628',
+                        background: selected ? 'rgba(255,107,43,0.12)' : '#091A10',
                         color: selected ? 'var(--orange)' : 'var(--text-muted)',
                         fontSize: 14,
                         fontWeight: selected ? 700 : 500,
@@ -333,7 +333,7 @@ const labelStyle: React.CSSProperties = {
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: '#0A1628',
+  background: '#091A10',
   border: '1.5px solid var(--border)',
   borderRadius: 10,
   padding: '11px 13px',

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { getWeeklyLeaderboard, LeaderboardEntry } from '../lib/dailyScores'
 
 interface Props {
@@ -73,7 +73,7 @@ export function Leaderboard({ highlightUsername }: Props) {
                   alignItems: 'center',
                   padding: '12px 20px',
                   borderBottom: '1px solid var(--border)',
-                  background: isMe ? 'rgba(29,111,232,0.1)' : 'transparent',
+                  background: isMe ? 'rgba(96,216,144,0.1)' : 'transparent',
                   borderLeft: isMe ? '3px solid var(--blue)' : '3px solid transparent',
                   transition: 'background 0.2s',
                 }}
@@ -109,7 +109,7 @@ export function Leaderboard({ highlightUsername }: Props) {
                         fontSize: 10,
                         fontWeight: 700,
                         color: 'var(--blue)',
-                        background: 'rgba(29,111,232,0.15)',
+                        background: 'rgba(96,216,144,0.15)',
                         padding: '2px 6px',
                         borderRadius: 4,
                         letterSpacing: 0.5,

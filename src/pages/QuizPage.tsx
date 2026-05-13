@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+﻿import { useEffect, useRef, useState, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { fetchDailyQuestions, DailyQuestion } from '../lib/questions'
 import { getParisDate, pickDailyQuestions, saveTodayPlayedData } from '../lib/dailyUtils'
@@ -269,7 +269,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
           key={qIndex}
           className="fade-in"
           style={{
-            background: 'linear-gradient(135deg, #0E2444 0%, var(--bg-card) 100%)',
+            background: 'linear-gradient(135deg, #0E2A1A 0%, var(--bg-card) 100%)',
             border: '1.5px solid var(--border-light)',
             borderRadius: 20,
             padding: '20px 20px 22px',

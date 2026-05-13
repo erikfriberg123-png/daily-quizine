@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import { submitDailyScore } from '../lib/dailyScores'
 import { Leaderboard } from '../components/Leaderboard'
@@ -129,7 +129,7 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
         <div
           className="pop-in"
           style={{
-            background: 'linear-gradient(135deg, #0A2A5C 0%, var(--bg-card) 100%)',
+            background: 'linear-gradient(135deg, #0A2A18 0%, var(--bg-card) 100%)',
             border: '1px solid var(--border-light)',
             borderRadius: 24,
             padding: 28,
@@ -184,8 +184,8 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
             </div>
             <div
               style={{
-                background: 'rgba(29,111,232,0.08)',
-                border: '1px solid rgba(29,111,232,0.25)',
+                background: 'rgba(96,216,144,0.08)',
+                border: '1px solid rgba(96,216,144,0.25)',
                 borderRadius: 12,
                 padding: '10px 20px',
               }}
