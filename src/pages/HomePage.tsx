@@ -438,7 +438,7 @@ function StartView({
           Dagens quiz är redo!
         </div>
         <div style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 24 }}>
-          10 frågor · 15 sekunder per fråga · Max 1 500 XP
+          3 frågor · 15 sekunder per fråga · Max 500 XP
         </div>
 
         <button
@@ -511,7 +511,7 @@ function StartView({
       >
         {[
           { icon: '⏱️', label: '15s', sub: 'per fråga' },
-          { icon: '🎯', label: '10', sub: 'frågor' },
+          { icon: '🎯', label: '3', sub: 'frågor' },
           { icon: '🏆', label: 'Vecka', sub: 'topplista' },
         ].map((item) => (
           <div

@@ -62,8 +62,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
 
       const q = questions[qIndex]
       const isCorrect = chosenIndex === q.correctIndex
-      const timeBonus = isCorrect ? Math.round(50 * (timeLeft / TIMER_SECONDS)) : 0
-      const gained = isCorrect ? 100 + timeBonus : 0
+      const gained = isCorrect ? 150 : 0
 
       setAnswered(true)
       setScore((s) => s + gained)
@@ -76,7 +75,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
 
       setTimeout(() => setShowNext(true), 600)
     },
-    [qIndex, questions, timeLeft, stopTimer]
+    [qIndex, questions, stopTimer]
   )
 
   const handleTimerExpire = useCallback(() => {
@@ -108,7 +107,8 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
   const handleNext = async () => {
     const nextIndex = qIndex + 1
     if (nextIndex >= questions.length) {
-      const finalScore = score
+      const bonus = correct === questions.length ? 50 : 0
+      const finalScore = score + bonus
       const finalCorrect = correct
       const dateStr = getParisDate()
       saveTodayPlayedData({ score: finalScore, correct: finalCorrect, total: questions.length })
