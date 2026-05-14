@@ -289,6 +289,20 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
           >
             {q.categoryId.replace(/_/g, ' ')}
           </div>
+          {q.imageUrl && (
+            <img
+              src={q.imageUrl}
+              alt=""
+              style={{
+                width: '100%',
+                maxHeight: 200,
+                objectFit: 'cover',
+                borderRadius: 12,
+                marginBottom: 14,
+                display: 'block',
+              }}
+            />
+          )}
           <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--white)', lineHeight: 1.45 }}>
             {q.question}
           </div>
