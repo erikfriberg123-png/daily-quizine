@@ -5,6 +5,7 @@ import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate } from 
 import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
+import { StoryModal } from '../components/StoryModal'
 import { supabase } from '../lib/supabase'
 import { ServerPlayed } from '../App'
 
@@ -26,6 +27,7 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
 export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, onStartQuiz, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
+  const [storyVisible, setStoryVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
   const weekend = isWeekend()
   const dateStr = getParisDate()
@@ -150,7 +152,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
         )}
 
         {/* Create question button — always visible */}
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <button
             onClick={() => setCreateVisible(true)}
             style={{
@@ -179,6 +181,35 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
             }}
           >
             ✏️  Skicka in en egen fråga
+          </button>
+          <button
+            onClick={() => setStoryVisible(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              width: '100%',
+              padding: '13px',
+              background: 'transparent',
+              color: 'var(--text-muted)',
+              border: '1px solid var(--border)',
+              borderRadius: 14,
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--orange)'
+              e.currentTarget.style.color = 'var(--orange)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border)'
+              e.currentTarget.style.color = 'var(--text-muted)'
+            }}
+          >
+            🍽️  Berätta en kroghistoria
           </button>
         </div>
 
@@ -239,6 +270,14 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
             setLoginThenCreate(true)
             setLoginVisible(true)
           }}
+        />
+      )}
+
+      {storyVisible && (
+        <StoryModal
+          user={user}
+          username={username}
+          onClose={() => setStoryVisible(false)}
         />
       )}
     </div>
