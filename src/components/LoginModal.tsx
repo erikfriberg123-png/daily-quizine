@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
+import { getLockedSeconds, recordAuthFailure, clearAuthRateLimit } from '../lib/authRateLimit'
 
 interface Props {
   onSuccess: (user: User) => void
@@ -18,16 +19,30 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
   const handleSubmit = async () => {
     if (!email.trim() || !password.trim()) return
+
+    const secondsLocked = getLockedSeconds()
+    if (secondsLocked > 0) {
+      setError(`För många misslyckade försök. Vänta ${secondsLocked} sekunder.`)
+      return
+    }
+
     setError('')
     setLoading(true)
     try {
       if (mode === 'login') {
         const { data, error: e } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
-        if (e) throw e
+        if (e) {
+          recordAuthFailure()
+          throw e
+        }
+        clearAuthRateLimit()
         if (data.user) onSuccess(data.user)
       } else {
         const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password })
-        if (e) throw e
+        if (e) {
+          recordAuthFailure()
+          throw e
+        }
         if (data.user && !data.user.email_confirmed_at) {
           setDone(true)
         } else if (data.user) {

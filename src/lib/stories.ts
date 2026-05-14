@@ -66,9 +66,18 @@ async function compressImage(file: File): Promise<Blob> {
   })
 }
 
+const MAX_INPUT_SIZE = 10 * 1024 * 1024  // 10 MB raw input
+const MAX_OUTPUT_SIZE = 1 * 1024 * 1024  // 1 MB after compression
+
 export async function uploadStoryImage(file: File): Promise<{ url: string } | { error: string }> {
+  if (file.size > MAX_INPUT_SIZE) {
+    return { error: 'Bilden är för stor (max 10 MB).' }
+  }
   try {
     const blob = await compressImage(file)
+    if (blob.size > MAX_OUTPUT_SIZE) {
+      return { error: 'Bilden är för stor efter komprimering. Välj en mindre bild.' }
+    }
     const filename = `story_${Date.now()}.jpg`
     const { error: uploadErr } = await supabase.storage
       .from(STORY_BUCKET)

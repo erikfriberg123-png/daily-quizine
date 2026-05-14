@@ -1,6 +1,17 @@
 import { supabase } from './supabase'
 import { getParisWeekBounds, getWeekStartForDate, getWeekEndForStart } from './dailyUtils'
 
+const DAILY_QUESTIONS = 3
+const POINTS_PER_CORRECT = 150
+const ALL_CORRECT_BONUS = 50
+
+function isValidScore(score: number, correct: number): boolean {
+  if (!Number.isInteger(score) || !Number.isInteger(correct)) return false
+  if (correct < 0 || correct > DAILY_QUESTIONS) return false
+  if (score < 0) return false
+  return score === correct * POINTS_PER_CORRECT + (correct === DAILY_QUESTIONS ? ALL_CORRECT_BONUS : 0)
+}
+
 export interface LeaderboardEntry {
   username: string
   total_score: number
@@ -15,6 +26,10 @@ export async function submitDailyScore(params: {
   score: number
   correct: number
 }): Promise<void> {
+  if (!isValidScore(params.score, params.correct)) {
+    throw new Error('Ogiltig poäng.')
+  }
+
   const { error } = await supabase.from('daily_scores').upsert(
     {
       user_id: params.userId,
