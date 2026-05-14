@@ -20,48 +20,53 @@ export function Timer({ duration, timeLeft, onExpire }: Props) {
   const pct = Math.max(0, timeLeft / duration)
   const urgent = timeLeft <= 5
 
-  const barColor = urgent
-    ? 'var(--error)'
-    : timeLeft <= 8
-    ? 'var(--orange)'
-    : 'var(--blue)'
-
   return (
-    <div style={{ marginBottom: 12 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-        <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: 1 }}>
-          TIMER
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <span style={{
+          fontSize: 12, color: 'var(--text-muted)', fontWeight: 600,
+          letterSpacing: 1.5, textTransform: 'uppercase' as const,
+        }}>
+          Tid kvar
         </span>
-        <span
-          style={{
-            fontSize: 14,
-            fontWeight: 800,
-            color: urgent ? 'var(--error)' : 'var(--white)',
-            transition: 'color 0.3s',
-            animation: urgent ? 'pulse 0.6s ease infinite' : 'none',
-          }}
-        >
+        <span style={{
+          fontSize: 16, fontWeight: 900,
+          color: urgent ? 'var(--rust-light)' : 'var(--gold-light)',
+          transition: 'color 0.3s',
+          animation: urgent ? 'pulse 0.6s ease infinite' : 'none',
+        }}>
           {timeLeft}s
         </span>
       </div>
-      <div
-        style={{
-          height: 6,
-          borderRadius: 3,
-          background: 'var(--bg-card-2)',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
+
+      <div style={{ position: 'relative' as const }}>
+        <div style={{ height: 8, borderRadius: 4, background: 'var(--border)', overflow: 'hidden' }}>
+          <div style={{
             height: '100%',
             width: `${pct * 100}%`,
-            borderRadius: 3,
-            background: barColor,
-            transition: 'width 1s linear, background 0.3s',
-            boxShadow: `0 0 8px ${barColor}`,
-          }}
-        />
+            borderRadius: 4,
+            background: urgent
+              ? 'linear-gradient(90deg, #C0441A 0%, #E05527 80%, #FF6633 100%)'
+              : 'linear-gradient(90deg, #C9922A 0%, #FFD700 80%, #FFF8DC 100%)',
+            transition: 'width 1s linear',
+          }} />
+        </div>
+
+        {pct > 0.04 && (
+          <div
+            className="glow-tip"
+            style={{
+              position: 'absolute' as const,
+              left: `calc(${pct * 100}% - 7px)`,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontSize: 12,
+              color: urgent ? '#FF6633' : '#FFD700',
+              pointerEvents: 'none' as const,
+              lineHeight: 1,
+            }}
+          >✦</div>
+        )}
       </div>
     </div>
   )

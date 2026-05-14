@@ -5,6 +5,7 @@ import { getParisDate, pickDailyQuestions, saveTodayPlayedData } from '../lib/da
 import { submitDailyScore } from '../lib/dailyScores'
 import { Timer } from '../components/Timer'
 import { AnswerButton } from '../components/AnswerButton'
+import { CATEGORY_DISPLAY } from '../lib/categories'
 
 const QUESTION_COUNT = 3
 const TIMER_SECONDS = 15
@@ -269,7 +270,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
           key={qIndex}
           className="fade-in"
           style={{
-            background: 'linear-gradient(135deg, #0E2444 0%, var(--bg-card) 100%)',
+            background: 'linear-gradient(135deg, #1C1208 0%, var(--bg-card) 100%)',
             border: '1.5px solid var(--border-light)',
             borderRadius: 20,
             padding: '20px 20px 22px',
@@ -281,13 +282,13 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
             style={{
               fontSize: 11,
               fontWeight: 700,
-              color: 'var(--blue)',
+              color: 'var(--gold)',
               letterSpacing: 1.5,
               textTransform: 'uppercase',
               marginBottom: 10,
             }}
           >
-            {q.categoryId.replace(/_/g, ' ')}
+            {CATEGORY_DISPLAY[q.categoryId]?.name ?? q.categoryId.replace(/_/g, ' ')}
           </div>
           {q.imageUrl && (
             <img

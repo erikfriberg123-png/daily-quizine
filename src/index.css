@@ -5,28 +5,35 @@
 }
 
 :root {
-  --bg:           #030C1A;
-  --bg-card:      #0C1E35;
-  --bg-card-2:    #112540;
-  --border:       #1B3A5C;
-  --border-light: #254A72;
+  --bg:           #0A0805;
+  --bg-card:      #1C1510;
+  --bg-card-2:    #221A13;
+  --border:       #2E2218;
+  --border-light: #3E3020;
 
-  --blue:         #1D6FE8;
-  --blue-light:   #3B8AF5;
+  --gold:         #C9922A;
+  --gold-light:   #E8B04A;
+  --gold-glow:    rgba(201, 146, 42, 0.25);
+  --rust:         #C0441A;
+  --rust-light:   #E05527;
+  --cream:        #F5EDD5;
+
+  --blue:         #2A6EA6;
+  --blue-light:   #4A8EC8;
   --blue-dark:    #1558C0;
-  --blue-glow:    rgba(29, 111, 232, 0.3);
+  --blue-glow:    rgba(42, 110, 166, 0.3);
 
-  --orange:       #FF6B2B;
-  --orange-light: #FF8C55;
-  --orange-dark:  #E05520;
-  --orange-glow:  rgba(255, 107, 43, 0.25);
+  --orange:       #E8B04A;
+  --orange-light: #F0C878;
+  --orange-dark:  #C9922A;
+  --orange-glow:  rgba(201, 146, 42, 0.25);
 
-  --white:        #FFFFFF;
-  --text-muted:   #7B9EC4;
-  --text-dim:     #3E5F82;
+  --white:        #F5EDD5;
+  --text-muted:   #8A7355;
+  --text-dim:     #4A3B28;
 
-  --success:      #10D48E;
-  --success-bg:   rgba(16, 212, 142, 0.12);
+  --success:      #5BA65B;
+  --success-bg:   rgba(91, 166, 91, 0.12);
   --error:        #FF4757;
   --error-bg:     rgba(255, 71, 87, 0.12);
 }
@@ -72,6 +79,12 @@ a {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.5; }
 }
+
+@keyframes glowTip {
+  from { text-shadow: 0 0 8px #FFD700, 0 0 20px #C9922A, 0 0 30px #C9922A; }
+  to   { text-shadow: 0 0 3px #FFD700, 0 0 8px #C9922A; }
+}
+.glow-tip { animation: glowTip 0.4s ease infinite alternate; }
 
 @keyframes timerShrink {
   from { transform: scaleX(1); }

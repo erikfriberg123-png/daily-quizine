@@ -1,13 +1,15 @@
-﻿import { useState } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import logo from '../assets/logo.png'
-import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate } from '../lib/dailyUtils'
+import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate, pickDailyQuestions } from '../lib/dailyUtils'
+import { fetchDailyQuestions } from '../lib/questions'
 import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
 import { StoryModal } from '../components/StoryModal'
 import { supabase } from '../lib/supabase'
 import { ServerPlayed } from '../App'
+import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
 
 const QUESTION_COUNT = 3
 
@@ -111,10 +113,10 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
               style={{
                 fontSize: 13,
                 fontWeight: 600,
-                color: 'var(--blue-light)',
-                background: 'rgba(29,111,232,0.1)',
+                color: 'var(--gold-light)',
+                background: 'rgba(201,146,42,0.1)',
                 padding: '7px 14px',
-                border: '1px solid rgba(29,111,232,0.3)',
+                border: '1px solid rgba(201,146,42,0.3)',
                 borderRadius: 10,
                 cursor: 'pointer',
               }}
@@ -422,142 +424,157 @@ function StartView({
   onLogin: () => void
 }) {
   const weekday = TODAY_WEEKDAY
+  const [menuItems, setMenuItems] = useState<Array<{ name: string; emoji: string; desc: string }>>([])
+
+  useEffect(() => {
+    fetchDailyQuestions()
+      .then(all => {
+        const daily = pickDailyQuestions(all, dateStr, 3)
+        setMenuItems(daily.map(q => CATEGORY_DISPLAY[q.categoryId] ?? { name: q.categoryId, emoji: '❓', desc: '' }))
+      })
+      .catch(() => {})
+  }, [dateStr])
 
   return (
     <div className="fade-in">
-      {/* Hero */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #0A2A5C 0%, #0C1E35 60%, var(--bg-card) 100%)',
-          border: '1px solid var(--border)',
-          borderRadius: 24,
-          padding: 28,
-          marginBottom: 20,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Decorative orb */}
-        <div
-          style={{
-            position: 'absolute',
-            top: -40,
-            right: -40,
-            width: 160,
-            height: 160,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(29,111,232,0.2) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: 'var(--blue-light)',
-            letterSpacing: 1.5,
-            textTransform: 'uppercase',
-            marginBottom: 8,
-          }}
-        >
-          {weekday} · {dateStr}
-        </div>
-        <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--white)', lineHeight: 1.2, marginBottom: 8 }}>
-          Dagens quiz är redo!
-        </div>
-        <div style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 24 }}>
-          3 frågor · 15 sekunder per fråga · Max 500 XP
-        </div>
-
-        <button
-          onClick={onStart}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-            width: '100%',
-            padding: '16px',
-            background: 'linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%)',
-            color: '#fff',
-            borderRadius: 16,
-            fontSize: 17,
-            fontWeight: 800,
-            cursor: 'pointer',
-            boxShadow: '0 4px 24px var(--orange-glow)',
-            border: 'none',
-            transition: 'transform 0.15s, box-shadow 0.15s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-1px)'
-            e.currentTarget.style.boxShadow = '0 6px 32px var(--orange-glow)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none'
-            e.currentTarget.style.boxShadow = '0 4px 24px var(--orange-glow)'
-          }}
-        >
-          <span style={{ fontSize: 20 }}>🎯</span>
-          Starta dagens quiz
-        </button>
-
-        {!user && (
-          <div style={{ marginTop: 14, textAlign: 'center', fontSize: 13, color: 'var(--text-muted)' }}>
-            Spela utan konto — eller{' '}
-            <button
-              onClick={onLogin}
-              style={{
-                background: 'none',
-                color: 'var(--blue-light)',
-                fontWeight: 600,
-                fontSize: 13,
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
-            >
-              logga in
-            </button>{' '}
-            för att synas på topplistan
-          </div>
-        )}
-        {user && username && (
-          <div style={{ marginTop: 14, textAlign: 'center', fontSize: 13, color: 'var(--text-muted)' }}>
-            Du spelar som{' '}
-            <strong style={{ color: 'var(--blue-light)' }}>{username}</strong>
-          </div>
-        )}
+      {/* Date ornament */}
+      <div style={{ textAlign: 'center', marginBottom: 20 }}>
+        <span style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600 }}>
+          ✦&nbsp; {weekday} {dateStr} &nbsp;✦
+        </span>
       </div>
 
-      {/* Rules strip */}
-      <div
+      {/* Hero title */}
+      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        <h1 style={{ fontSize: 32, fontWeight: 900, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 10, margin: 0 }}>
+          Dagens quiz<br />är{' '}
+          <em style={{ color: 'var(--gold-light)', fontStyle: 'italic' }}>serverat.</em>
+        </h1>
+        <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginTop: 10, marginBottom: 0 }}>
+          Visa vad du kan om livet på krogen.<br />Tävla med kollegorna.
+        </p>
+      </div>
+
+      {/* Menu card */}
+      <div style={{
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: 20,
+        marginBottom: 16,
+        overflow: 'hidden',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
+      }}>
+        {/* Card header */}
+        <div style={{
+          padding: '18px 20px 14px',
+          borderBottom: '1px solid var(--border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div>
+            <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>Dagens meny</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 3 }}>
+              3 rätter · Max 500 XP
+            </div>
+          </div>
+          <div style={{ fontSize: 22 }}>📋</div>
+        </div>
+
+        {/* Menu items */}
+        {menuItems.length > 0
+          ? menuItems.map((item, i) => (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', gap: 14,
+              padding: '14px 20px',
+              borderBottom: i < 2 ? '1px solid rgba(46,34,24,0.6)' : 'none',
+            }}>
+              <div style={{
+                fontSize: 18, fontWeight: 700, color: 'var(--border-light)',
+                minWidth: 26, fontFamily: 'Georgia, serif',
+              }}>
+                {ROMAN[i]}
+              </div>
+              <div style={{ fontSize: 22 }}>{item.emoji}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--white)' }}>{item.name}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{item.desc}</div>
+              </div>
+              <div style={{
+                fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20,
+                background: 'rgba(201,146,42,0.12)', color: 'var(--gold-light)',
+                border: '1px solid rgba(201,146,42,0.3)', letterSpacing: 0.5,
+              }}>
+                Idag
+              </div>
+            </div>
+          ))
+          : [0, 1, 2].map(i => (
+            <div key={i} style={{ padding: '18px 20px', borderBottom: i < 2 ? '1px solid var(--border)' : 'none' }}>
+              <div style={{ height: 14, background: 'var(--bg-card-2)', borderRadius: 7, width: `${55 + i * 12}%`, opacity: 0.7 }} />
+            </div>
+          ))
+        }
+
+        {/* Sparkler preview row */}
+        <div style={{
+          padding: '14px 20px', background: 'var(--bg-card-2)',
+          display: 'flex', alignItems: 'center', gap: 12,
+          borderTop: '1px solid var(--border)',
+        }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', minWidth: 90 }}>⏱ Tid per fråga</div>
+          <div style={{ flex: 1, height: 6, background: 'var(--border)', borderRadius: 3 }}>
+            <div style={{
+              height: '100%', width: '66%', borderRadius: 3,
+              background: 'linear-gradient(90deg, #C9922A 0%, #FFD700 80%, #FFF8DC 100%)',
+            }} />
+          </div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--gold-light)', minWidth: 32 }}>15s</div>
+        </div>
+      </div>
+
+      {/* Start button */}
+      <button
+        onClick={onStart}
         style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
-          gap: 10,
-          marginBottom: 8,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+          width: '100%', padding: '17px',
+          background: 'linear-gradient(135deg, var(--gold) 0%, var(--rust) 100%)',
+          color: 'var(--cream)', borderRadius: 16,
+          fontSize: 17, fontWeight: 800, cursor: 'pointer',
+          boxShadow: '0 4px 24px var(--gold-glow)',
+          border: 'none', transition: 'transform 0.15s, box-shadow 0.15s',
+          letterSpacing: 0.5, marginBottom: 12,
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.transform = 'translateY(-2px)'
+          e.currentTarget.style.boxShadow = '0 8px 32px rgba(201,146,42,0.4)'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = 'none'
+          e.currentTarget.style.boxShadow = '0 4px 24px var(--gold-glow)'
         }}
       >
-        {[
-          { icon: '⏱️', label: '15s', sub: 'per fråga' },
-          { icon: '🎯', label: '3', sub: 'frågor' },
-          { icon: '🏆', label: 'Vecka', sub: 'topplista' },
-        ].map((item) => (
-          <div
-            key={item.label}
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border)',
-              borderRadius: 14,
-              padding: '14px 10px',
-              textAlign: 'center',
-            }}
+        <span style={{ fontSize: 20 }}>🎯</span>
+        Starta dagens quiz
+      </button>
+
+      {!user && (
+        <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-muted)', marginBottom: 4 }}>
+          Spela utan konto — eller{' '}
+          <button
+            onClick={onLogin}
+            style={{ background: 'none', color: 'var(--gold-light)', fontWeight: 600, fontSize: 13, cursor: 'pointer', textDecoration: 'underline' }}
           >
-            <div style={{ fontSize: 22, marginBottom: 4 }}>{item.icon}</div>
-            <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)' }}>{item.label}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{item.sub}</div>
-          </div>
-        ))}
-      </div>
+            logga in
+          </button>
+          {' '}för att synas på topplistan
+        </div>
+      )}
+      {user && username && (
+        <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-muted)', marginBottom: 4 }}>
+          Du spelar som{' '}
+          <strong style={{ color: 'var(--gold-light)' }}>{username}</strong>
+        </div>
+      )}
     </div>
   )
 }
