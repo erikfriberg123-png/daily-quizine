@@ -4,6 +4,7 @@ import { submitDailyScore } from '../lib/dailyScores'
 import { Leaderboard } from '../components/Leaderboard'
 import { LoginModal } from '../components/LoginModal'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
+import { FeedbackModal } from '../components/FeedbackModal'
 
 interface Props {
   result: { score: number; correct: number; total: number; dateStr: string }
@@ -34,6 +35,7 @@ function scoreMessage(correct: number, total: number) {
 export default function ResultsPage({ result, user, username, onPlayAgain, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
+  const [feedbackVisible, setFeedbackVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -306,6 +308,22 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
           </button>
 
           <button
+            onClick={() => setFeedbackVisible(true)}
+            style={{
+              padding: '14px',
+              background: 'transparent',
+              color: 'var(--text-muted)',
+              border: '1px solid var(--border)',
+              borderRadius: 14,
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            💬  Lämna feedback
+          </button>
+
+          <button
             onClick={onPlayAgain}
             style={{
               padding: '14px',
@@ -365,6 +383,14 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
             }
           }}
           onClose={() => { setLoginVisible(false); setLoginThenCreate(false) }}
+        />
+      )}
+
+      {feedbackVisible && (
+        <FeedbackModal
+          user={user}
+          username={username}
+          onClose={() => setFeedbackVisible(false)}
         />
       )}
 
