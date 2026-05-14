@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react'
 import { getWeeklyLeaderboard, LeaderboardEntry } from '../lib/dailyScores'
+import { HallOfFameModal } from './HallOfFameModal'
 
 interface Props {
   highlightUsername?: string | null
@@ -10,6 +11,7 @@ const MEDALS = ['🥇', '🥈', '🥉']
 export function Leaderboard({ highlightUsername }: Props) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [showHallOfFame, setShowHallOfFame] = useState(false)
 
   useEffect(() => {
     getWeeklyLeaderboard()
@@ -132,6 +134,39 @@ export function Leaderboard({ highlightUsername }: Props) {
             )
           })}
         </div>
+      )}
+
+      {/* Hall of Fame button */}
+      <button
+        onClick={() => setShowHallOfFame(true)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+          width: '100%',
+          padding: '13px 16px',
+          background: 'transparent',
+          color: 'var(--text-muted)',
+          border: 'none',
+          borderTop: '1px solid var(--border)',
+          fontSize: 13,
+          fontWeight: 600,
+          cursor: 'pointer',
+          transition: 'color 0.15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.color = 'var(--white)' }}
+        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)' }}
+      >
+        <span style={{ fontSize: 16 }}>🏛️</span>
+        Hall of Fame — vinnare &amp; årets topplista
+      </button>
+
+      {showHallOfFame && (
+        <HallOfFameModal
+          highlightUsername={highlightUsername}
+          onClose={() => setShowHallOfFame(false)}
+        />
       )}
     </div>
   )

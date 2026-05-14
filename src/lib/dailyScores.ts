@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { getParisWeekBounds } from './dailyUtils'
+import { getParisWeekBounds, getWeekStartForDate, getWeekEndForStart } from './dailyUtils'
 
 export interface LeaderboardEntry {
   username: string
@@ -72,6 +72,70 @@ export async function getMyTodayScore(
     .maybeSingle()
   if (!data) return null
   return { score: data.score as number, correct: data.correct as number }
+}
+
+export interface WeeklyWinner {
+  week_start: string
+  week_end: string
+  username: string
+  total_score: number
+}
+
+export interface HallOfFameData {
+  weeklyWinners: WeeklyWinner[]
+  yearlyTop: LeaderboardEntry[]
+}
+
+export async function getHallOfFameData(): Promise<HallOfFameData> {
+  const year = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getFullYear()
+  const yearStart = `${year}-01-01`
+  const { start: currentWeekStart } = getParisWeekBounds()
+
+  const { data, error } = await supabase
+    .from('daily_scores')
+    .select('username, score, date')
+    .gte('date', yearStart)
+    .not('user_id', 'is', null)
+    .order('date', { ascending: true })
+
+  if (error) throw error
+  const rows = (data ?? []) as { username: string; score: number; date: string }[]
+
+  // Yearly top — aggregate all rows in the year by username
+  const yearMap = new Map<string, { total: number; days: number }>()
+  for (const row of rows) {
+    const prev = yearMap.get(row.username) ?? { total: 0, days: 0 }
+    yearMap.set(row.username, { total: prev.total + row.score, days: prev.days + 1 })
+  }
+  const yearlyTop: LeaderboardEntry[] = Array.from(yearMap.entries())
+    .map(([username, { total, days }]) => ({ username, total_score: total, days_played: days, rank: 0 }))
+    .sort((a, b) => b.total_score - a.total_score)
+    .slice(0, 20)
+    .map((e, i) => ({ ...e, rank: i + 1 }))
+
+  // Weekly winners — only past weeks (exclude current week)
+  const pastRows = rows.filter(r => r.date < currentWeekStart)
+  const weekMap = new Map<string, Map<string, number>>()
+  for (const row of pastRows) {
+    const weekKey = getWeekStartForDate(row.date)
+    if (!weekMap.has(weekKey)) weekMap.set(weekKey, new Map())
+    const userMap = weekMap.get(weekKey)!
+    userMap.set(row.username, (userMap.get(row.username) ?? 0) + row.score)
+  }
+
+  const weeklyWinners: WeeklyWinner[] = Array.from(weekMap.entries())
+    .map(([weekStart, userMap]) => {
+      let topUser = ''
+      let topScore = 0
+      userMap.forEach((score, username) => {
+        if (score > topScore) { topScore = score; topUser = username }
+      })
+      return { week_start: weekStart, week_end: getWeekEndForStart(weekStart), username: topUser, total_score: topScore }
+    })
+    .sort((a, b) => b.week_start.localeCompare(a.week_start))
+    .slice(0, 20)
+
+  return { weeklyWinners, yearlyTop }
 }
 
 export async function getUserWeekScore(userId: string): Promise<number> {

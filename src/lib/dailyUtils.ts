@@ -83,6 +83,29 @@ export function saveTodayPlayedData(data: PlayedData): void {
   localStorage.setItem(PLAYED_PREFIX + getParisDate(), JSON.stringify(data))
 }
 
+export function getWeekStartForDate(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const d = new Date(year, month - 1, day)
+  const dow = d.getDay()
+  const diffToMonday = dow === 0 ? -6 : 1 - dow
+  d.setDate(d.getDate() + diffToMonday)
+  return [
+    d.getFullYear(),
+    String(d.getMonth() + 1).padStart(2, '0'),
+    String(d.getDate()).padStart(2, '0'),
+  ].join('-')
+}
+
+export function getWeekEndForStart(weekStart: string): string {
+  const [year, month, day] = weekStart.split('-').map(Number)
+  const d = new Date(year, month - 1, day + 6)
+  return [
+    d.getFullYear(),
+    String(d.getMonth() + 1).padStart(2, '0'),
+    String(d.getDate()).padStart(2, '0'),
+  ].join('-')
+}
+
 export function getParisWeekBounds(): { start: string; end: string } {
   const now = new Date(
     new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })
