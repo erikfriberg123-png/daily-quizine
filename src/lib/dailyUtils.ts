@@ -1,4 +1,25 @@
 const PLAYED_PREFIX = 'dq_played_'
+const SESSION_PREFIX = 'dq_session_'
+
+export interface QuizSession {
+  qIndex: number
+  score: number
+  correct: number
+}
+
+export function getActiveSession(): QuizSession | null {
+  const raw = localStorage.getItem(SESSION_PREFIX + getParisDate())
+  if (!raw) return null
+  try { return JSON.parse(raw) as QuizSession } catch { return null }
+}
+
+export function saveActiveSession(data: QuizSession): void {
+  localStorage.setItem(SESSION_PREFIX + getParisDate(), JSON.stringify(data))
+}
+
+export function clearActiveSession(): void {
+  localStorage.removeItem(SESSION_PREFIX + getParisDate())
+}
 
 export function getParisDate(): string {
   return new Intl.DateTimeFormat('sv-SE', {

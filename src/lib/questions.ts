@@ -14,6 +14,7 @@ export async function fetchDailyQuestions(): Promise<DailyQuestion[]> {
     .from('remote_questions')
     .select('id, question, answers, correct_index, category_id, image_url')
     .eq('active', true)
+    .order('id')
 
   if (error) throw error
 

@@ -1,7 +1,7 @@
 ﻿import { useEffect, useRef, useState, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { fetchDailyQuestions, DailyQuestion } from '../lib/questions'
-import { getParisDate, pickDailyQuestions, saveTodayPlayedData } from '../lib/dailyUtils'
+import { getParisDate, pickDailyQuestions, saveTodayPlayedData, getActiveSession, saveActiveSession, clearActiveSession } from '../lib/dailyUtils'
 import { submitDailyScore } from '../lib/dailyScores'
 import { Timer } from '../components/Timer'
 import { AnswerButton } from '../components/AnswerButton'
@@ -39,6 +39,26 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
     fetchDailyQuestions()
       .then((all) => {
         const daily = pickDailyQuestions(all, getParisDate(), QUESTION_COUNT)
+        const session = getActiveSession()
+
+        if (session) {
+          const resumeIndex = session.qIndex + 1
+          if (resumeIndex >= daily.length) {
+            // Forfeited the last question — complete quiz immediately with saved score
+            saveTodayPlayedData({ score: session.score, correct: session.correct, total: daily.length })
+            clearActiveSession()
+            onComplete({ score: session.score, correct: session.correct, total: daily.length, dateStr: getParisDate() })
+            return
+          }
+          // Skip the forfeited question and resume from the next one
+          setQIndex(resumeIndex)
+          setScore(session.score)
+          setCorrect(session.correct)
+          saveActiveSession({ qIndex: resumeIndex, score: session.score, correct: session.correct })
+        } else {
+          saveActiveSession({ qIndex: 0, score: 0, correct: 0 })
+        }
+
         setQuestions(daily)
         setLoading(false)
       })
@@ -46,7 +66,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
         setError('Kunde inte ladda frågor. Kontrollera din internetanslutning.')
         setLoading(false)
       })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) {
@@ -113,6 +133,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
       const finalCorrect = correct
       const dateStr = getParisDate()
       saveTodayPlayedData({ score: finalScore, correct: finalCorrect, total: questions.length })
+      clearActiveSession()
 
       if (user && username) {
         try {
@@ -130,6 +151,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
 
       onComplete({ score: finalScore, correct: finalCorrect, total: questions.length, dateStr })
     } else {
+      saveActiveSession({ qIndex: nextIndex, score, correct })
       setQIndex(nextIndex)
     }
   }
@@ -210,7 +232,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
         }}
       >
         <button
-          onClick={onExit}
+          onClick={() => { clearActiveSession(); onExit() }}
           style={{
             background: 'none',
             color: 'var(--text-muted)',
