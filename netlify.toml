@@ -4,13 +4,15 @@
 
 [[redirects]]
   from = "/privacy"
-  to = "/privacy/index.html"
+  to = "/privacy.html"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/support"
-  to = "/support/index.html"
+  to = "/support.html"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"

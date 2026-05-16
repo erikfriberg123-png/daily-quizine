@@ -4,6 +4,7 @@ import {
   submitStory, uploadStoryImage,
   validateStoryText, validateDisplayName,
 } from '../lib/stories'
+import { useKeyboardOffset } from '../hooks/useKeyboardOffset'
 
 interface Props {
   user: User | null
@@ -14,6 +15,7 @@ interface Props {
 const DEFAULT_TEXT = 'Berätta en intressant händelse som du varit med om på restaurang.'
 
 export function StoryModal({ user, username, onClose }: Props) {
+  const keyboardOffset = useKeyboardOffset()
   const [text, setText] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [displayName, setDisplayName] = useState(username ?? '')
@@ -88,13 +90,26 @@ export function StoryModal({ user, username, onClose }: Props) {
 
   return (
     <div
-      style={{
-        position: 'fixed', inset: 0, zIndex: 100,
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-        background: 'rgba(0,0,0,0.65)',
-      }}
+      style={{ position: 'fixed', inset: 0, zIndex: 100 }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
+      {/* dim backdrop */}
+      <div
+        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)' }}
+        onClick={onClose}
+      />
+      {/* sheet — sits right above the keyboard */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: keyboardOffset,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          transition: 'bottom 0.2s ease',
+        }}
+      >
       <div
         style={{
           background: 'var(--bg-card)',
@@ -103,9 +118,12 @@ export function StoryModal({ user, username, onClose }: Props) {
           borderBottom: 'none',
           width: '100%',
           maxWidth: 560,
-          maxHeight: '92dvh',
+          maxHeight: '85dvh',
           overflowY: 'auto',
           padding: '24px 20px 40px',
+          paddingBottom: `max(40px, env(safe-area-inset-bottom))`,
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {/* Handle */}
@@ -308,6 +326,7 @@ export function StoryModal({ user, username, onClose }: Props) {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   )

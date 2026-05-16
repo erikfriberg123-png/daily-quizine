@@ -33,6 +33,13 @@ function scoreMessage(correct: number, total: number) {
   return 'Kom tillbaka imorgon och försök igen!'
 }
 
+const handleCreateBtnMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.currentTarget.style.background = 'rgba(255,107,43,0.08)'
+}
+const handleCreateBtnMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.currentTarget.style.background = 'transparent'
+}
+
 export default function ResultsPage({ result, user, username, onPlayAgain, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
@@ -49,7 +56,8 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
 
   // Auto-submit when user is already logged in
   useEffect(() => {
-    if (user && username && !submitted) {
+    if (user && username && !submitted && !submitting) {
+      setSubmitting(true)
       submitDailyScore({
         userId: user.id,
         username,
@@ -59,8 +67,9 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
       })
         .then(() => setSubmitted(true))
         .catch(() => {})
+        .finally(() => setSubmitting(false))
     }
-  }, [user, username, submitted, result])
+  }, [user, username, submitted, submitting, result])
 
   const handlePostLoginSubmit = async (u: User, uname: string) => {
     setSubmitting(true)
@@ -303,8 +312,8 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
               cursor: 'pointer',
               transition: 'all 0.2s',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,107,43,0.08)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+            onMouseEnter={handleCreateBtnMouseEnter}
+            onMouseLeave={handleCreateBtnMouseLeave}
           >
             ✏️  Skicka in en egen fråga
           </button>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { User } from '@supabase/supabase-js'
 import { submitFeedback } from '../lib/feedback'
+import { useKeyboardOffset } from '../hooks/useKeyboardOffset'
 
 interface Props {
   user: User | null
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function FeedbackModal({ user, username, onClose }: Props) {
+  const keyboardOffset = useKeyboardOffset()
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
@@ -26,14 +28,26 @@ export function FeedbackModal({ user, username, onClose }: Props) {
 
   return (
     <div
-      style={{
-        position: 'fixed', inset: 0, zIndex: 100,
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-        background: 'rgba(0,0,0,0.6)',
-        padding: '0 0 env(safe-area-inset-bottom)',
-      }}
+      style={{ position: 'fixed', inset: 0, zIndex: 100 }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
+      {/* dim backdrop */}
+      <div
+        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)' }}
+        onClick={onClose}
+      />
+      {/* sheet — sits right above the keyboard */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: keyboardOffset,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          transition: 'bottom 0.2s ease',
+        }}
+      >
       <div
         style={{
           background: 'var(--bg-card)',
@@ -41,7 +55,12 @@ export function FeedbackModal({ user, username, onClose }: Props) {
           border: '1px solid var(--border)',
           width: '100%',
           maxWidth: 560,
+          maxHeight: '85dvh',
+          overflowY: 'auto',
           padding: '24px 20px 32px',
+          paddingBottom: `max(32px, env(safe-area-inset-bottom))`,
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -127,6 +146,7 @@ export function FeedbackModal({ user, username, onClose }: Props) {
             </button>
           </>
         )}
+      </div>
       </div>
     </div>
   )

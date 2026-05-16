@@ -33,7 +33,15 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
   const [showNext, setShowNext] = useState(false)
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const showNextTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const answeredRef = useRef(false)
+
+  // Clear showNext timer on unmount
+  useEffect(() => {
+    return () => {
+      if (showNextTimerRef.current) clearTimeout(showNextTimerRef.current)
+    }
+  }, [])
 
   useEffect(() => {
     fetchDailyQuestions()
@@ -94,7 +102,8 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
       if (chosenIndex !== null && chosenIndex !== q.correctIndex) next[chosenIndex] = 'wrong'
       setAnswerStates(next)
 
-      setTimeout(() => setShowNext(true), 600)
+      if (showNextTimerRef.current) clearTimeout(showNextTimerRef.current)
+      showNextTimerRef.current = setTimeout(() => setShowNext(true), 600)
     },
     [qIndex, questions, stopTimer]
   )
@@ -335,7 +344,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {q.answers.map((answer, i) => (
             <AnswerButton
-              key={`${qIndex}-${i}`}
+              key={i}
               label={answer}
               index={i}
               state={answerStates[i]}
