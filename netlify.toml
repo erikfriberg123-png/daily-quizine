@@ -1,6 +1,16 @@
 [build]
-  command = "npm run build"
+  command = "npm run build && cp landing-page.html dist/index.html"
   publish = "dist"
+
+[[redirects]]
+  from = "/quizine"
+  to = "/quizine/"
+  status = 301
+
+[[redirects]]
+  from = "/quizine/*"
+  to = "/quizine/index.html"
+  status = 200
 
 [[redirects]]
   from = "/privacy"
@@ -13,8 +23,3 @@
   to = "/support.html"
   status = 200
   force = true
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
