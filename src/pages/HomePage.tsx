@@ -1,6 +1,5 @@
 ﻿import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
-import logo from '../assets/logo.png'
 import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate, pickDailyQuestions } from '../lib/dailyUtils'
 import { fetchDailyQuestions } from '../lib/questions'
 import { LoginModal } from '../components/LoginModal'
@@ -11,6 +10,7 @@ import { supabase } from '../lib/supabase'
 import { ServerPlayed } from '../App'
 import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
 import { getSegmentConfig, SegmentConfig } from '../config/segments'
+import { SegmentLogo } from '../components/SegmentLogo'
 
 const QUESTION_COUNT = 3
 
@@ -73,11 +73,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img
-            src={logo}
-            alt="Quizine logo"
-            style={{ width: 40, height: 40, objectFit: 'contain' }}
-          />
+          <SegmentLogo />
           <div>
             <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)', lineHeight: 1 }}>
               Quizine Daily
