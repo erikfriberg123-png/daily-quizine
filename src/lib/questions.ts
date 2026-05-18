@@ -1,4 +1,7 @@
 import { supabase } from './supabase'
+import { SEGMENT } from '../config/segments'
+
+const QUESTIONS_TABLE = SEGMENT === 'voo' ? 'voo_remote_questions' : 'remote_questions'
 
 export interface DailyQuestion {
   id: string
@@ -11,7 +14,7 @@ export interface DailyQuestion {
 
 export async function fetchDailyQuestions(): Promise<DailyQuestion[]> {
   const { data, error } = await supabase
-    .from('remote_questions')
+    .from(QUESTIONS_TABLE)
     .select('id, question, answers, correct_index, category_id, image_url')
     .eq('active', true)
     .order('id')
