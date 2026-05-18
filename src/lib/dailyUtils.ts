@@ -83,7 +83,11 @@ export function pickDailyQuestions<T>(items: T[], dateStr: string, count: number
   if (items.length <= count) return [...items]
   const yearMonth = dateStr.slice(0, 7)           // "2026-05"
   const rand = seededRandom(dateSeed(yearMonth))
-  const shuffled = [...items].sort(() => rand() - 0.5)
+  const shuffled = [...items]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
   const start = (weekdayIndexInMonth(dateStr) * count) % shuffled.length
   return Array.from({ length: count }, (_, i) => shuffled[(start + i) % shuffled.length])
 }
