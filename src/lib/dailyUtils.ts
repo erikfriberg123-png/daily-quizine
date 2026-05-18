@@ -1,5 +1,8 @@
-const PLAYED_PREFIX = 'dq_played_'
-const SESSION_PREFIX = 'dq_session_'
+import { getSegmentConfig } from '../config/segments'
+
+const { localStoragePrefix } = getSegmentConfig()
+const PLAYED_PREFIX = `${localStoragePrefix}played_`
+const SESSION_PREFIX = `${localStoragePrefix}session_`
 
 export interface QuizSession {
   qIndex: number

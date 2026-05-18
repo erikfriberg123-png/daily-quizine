@@ -47,7 +47,7 @@ export function Timer({ duration, timeLeft, onExpire }: Props) {
             borderRadius: 4,
             background: urgent
               ? 'linear-gradient(90deg, #C0441A 0%, #E05527 80%, #FF6633 100%)'
-              : 'linear-gradient(90deg, #C9922A 0%, #FFD700 80%, #FFF8DC 100%)',
+              : 'var(--timer-bar)',
             transition: 'width 1s linear',
           }} />
         </div>
@@ -61,7 +61,7 @@ export function Timer({ duration, timeLeft, onExpire }: Props) {
               top: '50%',
               transform: 'translateY(-50%)',
               fontSize: 12,
-              color: urgent ? '#FF6633' : '#FFD700',
+              color: urgent ? '#FF6633' : 'var(--timer-tip)',
               pointerEvents: 'none' as const,
               lineHeight: 1,
             }}

@@ -7,4 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist/quizine',
   },
+  define: {
+    __SEGMENT__: JSON.stringify('quizine'),
+  },
 })

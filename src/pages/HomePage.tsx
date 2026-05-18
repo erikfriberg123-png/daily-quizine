@@ -10,6 +10,7 @@ import { StoryModal } from '../components/StoryModal'
 import { supabase } from '../lib/supabase'
 import { ServerPlayed } from '../App'
 import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
+import { getSegmentConfig, SegmentConfig } from '../config/segments'
 
 const QUESTION_COUNT = 3
 
@@ -31,6 +32,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
+  const seg = getSegmentConfig()
   const weekend = isWeekend()
   const dateStr = getParisDate()
 
@@ -81,7 +83,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
               Quizine Daily
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
-              Quiz om krogen
+              {seg.subtitle}
             </div>
           </div>
         </div>
@@ -150,6 +152,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
             dateStr={dateStr}
             onStart={onStartQuiz}
             onLogin={() => setLoginVisible(true)}
+            seg={seg}
           />
         )}
 
@@ -184,35 +187,37 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
           >
             ✏️  Skicka in en egen fråga
           </button>
-          <button
-            onClick={() => setStoryVisible(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              width: '100%',
-              padding: '13px',
-              background: 'transparent',
-              color: 'var(--text-muted)',
-              border: '1px solid var(--border)',
-              borderRadius: 14,
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--orange)'
-              e.currentTarget.style.color = 'var(--orange)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border)'
-              e.currentTarget.style.color = 'var(--text-muted)'
-            }}
-          >
-            🍽️  Berätta en kroghistoria
-          </button>
+          {seg.showStoryButton && (
+            <button
+              onClick={() => setStoryVisible(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                width: '100%',
+                padding: '13px',
+                background: 'transparent',
+                color: 'var(--text-muted)',
+                border: '1px solid var(--border)',
+                borderRadius: 14,
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--orange)'
+                e.currentTarget.style.color = 'var(--orange)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border)'
+                e.currentTarget.style.color = 'var(--text-muted)'
+              }}
+            >
+              🍽️  Berätta en kroghistoria
+            </button>
+          )}
         </div>
 
         {/* Leaderboard always visible below */}
@@ -220,34 +225,61 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
           <Leaderboard highlightUsername={username} />
         </div>
 
-        {/* Link to main app */}
+        {/* Link to main app / back to segment selector */}
         <div style={{ marginTop: 28, textAlign: 'center' }}>
-          <a
-            href="https://quizine.se"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: 13,
-              color: 'var(--text-muted)',
-              padding: '8px 16px',
-              border: '1px solid var(--border)',
-              borderRadius: 20,
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--white)'
-              e.currentTarget.style.borderColor = 'var(--border-light)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--text-muted)'
-              e.currentTarget.style.borderColor = 'var(--border)'
-            }}
-          >
-            ⚔️ Vill du spela mer? Besök Quizine.se
-          </a>
+          {seg.showBackLink ? (
+            <a
+              href="/"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 13,
+                color: 'var(--text-muted)',
+                padding: '8px 16px',
+                border: '1px solid var(--border)',
+                borderRadius: 20,
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--white)'
+                e.currentTarget.style.borderColor = 'var(--border-light)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-muted)'
+                e.currentTarget.style.borderColor = 'var(--border)'
+              }}
+            >
+              ← Byt bransch
+            </a>
+          ) : (
+            <a
+              href="https://quizine.se"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                fontSize: 13,
+                color: 'var(--text-muted)',
+                padding: '8px 16px',
+                border: '1px solid var(--border)',
+                borderRadius: 20,
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--white)'
+                e.currentTarget.style.borderColor = 'var(--border-light)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-muted)'
+                e.currentTarget.style.borderColor = 'var(--border)'
+              }}
+            >
+              ⚔️ Vill du spela mer? Besök Quizine.se
+            </a>
+          )}
         </div>
       </main>
 
@@ -416,12 +448,14 @@ function StartView({
   dateStr,
   onStart,
   onLogin,
+  seg,
 }: {
   user: User | null
   username: string | null
   dateStr: string
   onStart: () => void
   onLogin: () => void
+  seg: SegmentConfig
 }) {
   const weekday = TODAY_WEEKDAY
   const [menuItems, setMenuItems] = useState<Array<{ name: string; emoji: string; desc: string }>>([])
@@ -437,6 +471,23 @@ function StartView({
 
   return (
     <div className="fade-in">
+      {/* EKG decoration (VOO only) */}
+      {seg.showEkg && (
+        <svg
+          style={{ width: '100%', height: 32, marginBottom: 24, opacity: 0.18 }}
+          viewBox="0 0 560 32"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <polyline
+            points="0,16 60,16 80,16 90,4 100,28 110,2 120,30 130,16 200,16 220,16 230,8 240,24 250,16 320,16 340,16 350,4 360,28 370,2 380,30 390,16 460,16 480,16 490,8 500,24 510,16 560,16"
+            stroke="var(--gold)"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )}
+
       {/* Date ornament */}
       <div style={{ textAlign: 'center', marginBottom: 20 }}>
         <span style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600 }}>
@@ -447,11 +498,11 @@ function StartView({
       {/* Hero title */}
       <div style={{ textAlign: 'center', marginBottom: 24 }}>
         <h1 style={{ fontSize: 32, fontWeight: 900, color: 'var(--cream)', lineHeight: 1.2, marginBottom: 10, margin: 0 }}>
-          Dagens quiz<br />är{' '}
-          <em style={{ color: 'var(--gold-light)', fontStyle: 'italic' }}>serverat.</em>
+          {seg.heroLine1}<br />{seg.heroLine2Start}
+          <em style={{ color: 'var(--gold-light)', fontStyle: 'italic' }}>{seg.heroEm}</em>
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginTop: 10, marginBottom: 0 }}>
-          Visa vad du kan om livet på krogen.<br />Tävla med kollegorna.
+          {seg.heroCopyLine1}<br />{seg.heroCopyLine2}
         </p>
       </div>
 
@@ -471,12 +522,12 @@ function StartView({
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div>
-            <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>Dagens meny</div>
+            <div style={{ fontWeight: 700, color: 'var(--white)', fontSize: 15 }}>{seg.cardTitle}</div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 3 }}>
               3 rätter · Max 500 XP
             </div>
           </div>
-          <div style={{ fontSize: 22 }}>📋</div>
+          <div style={{ fontSize: 22 }}>{seg.cardIcon}</div>
         </div>
 
         {/* Menu items */}
@@ -524,10 +575,10 @@ function StartView({
           <div style={{ flex: 1, height: 6, background: 'var(--border)', borderRadius: 3 }}>
             <div style={{
               height: '100%', width: '66%', borderRadius: 3,
-              background: 'linear-gradient(90deg, #C9922A 0%, #FFD700 80%, #FFF8DC 100%)',
+              background: 'var(--timer-bar)',
             }} />
           </div>
-          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--gold-light)', minWidth: 32 }}>15s</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--gold-light)', minWidth: 32 }}>20s</div>
         </div>
       </div>
 
@@ -553,7 +604,7 @@ function StartView({
           e.currentTarget.style.boxShadow = '0 4px 24px var(--gold-glow)'
         }}
       >
-        <span style={{ fontSize: 20 }}>🎯</span>
+        <span style={{ fontSize: 20 }}>{seg.startBtnIcon}</span>
         Starta dagens quiz
       </button>
 

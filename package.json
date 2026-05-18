@@ -4,7 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev:voo": "vite --config vite.config.voo.ts",
+    "build:quizine": "tsc -b && vite build",
+    "build:voo": "vite build --config vite.config.voo.ts",
+    "build": "npm run build:quizine && npm run build:voo",
     "preview": "vite preview"
   },
   "dependencies": {

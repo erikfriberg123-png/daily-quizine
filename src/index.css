@@ -36,6 +36,37 @@
   --success-bg:   rgba(91, 166, 91, 0.12);
   --error:        #FF4757;
   --error-bg:     rgba(255, 71, 87, 0.12);
+
+  --timer-bar:    linear-gradient(90deg, #C9922A 0%, #FFD700 80%, #FFF8DC 100%);
+  --timer-tip:    #FFD700;
+}
+
+/* ── VOO (Vård & Omsorg) theme ── */
+html[data-segment="voo"] {
+  --bg:           #060C0C;
+  --bg-card:      #0D1A1A;
+  --bg-card-2:    #122020;
+  --border:       #1A3030;
+  --border-light: #244040;
+
+  --gold:         #00B8A9;
+  --gold-light:   #00D4C4;
+  --gold-glow:    rgba(0, 184, 169, 0.25);
+  --rust:         #007A6E;
+  --rust-light:   #009688;
+  --cream:        #E8F4F3;
+  --white:        #E8F4F3;
+
+  --orange:       #00D4C4;
+  --orange-light: #B2F0EB;
+  --orange-dark:  #00B8A9;
+  --orange-glow:  rgba(0, 184, 169, 0.25);
+
+  --text-muted:   #4A7070;
+  --text-dim:     #2A4545;
+
+  --timer-bar:    linear-gradient(90deg, #00968A 0%, #00D4C4 80%, #B2F0EB 100%);
+  --timer-tip:    #00D4C4;
 }
 
 html, body, #root {
