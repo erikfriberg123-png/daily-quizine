@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { getParisWeekBounds, getWeekStartForDate, getWeekEndForStart } from './dailyUtils'
+import { SEGMENT } from '../config/segments'
 
 const DAILY_QUESTIONS = 3
 const POINTS_PER_CORRECT = 150
@@ -37,8 +38,9 @@ export async function submitDailyScore(params: {
       date: params.date,
       score: params.score,
       correct: params.correct,
+      segment: SEGMENT,
     },
-    { onConflict: 'user_id,date' }
+    { onConflict: 'user_id,date,segment' }
   )
   if (error) throw error
 }
@@ -49,6 +51,7 @@ export async function getWeeklyLeaderboard(): Promise<LeaderboardEntry[]> {
   const { data, error } = await supabase
     .from('daily_scores')
     .select('username, score, date')
+    .eq('segment', SEGMENT)
     .gte('date', start)
     .lte('date', end)
     .not('user_id', 'is', null)
@@ -84,6 +87,7 @@ export async function getMyTodayScore(
     .select('score, correct')
     .eq('user_id', userId)
     .eq('date', date)
+    .eq('segment', SEGMENT)
     .maybeSingle()
   if (!data) return null
   return { score: data.score as number, correct: data.correct as number }
@@ -109,6 +113,7 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
   const { data, error } = await supabase
     .from('daily_scores')
     .select('username, score, date')
+    .eq('segment', SEGMENT)
     .gte('date', yearStart)
     .not('user_id', 'is', null)
     .order('date', { ascending: true })
@@ -159,6 +164,7 @@ export async function getUserWeekScore(userId: string): Promise<number> {
     .from('daily_scores')
     .select('score')
     .eq('user_id', userId)
+    .eq('segment', SEGMENT)
     .gte('date', start)
     .lte('date', end)
 
