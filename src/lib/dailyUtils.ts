@@ -3,6 +3,7 @@ import { getSegmentConfig } from '../config/segments'
 const { localStoragePrefix } = getSegmentConfig()
 const PLAYED_PREFIX = `${localStoragePrefix}played_`
 const SESSION_PREFIX = `${localStoragePrefix}session_`
+const SELECTION_PREFIX = `${localStoragePrefix}sel_`
 
 export interface QuizSession {
   qIndex: number
@@ -152,4 +153,22 @@ export function getParisWeekBounds(): { start: string; end: string } {
     }).format(d)
 
   return { start: fmt(monday), end: fmt(sunday) }
+}
+
+export function getCachedDailySelection(dateStr: string): string[] | null {
+  try {
+    const raw = localStorage.getItem(SELECTION_PREFIX + dateStr)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed) || parsed.length === 0) return null
+    return parsed as string[]
+  } catch {
+    return null
+  }
+}
+
+export function cacheDailySelection(dateStr: string, ids: string[]): void {
+  try {
+    localStorage.setItem(SELECTION_PREFIX + dateStr, JSON.stringify(ids))
+  } catch { /* storage unavailable */ }
 }

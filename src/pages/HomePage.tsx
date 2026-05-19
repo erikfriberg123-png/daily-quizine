@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
-import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate, pickDailyQuestions } from '../lib/dailyUtils'
+import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate, pickDailyQuestions, getCachedDailySelection, cacheDailySelection } from '../lib/dailyUtils'
 import { fetchDailyQuestions } from '../lib/questions'
 import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
@@ -459,7 +459,17 @@ function StartView({
   useEffect(() => {
     fetchDailyQuestions()
       .then(all => {
-        const daily = pickDailyQuestions(all, dateStr, 3)
+        let daily
+        const cachedIds = getCachedDailySelection(dateStr)
+        if (cachedIds) {
+          const idMap = new Map(all.map(q => [q.id, q]))
+          const restored = cachedIds.map(id => idMap.get(id)).filter(q => !!q)
+          daily = restored.length === 3 ? restored : pickDailyQuestions(all, dateStr, 3)
+          if (restored.length !== 3) cacheDailySelection(dateStr, daily.map(q => q.id))
+        } else {
+          daily = pickDailyQuestions(all, dateStr, 3)
+          cacheDailySelection(dateStr, daily.map(q => q.id))
+        }
         setMenuItems(daily.map(q => CATEGORY_DISPLAY[q.categoryId] ?? { name: q.categoryId, emoji: '❓', desc: '' }))
       })
       .catch(() => {})

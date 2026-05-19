@@ -1,7 +1,7 @@
 ﻿import { useEffect, useRef, useState, useCallback } from 'react'
 import { User } from '@supabase/supabase-js'
 import { fetchDailyQuestions, DailyQuestion } from '../lib/questions'
-import { getParisDate, pickDailyQuestions, saveTodayPlayedData, getActiveSession, saveActiveSession, clearActiveSession } from '../lib/dailyUtils'
+import { getParisDate, pickDailyQuestions, saveTodayPlayedData, getActiveSession, saveActiveSession, clearActiveSession, getCachedDailySelection, cacheDailySelection } from '../lib/dailyUtils'
 import { submitDailyScore } from '../lib/dailyScores'
 import { Timer } from '../components/Timer'
 import { AnswerButton } from '../components/AnswerButton'
@@ -46,7 +46,18 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
   useEffect(() => {
     fetchDailyQuestions()
       .then((all) => {
-        const daily = pickDailyQuestions(all, getParisDate(), QUESTION_COUNT)
+        const dateStr = getParisDate()
+        let daily: DailyQuestion[]
+        const cachedIds = getCachedDailySelection(dateStr)
+        if (cachedIds) {
+          const idMap = new Map(all.map(q => [q.id, q]))
+          const restored = cachedIds.map(id => idMap.get(id)).filter((q): q is DailyQuestion => !!q)
+          daily = restored.length === QUESTION_COUNT ? restored : pickDailyQuestions(all, dateStr, QUESTION_COUNT)
+          if (restored.length !== QUESTION_COUNT) cacheDailySelection(dateStr, daily.map(q => q.id))
+        } else {
+          daily = pickDailyQuestions(all, dateStr, QUESTION_COUNT)
+          cacheDailySelection(dateStr, daily.map(q => q.id))
+        }
         const session = getActiveSession()
 
         if (session) {
