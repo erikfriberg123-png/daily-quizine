@@ -31,6 +31,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
   const [answered, setAnswered] = useState(false)
   const [answerStates, setAnswerStates] = useState<AnswerState[]>(['idle', 'idle', 'idle', 'idle'])
   const [showNext, setShowNext] = useState(false)
+  const [lastWasWrong, setLastWasWrong] = useState(false)
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const showNextTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -105,6 +106,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
       const gained = isCorrect ? 150 : 0
 
       setAnswered(true)
+      setLastWasWrong(!isCorrect)
       setScore((s) => s + gained)
       if (isCorrect) setCorrect((c) => c + 1)
 
@@ -128,6 +130,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
     if (loading || questions.length === 0) return
     answeredRef.current = false
     setAnswered(false)
+    setLastWasWrong(false)
     setAnswerStates(['idle', 'idle', 'idle', 'idle'])
     setShowNext(false)
     setTimeLeft(TIMER_SECONDS)
@@ -364,7 +367,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
           ))}
         </div>
 
-        {/* Next button */}
+        {/* Next button + explanation */}
         <div
           style={{
             marginTop: 'auto',
@@ -375,6 +378,22 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
             pointerEvents: showNext ? 'auto' : 'none',
           }}
         >
+          {lastWasWrong && (
+            <div
+              style={{
+                background: 'var(--bg-card)',
+                borderLeft: '3px solid #ff5a5a',
+                borderRadius: 12,
+                padding: '12px 14px',
+                marginBottom: 12,
+                fontSize: 14,
+                color: 'var(--text-muted)',
+                lineHeight: 1.55,
+              }}
+            >
+              {q.forklaring ?? 'Ingen förklaring ännu'}
+            </div>
+          )}
           <button
             onClick={handleNext}
             style={{

@@ -10,12 +10,13 @@ export interface DailyQuestion {
   correctIndex: 0 | 1 | 2 | 3
   categoryId: string
   imageUrl?: string
+  forklaring?: string
 }
 
 export async function fetchDailyQuestions(): Promise<DailyQuestion[]> {
   const { data, error } = await supabase
     .from(QUESTIONS_TABLE)
-    .select('id, question, answers, correct_index, category_id, image_url')
+    .select('id, question, answers, correct_index, category_id, image_url, forklaring')
     .eq('active', true)
     .order('id')
 
@@ -28,5 +29,6 @@ export async function fetchDailyQuestions(): Promise<DailyQuestion[]> {
     correctIndex: row.correct_index as 0 | 1 | 2 | 3,
     categoryId: row.category_id as string,
     ...(row.image_url ? { imageUrl: row.image_url as string } : {}),
+    ...(row.forklaring ? { forklaring: row.forklaring as string } : {}),
   }))
 }
