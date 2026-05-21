@@ -2,6 +2,7 @@
 import { User } from '@supabase/supabase-js'
 import { submitDailyScore } from '../lib/dailyScores'
 import { Leaderboard } from '../components/Leaderboard'
+import { getSegmentConfig } from '../config/segments'
 import { LoginModal } from '../components/LoginModal'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
 import { FeedbackModal } from '../components/FeedbackModal'
@@ -50,6 +51,7 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
 
+  const seg = getSegmentConfig()
   const pct = Math.round((result.correct / result.total) * 100)
   const emoji = scoreEmoji(result.correct, result.total)
   const message = scoreMessage(result.correct, result.total)
@@ -290,6 +292,40 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
           </div>
         )}
 
+        {/* Play more CTA */}
+        <style>{`
+          @keyframes cta-attract {
+            0%   { transform: scale(1.04); box-shadow: 0 0 0 6px rgba(29,111,232,0.45), 0 8px 32px rgba(29,111,232,0.55); }
+            60%  { transform: scale(1.01); box-shadow: 0 0 0 0px rgba(29,111,232,0), 0 6px 24px rgba(29,111,232,0.35); }
+            100% { transform: scale(1);    box-shadow: 0 4px 20px var(--blue-glow); }
+          }
+          .cta-attract { animation: cta-attract 2s cubic-bezier(0.22,1,0.36,1) forwards; }
+        `}</style>
+        <a
+          href={seg.ctaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cta-attract"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            padding: '16px',
+            background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
+            color: '#fff',
+            borderRadius: 14,
+            fontSize: 16,
+            fontWeight: 700,
+            textAlign: 'center',
+            boxShadow: '0 4px 20px var(--blue-glow)',
+            marginBottom: 20,
+            textDecoration: 'none',
+          }}
+        >
+          {seg.ctaLabel}
+        </a>
+
         {/* Leaderboard */}
         <Leaderboard highlightUsername={username} />
 
@@ -366,27 +402,6 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
             ← Tillbaka till startsidan
           </button>
 
-          <a
-            href="https://quizine.se"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              padding: '14px',
-              background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
-              color: '#fff',
-              borderRadius: 14,
-              fontSize: 15,
-              fontWeight: 700,
-              textAlign: 'center',
-              boxShadow: '0 4px 20px var(--blue-glow)',
-            }}
-          >
-            ⚔️ Spela mer på Quizine.se
-          </a>
         </div>
       </main>
 

@@ -19,6 +19,7 @@ interface Props {
   username: string | null
   serverPlayed: ServerPlayed | null
   serverPlayedChecked: boolean
+  justCompleted: boolean
   onStartQuiz: () => void
   onAuthChange: (user: User | null) => void
 }
@@ -27,7 +28,7 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, onStartQuiz, onAuthChange }: Props) {
+export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -216,66 +217,50 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
           )}
         </div>
 
-        {/* Leaderboard always visible below */}
-        <div style={{ marginTop: 32 }}>
-          <Leaderboard highlightUsername={username} />
+        {/* Play more CTA */}
+        <style>{`
+          @keyframes cta-attract {
+            0%   { transform: scale(1.04); box-shadow: 0 0 0 6px rgba(29,111,232,0.45), 0 8px 32px rgba(29,111,232,0.55); }
+            60%  { transform: scale(1.01); box-shadow: 0 0 0 0px rgba(29,111,232,0), 0 6px 24px rgba(29,111,232,0.35); }
+            100% { transform: scale(1);    box-shadow: 0 4px 20px var(--blue-glow); }
+          }
+          .cta-attract { animation: cta-attract 2s cubic-bezier(0.22,1,0.36,1) forwards; }
+        `}</style>
+        <div style={{ marginTop: 20 }}>
+          <a
+            href={seg.ctaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={justCompleted ? 'cta-attract' : undefined}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '15px',
+              background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
+              color: '#fff',
+              borderRadius: 14,
+              fontSize: 15,
+              fontWeight: 700,
+              textDecoration: 'none',
+              boxShadow: '0 4px 20px var(--blue-glow)',
+            }}
+          >
+            {seg.ctaLabel}
+          </a>
+          {seg.showBackLink && (
+            <div style={{ textAlign: 'center', marginTop: 12 }}>
+              <a href="/" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>
+                ← Byt bransch
+              </a>
+            </div>
+          )}
         </div>
 
-        {/* Link to main app / back to segment selector */}
-        <div style={{ marginTop: 28, textAlign: 'center' }}>
-          {seg.showBackLink ? (
-            <a
-              href="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                fontSize: 13,
-                color: 'var(--text-muted)',
-                padding: '8px 16px',
-                border: '1px solid var(--border)',
-                borderRadius: 20,
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--white)'
-                e.currentTarget.style.borderColor = 'var(--border-light)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--text-muted)'
-                e.currentTarget.style.borderColor = 'var(--border)'
-              }}
-            >
-              ← Byt bransch
-            </a>
-          ) : (
-            <a
-              href="https://quizine.se"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                fontSize: 13,
-                color: 'var(--text-muted)',
-                padding: '8px 16px',
-                border: '1px solid var(--border)',
-                borderRadius: 20,
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--white)'
-                e.currentTarget.style.borderColor = 'var(--border-light)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--text-muted)'
-                e.currentTarget.style.borderColor = 'var(--border)'
-              }}
-            >
-              ⚔️ Vill du spela mer? Besök Quizine.se
-            </a>
-          )}
+        {/* Leaderboard */}
+        <div style={{ marginTop: 24 }}>
+          <Leaderboard highlightUsername={username} />
         </div>
       </main>
 

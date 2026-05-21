@@ -15,6 +15,8 @@ export interface SegmentConfig {
   showBackLink: boolean
   localStoragePrefix: string
   showEkg: boolean
+  ctaUrl: string
+  ctaLabel: string
 }
 
 export const SEGMENT: string = __SEGMENT__
@@ -37,6 +39,8 @@ const CONFIGS: Record<string, SegmentConfig> = {
     showBackLink: false,
     localStoragePrefix: 'dq_',
     showEkg: false,
+    ctaUrl: 'https://quizine.se',
+    ctaLabel: '⚔️ Vill du spela mer? Besök Quizine.se',
   },
   voo: {
     id: 'voo',
@@ -55,6 +59,8 @@ const CONFIGS: Record<string, SegmentConfig> = {
     showBackLink: true,
     localStoragePrefix: 'voo_',
     showEkg: true,
+    ctaUrl: 'https://voo.quizine.se',
+    ctaLabel: '🩺 Vill du spela mer? Besök voo.quizine.se',
   },
 }
 

@@ -28,6 +28,7 @@ export default function App() {
   const [result, setResult] = useState<QuizResult | null>(null)
   const [serverPlayed, setServerPlayed] = useState<ServerPlayed | null>(null)
   const [serverPlayedChecked, setServerPlayedChecked] = useState(false)
+  const [justCompleted, setJustCompleted] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -90,6 +91,7 @@ export default function App() {
           username={username}
           serverPlayed={serverPlayed}
           serverPlayedChecked={serverPlayedChecked}
+          justCompleted={justCompleted}
           onStartQuiz={() => setView('quiz')}
           onAuthChange={handleAuthChange}
         />
@@ -107,7 +109,7 @@ export default function App() {
           result={result}
           user={user}
           username={username}
-          onPlayAgain={() => setView('home')}
+          onPlayAgain={() => { setJustCompleted(true); setView('home') }}
           onAuthChange={handleAuthChange}
         />
       )}
