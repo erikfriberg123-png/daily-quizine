@@ -17,6 +17,7 @@ export interface LeaderboardEntry {
   username: string
   total_score: number
   days_played: number
+  last_played_date: string
   rank: number
 }
 
@@ -60,18 +61,24 @@ export async function getWeeklyLeaderboard(): Promise<LeaderboardEntry[]> {
   if (error) throw error
 
   // Aggregate by username client-side
-  const map = new Map<string, { total: number; days: number }>()
+  const map = new Map<string, { total: number; days: number; lastPlayed: string }>()
   for (const row of data ?? []) {
     const key = row.username as string
-    const prev = map.get(key) ?? { total: 0, days: 0 }
-    map.set(key, { total: prev.total + (row.score as number), days: prev.days + 1 })
+    const prev = map.get(key) ?? { total: 0, days: 0, lastPlayed: '' }
+    const rowDate = row.date as string
+    map.set(key, {
+      total: prev.total + (row.score as number),
+      days: prev.days + 1,
+      lastPlayed: rowDate > prev.lastPlayed ? rowDate : prev.lastPlayed,
+    })
   }
 
   return Array.from(map.entries())
-    .map(([username, { total, days }]) => ({
+    .map(([username, { total, days, lastPlayed }]) => ({
       username,
       total_score: total,
       days_played: days,
+      last_played_date: lastPlayed,
       rank: 0,
     }))
     .sort((a, b) => b.total_score - a.total_score)
@@ -128,7 +135,7 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
     yearMap.set(row.username, { total: prev.total + row.score, days: prev.days + 1 })
   }
   const yearlyTop: LeaderboardEntry[] = Array.from(yearMap.entries())
-    .map(([username, { total, days }]) => ({ username, total_score: total, days_played: days, rank: 0 }))
+    .map(([username, { total, days }]) => ({ username, total_score: total, days_played: days, last_played_date: '', rank: 0 }))
     .sort((a, b) => b.total_score - a.total_score)
     .slice(0, 20)
     .map((e, i) => ({ ...e, rank: i + 1 }))

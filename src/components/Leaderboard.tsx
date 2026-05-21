@@ -1,6 +1,18 @@
 ﻿import { useEffect, useState } from 'react'
 import { getWeeklyLeaderboard, LeaderboardEntry } from '../lib/dailyScores'
+import { getParisDate } from '../lib/dailyUtils'
 import { HallOfFameModal } from './HallOfFameModal'
+
+function lastPlayedLabel(lastPlayedDate: string): string {
+  const today = getParisDate()
+  if (!lastPlayedDate) return ''
+  if (lastPlayedDate === today) return 'idag'
+  const todayMs = new Date(today).getTime()
+  const playedMs = new Date(lastPlayedDate).getTime()
+  const days = Math.round((todayMs - playedMs) / 86400000)
+  if (days === 1) return 'igår'
+  return `${days} dagar sedan`
+}
 
 interface Props {
   highlightUsername?: string | null
@@ -127,7 +139,7 @@ export function Leaderboard({ highlightUsername }: Props) {
                     {entry.total_score.toLocaleString('sv-SE')}
                   </div>
                   <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 1 }}>
-                    {entry.days_played} dag{entry.days_played !== 1 ? 'ar' : ''}
+                    {lastPlayedLabel(entry.last_played_date)}
                   </div>
                 </div>
               </div>
