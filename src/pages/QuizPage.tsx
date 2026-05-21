@@ -5,7 +5,7 @@ import { getParisDate, pickDailyQuestions, saveTodayPlayedData, getActiveSession
 import { submitDailyScore } from '../lib/dailyScores'
 import { Timer } from '../components/Timer'
 import { AnswerButton } from '../components/AnswerButton'
-import { CATEGORY_DISPLAY } from '../lib/categories'
+import { CATEGORY_DISPLAY, CATEGORY_COLORS } from '../lib/categories'
 
 const QUESTION_COUNT = 3
 const TIMER_SECONDS = 20
@@ -378,22 +378,22 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
             pointerEvents: showNext ? 'auto' : 'none',
           }}
         >
-          {lastWasWrong && !!q.forklaring?.trim() && q.forklaring.trim().toLowerCase() !== 'förklaring saknas' && (
-            <div
-              style={{
-                background: 'var(--bg-card)',
-                borderLeft: '3px solid #ff5a5a',
-                borderRadius: 12,
-                padding: '12px 14px',
-                marginBottom: 12,
-                fontSize: 14,
-                color: 'var(--text-muted)',
-                lineHeight: 1.55,
-              }}
-            >
-              {q.forklaring.trim()}
-            </div>
-          )}
+          <div
+            style={{
+              background: 'var(--bg-card)',
+              border: `1.5px solid ${CATEGORY_COLORS[q.categoryId] ?? 'var(--blue)'}`,
+              borderRadius: 12,
+              padding: '12px 14px',
+              marginBottom: 12,
+              fontSize: 14,
+              color: 'var(--text-muted)',
+              lineHeight: 1.55,
+            }}
+          >
+            {!!q.forklaring?.trim() && q.forklaring.trim().toLowerCase() !== 'förklaring saknas'
+              ? q.forklaring.trim()
+              : 'Ingen förklaring'}
+          </div>
           <button
             onClick={handleNext}
             style={{

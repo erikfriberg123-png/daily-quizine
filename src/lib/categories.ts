@@ -26,3 +26,27 @@ export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; des
 }
 
 export const ROMAN = ['I.', 'II.', 'III.']
+
+export const CATEGORY_COLORS: Record<string, string> = {
+  food: '#FF6B35',
+  drink: '#8B2FC9',
+  famous_profiles: '#E8B84B',
+  professional: '#F7C948',
+  service_guests: '#2EC4B6',
+  industry_culture: '#9B5DE5',
+  fun_reallife: '#F15BB5',
+  labor_law: '#3A86FF',
+  food_cost: '#06D6A0',
+  scheduling_labor: '#FFB347',
+  guest_psychology: '#FF6B9D',
+  service_pressure: '#FF5555',
+  anatomy_body: '#FF6B35',
+  diagnoses_symptoms: '#9B5DE5',
+  emergency_firstaid: '#FF5555',
+  ethics_communication: '#2EC4B6',
+  infections_hygiene: '#06D6A0',
+  medical_history: '#E8B84B',
+  medications_pharma: '#3A86FF',
+  popculture_healthcare: '#F15BB5',
+  psychiatry_psychology: '#8B2FC9',
+}
