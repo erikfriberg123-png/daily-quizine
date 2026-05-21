@@ -378,7 +378,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
             pointerEvents: showNext ? 'auto' : 'none',
           }}
         >
-          {lastWasWrong && (
+          {lastWasWrong && !!q.forklaring?.trim() && q.forklaring.trim().toLowerCase() !== 'förklaring saknas' && (
             <div
               style={{
                 background: 'var(--bg-card)',
@@ -391,7 +391,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
                 lineHeight: 1.55,
               }}
             >
-              {q.forklaring ?? 'Ingen förklaring ännu'}
+              {q.forklaring.trim()}
             </div>
           )}
           <button
