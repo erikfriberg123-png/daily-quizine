@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+﻿import { useState, useEffect, useRef } from 'react'
 import { User } from '@supabase/supabase-js'
 import { submitDailyScore } from '../lib/dailyScores'
 import { Leaderboard } from '../components/Leaderboard'
@@ -50,15 +50,21 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const submittingRef = useRef(false)
 
   const seg = getSegmentConfig()
   const pct = Math.round((result.correct / result.total) * 100)
   const emoji = scoreEmoji(result.correct, result.total)
   const message = scoreMessage(result.correct, result.total)
 
-  // Auto-submit when user is already logged in
+  // Auto-submit when user is already logged in.
+  // Guard via ref instead of state to prevent an infinite retry loop: if the
+  // submission fails silently, having `submitting` in the dep array would
+  // re-trigger the effect each time it toggles false→true→false, causing the
+  // "Sparar poäng…" row to flash and the page content to shake.
   useEffect(() => {
-    if (user && username && !submitted && !submitting) {
+    if (user && username && !submitted && !submittingRef.current) {
+      submittingRef.current = true
       setSubmitting(true)
       submitDailyScore({
         userId: user.id,
@@ -69,9 +75,12 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
       })
         .then(() => setSubmitted(true))
         .catch(() => {})
-        .finally(() => setSubmitting(false))
+        .finally(() => {
+          setSubmitting(false)
+          submittingRef.current = false
+        })
     }
-  }, [user, username, submitted, submitting, result])
+  }, [user, username, submitted, result])
 
   const handlePostLoginSubmit = async (u: User, uname: string) => {
     setSubmitting(true)
