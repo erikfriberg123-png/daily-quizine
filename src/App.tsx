@@ -6,9 +6,8 @@ import { getParisDate } from './lib/dailyUtils'
 import HomePage from './pages/HomePage'
 import QuizPage from './pages/QuizPage'
 import ResultsPage from './pages/ResultsPage'
-import TrueFalsePage from './pages/TrueFalsePage'
 
-type View = 'home' | 'quiz' | 'results' | 'tf'
+type View = 'home' | 'quiz' | 'results'
 
 interface QuizResult {
   score: number
@@ -94,7 +93,6 @@ export default function App() {
           serverPlayedChecked={serverPlayedChecked}
           justCompleted={justCompleted}
           onStartQuiz={() => setView('quiz')}
-          onStartTrueFalse={() => setView('tf')}
           onAuthChange={handleAuthChange}
         />
       )}
@@ -106,10 +104,7 @@ export default function App() {
           onExit={() => setView('home')}
         />
       )}
-      {view === 'tf' && (
-        <TrueFalsePage onExit={() => setView('home')} />
-      )}
-      {view === 'results' && result && (
+{view === 'results' && result && (
         <ResultsPage
           result={result}
           user={user}
