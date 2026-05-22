@@ -29,7 +29,7 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onStartTrueFalse, onAuthChange }: Props) {
+export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onStartTrueFalse: _onStartTrueFalse, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -622,7 +622,7 @@ function StartView({
   )
 }
 
-function TrueFalseCard({ onStart }: { onStart: () => void }) {
+function _TrueFalseCard({ onStart }: { onStart: () => void }) {
   const LEVELS = [
     { label: 'Lätt',  color: 'var(--success)' },
     { label: 'Medel', color: 'var(--orange)' },
