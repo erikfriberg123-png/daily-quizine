@@ -106,6 +106,7 @@ export function FeedbackModal({ user, username, onClose }: Props) {
             <textarea
               value={text}
               onChange={(e) => { setText(e.target.value); setError('') }}
+              onFocus={(e) => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350) }}
               placeholder="Skriv ditt meddelande..."
               maxLength={1000}
               rows={5}
