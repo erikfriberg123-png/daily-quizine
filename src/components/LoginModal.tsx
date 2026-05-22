@@ -2,6 +2,7 @@
 import { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { getLockedSeconds, recordAuthFailure, clearAuthRateLimit } from '../lib/authRateLimit'
+import { useKeyboardOffset } from '../hooks/useKeyboardOffset'
 
 interface Props {
   onSuccess: (user: User) => void
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function LoginModal({ onSuccess, onClose, hint }: Props) {
+  const keyboardOffset = useKeyboardOffset()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -61,19 +63,30 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(3,12,26,0.85)',
-        backdropFilter: 'blur(6px)',
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        zIndex: 100,
-        padding: 16,
-      }}
+      style={{ position: 'fixed', inset: 0, zIndex: 100 }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(3,12,26,0.85)',
+          backdropFilter: 'blur(6px)',
+        }}
+        onClick={onClose}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: keyboardOffset,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '0 16px',
+          transition: 'bottom 0.2s ease',
+        }}
+      >
       <div
         className="fade-in"
         style={{
@@ -84,6 +97,8 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
           width: '100%',
           maxWidth: 420,
           marginBottom: 8,
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {done ? (
@@ -198,6 +213,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
             </button>
           </>
         )}
+      </div>
       </div>
     </div>
   )

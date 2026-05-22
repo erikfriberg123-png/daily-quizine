@@ -13,7 +13,10 @@ export function useKeyboardOffset(): number {
     if (!vv) return
 
     const update = () => {
-      const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop)
+      // Do not subtract vv.offsetTop: when the page is scrolled before the modal
+      // opens, offsetTop equals the scroll position and would cancel out the
+      // keyboard height, leaving the sheet stuck behind the keyboard.
+      const kb = Math.max(0, window.innerHeight - vv.height)
       setOffset(kb)
     }
 
