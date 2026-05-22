@@ -87,6 +87,7 @@ export default function TrueFalsePage({ onExit }: Props) {
 
   const handleNextLevel = () => setLevel((l) => Math.min(l + 1, TF_MAX_LEVEL) as TFLevel)
   const handleRetry = () => setLoadKey((k) => k + 1)
+  const handleRestart = () => { setLevel(1); setLoadKey((k) => k + 1) }
 
   const cfg = TF_LEVEL_CONFIG[level]
 
@@ -122,6 +123,7 @@ export default function TrueFalsePage({ onExit }: Props) {
         failedAt={failedAt}
         onNextLevel={handleNextLevel}
         onRetry={handleRetry}
+        onRestart={handleRestart}
         onExit={onExit}
       />
     )
@@ -237,7 +239,7 @@ function TFBtn({ index, label, icon, answerState, chosenIndex, correctIndex, onC
 
 /* ─── Splash ─────────────────────────────────────────────────────────────── */
 
-function Splash({ type, level, questions, failedQuestion, failedAt, onNextLevel, onRetry, onExit }: {
+function Splash({ type, level, questions, failedQuestion, failedAt, onNextLevel, onRetry, onRestart, onExit }: {
   type: SplashType
   level: TFLevel
   questions: TrueFalseQuestion[]
@@ -245,6 +247,7 @@ function Splash({ type, level, questions, failedQuestion, failedAt, onNextLevel,
   failedAt: number
   onNextLevel: () => void
   onRetry: () => void
+  onRestart: () => void
   onExit: () => void
 }) {
   const cfg = TF_LEVEL_CONFIG[level]
@@ -262,7 +265,7 @@ function Splash({ type, level, questions, failedQuestion, failedAt, onNextLevel,
             Du klarade alla 3 nivåer av Sant eller Falskt.<br />Imponerande!
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-            <button onClick={onRetry} style={{ ...btnPrimary, background: 'linear-gradient(135deg, var(--gold) 0%, var(--rust) 100%)', color: 'var(--cream)' }}>
+            <button onClick={onRestart} style={{ ...btnPrimary, background: 'linear-gradient(135deg, var(--gold) 0%, var(--rust) 100%)', color: 'var(--cream)' }}>
               🔄 Spela igen från Level 1
             </button>
             <button onClick={onExit} style={btnSecondary}>← Tillbaka till menyn</button>

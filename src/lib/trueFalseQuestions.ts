@@ -25,20 +25,25 @@ export const TF_QUESTIONS_PER_LEVEL = 10
 export async function fetchTrueFalseQuestions(level: TFLevel): Promise<TrueFalseQuestion[]> {
   const { data, error } = await supabase
     .from(TABLE)
-    .select('id, question, correct_index, category_id, forklaring')
+    .select('id, question, correct_index, category_id, forklaring, answers')
     .eq('active', true)
     .eq('difficulty', TF_LEVEL_CONFIG[level].difficulty)
     .order('id')
 
   if (error) throw error
 
-  return (data ?? []).map((row) => ({
-    id: row.id as string,
-    question: row.question as string,
-    correctIndex: row.correct_index as 0 | 1,
-    categoryId: row.category_id as string,
-    ...(row.forklaring ? { forklaring: row.forklaring as string } : {}),
-  }))
+  return (data ?? [])
+    .filter((row) => {
+      const ans = row.answers as string[] | null
+      return ans?.[0]?.toLowerCase() === 'sant' && ans?.[1]?.toLowerCase() === 'falskt'
+    })
+    .map((row) => ({
+      id: row.id as string,
+      question: row.question as string,
+      correctIndex: row.correct_index as 0 | 1,
+      categoryId: row.category_id as string,
+      ...(row.forklaring ? { forklaring: row.forklaring as string } : {}),
+    }))
 }
 
 export function pickTFQuestions(all: TrueFalseQuestion[], count: number): TrueFalseQuestion[] {

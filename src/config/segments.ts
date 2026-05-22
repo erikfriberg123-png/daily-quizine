@@ -59,8 +59,8 @@ const CONFIGS: Record<string, SegmentConfig> = {
     showBackLink: true,
     localStoragePrefix: 'voo_',
     showEkg: true,
-    ctaUrl: 'https://voo.quizine.se',
-    ctaLabel: '🩺 Vill du spela mer? Besök voo.quizine.se',
+    ctaUrl: 'https://quizine.se',
+    ctaLabel: '🩺 Vill du spela mer? Besök quizine.se',
   },
 }
 

@@ -154,9 +154,6 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
           />
         )}
 
-        {/* Sant eller Falskt entry card */}
-        <TrueFalseCard onStart={onStartTrueFalse} />
-
         {/* Create question button — always visible */}
         <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <button
