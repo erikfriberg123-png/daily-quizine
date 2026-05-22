@@ -21,6 +21,7 @@ interface Props {
   serverPlayedChecked: boolean
   justCompleted: boolean
   onStartQuiz: () => void
+  onStartTrueFalse: () => void
   onAuthChange: (user: User | null) => void
 }
 
@@ -28,7 +29,7 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange }: Props) {
+export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onStartTrueFalse, onAuthChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -152,6 +153,9 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
             seg={seg}
           />
         )}
+
+        {/* Sant eller Falskt entry card */}
+        <TrueFalseCard onStart={onStartTrueFalse} />
 
         {/* Create question button — always visible */}
         <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -617,6 +621,86 @@ function StartView({
           <strong style={{ color: 'var(--gold-light)' }}>{username}</strong>
         </div>
       )}
+    </div>
+  )
+}
+
+function TrueFalseCard({ onStart }: { onStart: () => void }) {
+  const LEVELS = [
+    { label: 'Lätt',  color: 'var(--success)' },
+    { label: 'Medel', color: 'var(--orange)' },
+    { label: 'Svår',  color: 'var(--error)' },
+  ]
+
+  return (
+    <div
+      style={{
+        marginTop: 20,
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: 20,
+        overflow: 'hidden',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+      }}
+    >
+      {/* Header */}
+      <div style={{
+        padding: '16px 20px 14px',
+        borderBottom: '1px solid var(--border)',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--white)' }}>🧠 Sant eller Falskt</div>
+          <div style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: 1, textTransform: 'uppercase', marginTop: 3 }}>
+            10 frågor per nivå · 3 nivåer
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {LEVELS.map((l) => (
+            <span
+              key={l.label}
+              style={{
+                fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 20,
+                background: 'var(--bg-card-2)', color: l.color,
+                border: `1px solid ${l.color}`, letterSpacing: 0.5,
+              }}
+            >
+              {l.label}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Description row */}
+      <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+        Klara alla 10 frågor rätt för att gå vidare. Ett fel svar och du börjar om!
+      </div>
+
+      {/* Start button */}
+      <div style={{ padding: '14px 16px' }}>
+        <button
+          onClick={onStart}
+          style={{
+            width: '100%', padding: '13px',
+            background: 'linear-gradient(135deg, var(--bg-card-2) 0%, #0A1628 100%)',
+            color: 'var(--white)',
+            border: '1.5px solid var(--border-light)',
+            borderRadius: 14, fontSize: 15, fontWeight: 700,
+            cursor: 'pointer', transition: 'all 0.2s',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = 'var(--gold)'
+            e.currentTarget.style.color = 'var(--gold-light)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'var(--border-light)'
+            e.currentTarget.style.color = 'var(--white)'
+          }}
+        >
+          <span>🧠</span> Starta Sant eller Falskt
+        </button>
+      </div>
     </div>
   )
 }
