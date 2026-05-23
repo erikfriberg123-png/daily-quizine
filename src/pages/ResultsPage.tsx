@@ -301,6 +301,11 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
           </div>
         )}
 
+        {/* Feedback label */}
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+          Feedback?
+        </div>
+
         {/* Play more CTA */}
         <style>{`
           @keyframes cta-attract {
