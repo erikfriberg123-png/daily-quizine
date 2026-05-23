@@ -30,7 +30,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
     setAppleLoading(true)
     await supabase.auth.signInWithOAuth({
       provider: 'apple',
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: window.location.origin + import.meta.env.BASE_URL },
     })
     setAppleLoading(false)
   }

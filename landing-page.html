@@ -392,6 +392,7 @@
       font-family: inherit;
       margin-bottom: 10px;
       transition: border-color 0.2s;
+      box-sizing: border-box;
     }
     .input-field:focus { outline: none; border-color: var(--gold); }
     .input-field::placeholder { color: var(--text-dim); }
@@ -408,6 +409,7 @@
       transition: opacity 0.2s;
     }
     .btn-submit:hover { opacity: 0.9; }
+    .btn-submit:disabled { opacity: 0.5; cursor: default; }
 
     .modal-close {
       position: absolute;
@@ -416,6 +418,64 @@
       color: var(--text-muted);
       font-size: 20px;
       cursor: pointer;
+    }
+
+    .modal-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 14px;
+    }
+    .modal-divider .line { flex: 1; height: 1px; background: var(--border-light); }
+    .modal-divider span { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+
+    .btn-apple {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px;
+      background: #000;
+      color: #fff;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .btn-apple:hover { background: #1a1a1a; }
+    .btn-apple:disabled { background: #333; cursor: default; }
+
+    .modal-error {
+      font-size: 13px;
+      color: #ff6b6b;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: none;
+    }
+
+    .modal-toggle {
+      display: block;
+      margin: 14px auto 0;
+      background: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-family: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .btn-logout {
+      font-size: 12px;
+      color: var(--text-dim);
+      background: none;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -440,7 +500,9 @@
       </div>
     </div>
     <div class="header-right">
-      <button class="btn-login" onclick="openLogin()">Logga in</button>
+      <span id="header-username" style="font-size:13px;color:var(--text-muted);display:none;"></span>
+      <button class="btn-logout" id="btn-logout" onclick="handleLogout()">Logga ut</button>
+      <button class="btn-login" id="btn-login" onclick="openLogin()">Logga in</button>
     </div>
   </header>
 
@@ -584,33 +646,158 @@
   <div class="modal-overlay" id="login-overlay" onclick="handleOverlayClick(event)">
     <div class="modal" style="position:relative">
       <button class="modal-close" onclick="closeLogin()">✕</button>
-      <div class="modal-title">Välkommen tillbaka</div>
-      <div class="modal-sub">
-        Logga in för att spara din streak, synas på topplistan och gå direkt till ditt quiz.
+      <div class="modal-title" id="modal-title">Logga in</div>
+      <div class="modal-sub" id="modal-sub">Samma konto som Quizine.se</div>
+
+      <input class="input-field" type="email" placeholder="E-postadress" id="email-input" onkeydown="if(event.key==='Enter')handleEmailAuth()"/>
+      <input class="input-field" type="password" placeholder="Lösenord" id="password-input" onkeydown="if(event.key==='Enter')handleEmailAuth()"/>
+
+      <div class="modal-error" id="modal-error"></div>
+
+      <button class="btn-submit" id="btn-submit" onclick="handleEmailAuth()">Logga in</button>
+
+      <div class="modal-divider">
+        <div class="line"></div>
+        <span>eller</span>
+        <div class="line"></div>
       </div>
-      <input class="input-field" type="email" placeholder="E-postadress" id="email-input"/>
-      <input class="input-field" type="password" placeholder="Lösenord" />
-      <button class="btn-submit">Logga in</button>
+
+      <button class="btn-apple" id="btn-apple" onclick="handleAppleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/>
+        </svg>
+        Logga in med Apple
+      </button>
+
+      <button class="modal-toggle" id="modal-toggle" onclick="toggleMode()">Inget konto? Skapa ett</button>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
+    const SUPABASE_URL = 'https://lowcouyuifntbitkfjlg.supabase.co'
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxvd2NvdXl1aWZudGJpdGtmamxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NjI2MjYsImV4cCI6MjA5MzEzODYyNn0.zsgiX2v64LX_PjrIQRSbVszFt3H2xrBsZPn2LyrAAd8'
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+    let authMode = 'login'
+
     function openLogin() {
-      document.getElementById('login-overlay').classList.add('open');
+      document.getElementById('login-overlay').classList.add('open')
+      setTimeout(() => document.getElementById('email-input').focus(), 100)
     }
     function closeLogin() {
-      document.getElementById('login-overlay').classList.remove('open');
+      document.getElementById('login-overlay').classList.remove('open')
+      document.getElementById('modal-error').style.display = 'none'
     }
     function handleOverlayClick(e) {
-      if (e.target === document.getElementById('login-overlay')) closeLogin();
+      if (e.target === document.getElementById('login-overlay')) closeLogin()
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLogin(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLogin() })
 
-    // Demo: simulate logged-in state (remove this in production)
-    // Uncomment to preview logged-in view:
-    // document.getElementById('user-pill').style.display = 'inline-flex';
-    // document.getElementById('username-label').textContent = 'Maria';
-    // document.querySelector('.btn-login').textContent = 'Logga ut';
+    function toggleMode() {
+      authMode = authMode === 'login' ? 'register' : 'login'
+      document.getElementById('modal-title').textContent = authMode === 'login' ? 'Logga in' : 'Skapa konto'
+      document.getElementById('modal-sub').textContent = authMode === 'login'
+        ? 'Samma konto som Quizine.se'
+        : 'Skapa ett konto som fungerar på Quizine.se också'
+      document.getElementById('btn-submit').textContent = authMode === 'login' ? 'Logga in' : 'Skapa konto'
+      document.getElementById('modal-toggle').textContent = authMode === 'login'
+        ? 'Inget konto? Skapa ett'
+        : 'Har du redan ett konto? Logga in'
+      document.getElementById('modal-error').style.display = 'none'
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('modal-error')
+      el.textContent = msg
+      el.style.display = 'block'
+    }
+
+    function setLoading(loading) {
+      const btn = document.getElementById('btn-submit')
+      btn.disabled = loading
+      btn.textContent = loading ? 'Laddar...' : (authMode === 'login' ? 'Logga in' : 'Skapa konto')
+      document.getElementById('btn-apple').disabled = loading
+    }
+
+    async function handleEmailAuth() {
+      const email = document.getElementById('email-input').value.trim()
+      const password = document.getElementById('password-input').value
+      if (!email || !password) return
+      setLoading(true)
+      document.getElementById('modal-error').style.display = 'none'
+      try {
+        if (authMode === 'login') {
+          const { data, error } = await sb.auth.signInWithPassword({ email, password })
+          if (error) throw error
+          updateLoggedInUI(data.user)
+          closeLogin()
+        } else {
+          const { data, error } = await sb.auth.signUp({ email, password })
+          if (error) throw error
+          if (data.user && !data.user.email_confirmed_at) {
+            document.getElementById('modal-title').textContent = 'Bekräfta din e-post'
+            document.getElementById('modal-sub').textContent = 'Vi skickade ett bekräftelsemail. Klicka på länken för att aktivera ditt konto.'
+            document.getElementById('email-input').style.display = 'none'
+            document.getElementById('password-input').style.display = 'none'
+            document.getElementById('btn-submit').style.display = 'none'
+            document.getElementById('btn-apple').style.display = 'none'
+            document.getElementById('modal-toggle').style.display = 'none'
+            document.querySelector('.modal-divider').style.display = 'none'
+            document.getElementById('modal-error').style.display = 'none'
+          } else if (data.user) {
+            updateLoggedInUI(data.user)
+            closeLogin()
+          }
+        }
+      } catch (e) {
+        const msg = e.message || 'Något gick fel'
+        if (msg.includes('Invalid login')) showError('Fel e-post eller lösenord.')
+        else if (msg.includes('already registered')) showError('Den e-postadressen finns redan.')
+        else showError(msg)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    async function handleAppleSignIn() {
+      document.getElementById('btn-apple').disabled = true
+      document.getElementById('btn-apple').childNodes[1].textContent = ' Omdirigerar...'
+      await sb.auth.signInWithOAuth({
+        provider: 'apple',
+        options: { redirectTo: window.location.origin + '/' },
+      })
+    }
+
+    async function handleLogout() {
+      await sb.auth.signOut()
+    }
+
+    function updateLoggedInUI(user) {
+      const username = user.user_metadata?.username || user.email?.split('@')[0] || 'Användare'
+      document.getElementById('username-label').textContent = username
+      document.getElementById('user-pill').style.display = 'inline-flex'
+      document.getElementById('header-username').textContent = username
+      document.getElementById('header-username').style.display = 'inline'
+      document.getElementById('btn-login').style.display = 'none'
+      document.getElementById('btn-logout').style.display = 'inline-block'
+    }
+
+    function updateLoggedOutUI() {
+      document.getElementById('user-pill').style.display = 'none'
+      document.getElementById('header-username').style.display = 'none'
+      document.getElementById('btn-login').style.display = 'inline-block'
+      document.getElementById('btn-logout').style.display = 'none'
+    }
+
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session) updateLoggedInUI(session.user)
+    })
+
+    sb.auth.onAuthStateChange((_event, session) => {
+      if (session) updateLoggedInUI(session.user)
+      else updateLoggedOutUI()
+    })
   </script>
 
 </body>
