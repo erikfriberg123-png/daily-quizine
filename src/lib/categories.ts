@@ -27,10 +27,13 @@ export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; des
   cloud_infra:           { name: 'Cloud & Infrastruktur',   emoji: '☁️', desc: 'DevOps, drift & nätverk' },
   cybersecurity:         { name: 'Cybersäkerhet',           emoji: '🔒', desc: 'Skydd, hot & sårbarheter' },
   databases:             { name: 'Databaser',               emoji: '🗄️', desc: 'SQL, NoSQL & datamodellering' },
-  ai_ml:                 { name: 'AI & Maskininlärning',    emoji: '🧠', desc: 'Modeller, träning & tillämpningar' },
+  ai_ml:                 { name: 'AI & Maskininlärning',    emoji: '🧠', desc: 'ChatGPT, LLM:er & AI-verktyg' },
   operating_systems:     { name: 'Operativsystem',          emoji: '🖥️', desc: 'Linux, Windows & systemarkitektur' },
   web_apis:              { name: 'Webb & API:er',           emoji: '🌐', desc: 'HTTP, REST, frontend & backend' },
   app_development:       { name: 'Applikationsutveckling',  emoji: '📱', desc: 'Appar, frameworks & livscykel' },
+  tools_workflow:        { name: 'Verktyg & Arbetsflöde',   emoji: '🛠️', desc: 'Git, IDE:er, agile & felsökning' },
+  tech_history:          { name: 'Teknikhistoria & Kultur',  emoji: '🏛️', desc: 'Kända företag, uppfinnare & milstolpar' },
+  fun_culture:           { name: 'Roligt & Kultur',         emoji: '😄', desc: 'Techhumor, memes & developer-liv' },
 }
 
 export const ROMAN = ['I.', 'II.', 'III.']
@@ -65,4 +68,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
   operating_systems: '#00CC50',
   web_apis: '#00FF64',
   app_development: '#00CC50',
+  tools_workflow: '#00FF64',
+  tech_history: '#00CC50',
+  fun_culture: '#00FF64',
 }
