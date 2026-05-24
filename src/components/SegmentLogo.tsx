@@ -13,10 +13,10 @@ export function SegmentLogo() {
         flexShrink: 0,
       }}>
         <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
-          style={{ filter: 'drop-shadow(0 0 5px #00FF64)' }}>
-          <rect x="8" y="12" width="36" height="28" rx="4" stroke="#00FF64" strokeWidth="2.5" fill="none"/>
-          <path d="M14 22 L20 28 L14 34" stroke="#00FF64" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          <line x1="23" y1="34" x2="38" y2="34" stroke="#00FF64" strokeWidth="2.5" strokeLinecap="round"/>
+          style={{ filter: 'drop-shadow(0 0 6px #00FF64)' }}>
+          <path d="M20 8 L8 26 L20 44" stroke="#00FF64" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <path d="M32 8 L44 26 L32 44" stroke="#00FF64" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <text x="26" y="32" textAnchor="middle" fontFamily="DM Sans,sans-serif" fontSize="17" fontWeight="700" fill="#00FF64">?</text>
         </svg>
       </div>
     )
