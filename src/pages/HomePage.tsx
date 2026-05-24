@@ -9,7 +9,7 @@ import { StoryModal } from '../components/StoryModal'
 import { supabase } from '../lib/supabase'
 import { ServerPlayed } from '../App'
 import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
-import { getSegmentConfig, SegmentConfig } from '../config/segments'
+import { getSegmentConfig } from '../config/segments'
 import { SegmentLogo } from '../components/SegmentLogo'
 
 const QUESTION_COUNT = 3
@@ -212,7 +212,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
                 e.currentTarget.style.color = 'var(--text-muted)'
               }}
             >
-              🍽️  Berätta en kroghistoria
+              {seg.storyButtonText}
             </button>
           )}
         </div>

@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "vite",
     "dev:voo": "vite --config vite.config.voo.ts",
+    "dev:it": "vite --config vite.config.it.ts",
     "build:quizine": "tsc -b && vite build",
     "build:voo": "vite build --config vite.config.voo.ts",
-    "build": "npm run build:quizine && npm run build:voo",
+    "build:it": "vite build --config vite.config.it.ts",
+    "build": "npm run build:quizine && npm run build:voo && npm run build:it",
     "preview": "vite preview"
   },
   "dependencies": {

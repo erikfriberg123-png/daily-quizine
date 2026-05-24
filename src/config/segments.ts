@@ -17,6 +17,8 @@ export interface SegmentConfig {
   showEkg: boolean
   ctaUrl: string
   ctaLabel: string
+  questionsTable: string
+  storyButtonText: string
 }
 
 export const SEGMENT: string = __SEGMENT__
@@ -41,6 +43,8 @@ const CONFIGS: Record<string, SegmentConfig> = {
     showEkg: false,
     ctaUrl: 'https://quizine.se',
     ctaLabel: '⚔️ Vill du spela mer? Besök Quizine.se',
+    questionsTable: 'remote_questions',
+    storyButtonText: '🍽️  Berätta en kroghistoria',
   },
   voo: {
     id: 'voo',
@@ -61,6 +65,30 @@ const CONFIGS: Record<string, SegmentConfig> = {
     showEkg: true,
     ctaUrl: 'https://quizine.se',
     ctaLabel: '🩺 Vill du spela mer? Besök quizine.se',
+    questionsTable: 'voo_remote_questions',
+    storyButtonText: '',
+  },
+  it: {
+    id: 'it',
+    name: 'Quizine Daily',
+    subtitle: 'IT & Software',
+    icon: '💻',
+    heroLine1: 'Dagens quiz',
+    heroLine2Start: 'är ',
+    heroEm: 'deployat.',
+    heroCopyLine1: 'Visa vad du kan om IT och mjukvara.',
+    heroCopyLine2: 'Tävla med kollegorna.',
+    cardTitle: 'Dagens sprint',
+    cardIcon: '💻',
+    startBtnIcon: '💻',
+    showStoryButton: true,
+    showBackLink: true,
+    localStoragePrefix: 'it_',
+    showEkg: false,
+    ctaUrl: 'https://quizine.se',
+    ctaLabel: '💻 Vill du spela mer? Besök quizine.se',
+    questionsTable: 'it_remote_questions',
+    storyButtonText: '💻  Berätta en arbetsrelaterad händelse',
   },
 }
 

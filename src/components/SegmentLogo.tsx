@@ -1,6 +1,27 @@
 import { SEGMENT } from '../config/segments'
 
 export function SegmentLogo() {
+  if (SEGMENT === 'it') {
+    return (
+      <div style={{
+        width: 38, height: 38,
+        background: 'var(--bg-card-2)',
+        border: '1px solid var(--border-light)',
+        borderRadius: 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 14px var(--gold-glow)',
+        flexShrink: 0,
+      }}>
+        <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
+          style={{ filter: 'drop-shadow(0 0 5px #00FF64)' }}>
+          <rect x="8" y="12" width="36" height="28" rx="4" stroke="#00FF64" strokeWidth="2.5" fill="none"/>
+          <path d="M14 22 L20 28 L14 34" stroke="#00FF64" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <line x1="23" y1="34" x2="38" y2="34" stroke="#00FF64" strokeWidth="2.5" strokeLinecap="round"/>
+        </svg>
+      </div>
+    )
+  }
+
   if (SEGMENT === 'voo') {
     return (
       <div style={{

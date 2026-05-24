@@ -1,5 +1,5 @@
 export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; desc: string }> = {
-  // Quizine (krogen) categories
+  // Quizine (krogen)
   food:                  { name: 'Mat & Tillagning',        emoji: '🍳', desc: 'Tekniker & ingredienser' },
   drink:                 { name: 'Vin & Dryck',             emoji: '🍷', desc: 'Druvor, regioner, cocktails' },
   famous_profiles:       { name: 'Kända profiler',          emoji: '⭐', desc: 'Kockar & krogpersonligheter' },
@@ -12,8 +12,7 @@ export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; des
   scheduling_labor:      { name: 'Schema & Bemanning',      emoji: '📅', desc: 'Planering & personal' },
   guest_psychology:      { name: 'Gästpsykologi',           emoji: '🧠', desc: 'Beteende & upplevelse' },
   service_pressure:      { name: 'Service Under Press',     emoji: '💪', desc: 'Stress & hantering' },
-
-  // VOO (vård & omsorg) categories
+  // VOO (Vård & Omsorg)
   anatomy_body:          { name: 'Anatomi & Kroppen',       emoji: '🫀', desc: 'Organ, system & funktioner' },
   diagnoses_symptoms:    { name: 'Diagnoser & Symtom',      emoji: '🩺', desc: 'Sjukdom, symtom & diagnostik' },
   emergency_firstaid:    { name: 'Akut & Första hjälpen',   emoji: '🚨', desc: 'Akutvård, HLR & livräddning' },
@@ -23,6 +22,15 @@ export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; des
   medications_pharma:    { name: 'Läkemedel & Farmakologi', emoji: '💊', desc: 'Preparat, mekanismer & biverkningar' },
   popculture_healthcare: { name: 'Populärkultur & Vård',    emoji: '🌟', desc: 'Kända läkare & vård i media' },
   psychiatry_psychology: { name: 'Psykiatri & Psykologi',   emoji: '🧠', desc: 'Psykiska tillstånd & behandling' },
+  // IT (IT & Software)
+  programming:           { name: 'Programmering',           emoji: '💻', desc: 'Kod, algoritmer & tekniker' },
+  cloud_infra:           { name: 'Cloud & Infrastruktur',   emoji: '☁️', desc: 'DevOps, drift & nätverk' },
+  cybersecurity:         { name: 'Cybersäkerhet',           emoji: '🔒', desc: 'Skydd, hot & sårbarheter' },
+  databases:             { name: 'Databaser',               emoji: '🗄️', desc: 'SQL, NoSQL & datamodellering' },
+  ai_ml:                 { name: 'AI & Maskininlärning',    emoji: '🧠', desc: 'Modeller, träning & tillämpningar' },
+  operating_systems:     { name: 'Operativsystem',          emoji: '🖥️', desc: 'Linux, Windows & systemarkitektur' },
+  web_apis:              { name: 'Webb & API:er',           emoji: '🌐', desc: 'HTTP, REST, frontend & backend' },
+  app_development:       { name: 'Applikationsutveckling',  emoji: '📱', desc: 'Appar, frameworks & livscykel' },
 }
 
 export const ROMAN = ['I.', 'II.', 'III.']
@@ -49,4 +57,12 @@ export const CATEGORY_COLORS: Record<string, string> = {
   medications_pharma: '#3A86FF',
   popculture_healthcare: '#F15BB5',
   psychiatry_psychology: '#8B2FC9',
+  programming: '#00FF64',
+  cloud_infra: '#00CC50',
+  cybersecurity: '#00FF64',
+  databases: '#00CC50',
+  ai_ml: '#00FF64',
+  operating_systems: '#00CC50',
+  web_apis: '#00FF64',
+  app_development: '#00CC50',
 }
