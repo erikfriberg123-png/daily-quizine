@@ -211,7 +211,7 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
         }}
       >
         <div style={{ fontSize: 32 }}>⚠️</div>
-        <div style={{ fontSize: 16, color: 'var(--text-muted)' }}>{error || 'Inga frågor tillgängliga.'}</div>
+        <div style={{ fontSize: 16, color: 'var(--text-muted)' }}>{error || 'Inga frågor i databasen ännu — hjälp till att skapa dem.'}</div>
         <button
           onClick={onExit}
           style={{
