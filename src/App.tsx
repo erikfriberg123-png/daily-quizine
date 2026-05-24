@@ -3,6 +3,7 @@ import { User } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import { getMyTodayScore } from './lib/dailyScores'
 import { getParisDate } from './lib/dailyUtils'
+import { getSegmentConfig } from './config/segments'
 import HomePage from './pages/HomePage'
 import QuizPage from './pages/QuizPage'
 import ResultsPage from './pages/ResultsPage'
@@ -21,7 +22,22 @@ export interface ServerPlayed {
   correct: number
 }
 
+function ComingSoonPage() {
+  const { name, icon, subtitle } = getSegmentConfig()
+  return (
+    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 32, textAlign: 'center', background: 'var(--bg)', color: 'var(--cream)' }}>
+      <div style={{ fontSize: 56 }}>{icon}</div>
+      <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>{name}</h1>
+      <p style={{ fontSize: 16, opacity: 0.6, margin: 0 }}>{subtitle}</p>
+      <div style={{ marginTop: 8, padding: '10px 22px', borderRadius: 99, border: '1px solid var(--border-light)', fontSize: 14, opacity: 0.5 }}>
+        Kommer snart
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
+  const segment = getSegmentConfig()
   const [view, setView] = useState<View>('home')
   const [user, setUser] = useState<User | null>(null)
   const [username, setUsername] = useState<string | null>(null)
@@ -82,6 +98,8 @@ export default function App() {
       setServerPlayedChecked(true)
     }
   }
+
+  if (segment.disabled) return <ComingSoonPage />
 
   return (
     <>

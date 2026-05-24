@@ -17,6 +17,7 @@ const SEGMENT_CATEGORIES: Record<string, string[]> = {
   quizine: ['food','drink','famous_profiles','professional','service_guests','industry_culture','fun_reallife','labor_law','food_cost','scheduling_labor','guest_psychology','service_pressure'],
   voo:     ['anatomy_body','diagnoses_symptoms','emergency_firstaid','ethics_communication','infections_hygiene','medical_history','medications_pharma','popculture_healthcare','psychiatry_psychology'],
   it:      ['programming','cloud_infra','cybersecurity','databases','ai_ml','operating_systems','web_apis','app_development','tools_workflow','tech_history','fun_culture'],
+  blaljus: ['filmer_serier','spannande_fakta','lagar_regler','forsta_hjalpen','brandbekampning','polisarbete','akutvard_ambulans','krisberedskap','raddningsoperationer','trafiksakerhet'],
 }
 
 const CATEGORIES = (SEGMENT_CATEGORIES[segmentId] ?? SEGMENT_CATEGORIES.quizine).map((id) => ({

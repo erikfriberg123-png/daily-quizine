@@ -19,6 +19,7 @@ export interface SegmentConfig {
   ctaLabel: string
   questionsTable: string
   storyButtonText: string
+  disabled?: boolean
 }
 
 export const SEGMENT: string = __SEGMENT__
@@ -70,6 +71,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
   },
   blaljus: {
     id: 'blaljus',
+    disabled: true,
     name: 'Quizine Daily',
     subtitle: 'Blåljuspersonal',
     icon: '🚨',
@@ -92,6 +94,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
   },
   it: {
     id: 'it',
+    disabled: true,
     name: 'Quizine Daily',
     subtitle: 'IT & Software',
     icon: '💻',
