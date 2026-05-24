@@ -9,7 +9,7 @@ import { StoryModal } from '../components/StoryModal'
 import { supabase } from '../lib/supabase'
 import { ServerPlayed } from '../App'
 import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
-import { getSegmentConfig } from '../config/segments'
+import { getSegmentConfig, SegmentConfig } from '../config/segments'
 import { SegmentLogo } from '../components/SegmentLogo'
 
 const QUESTION_COUNT = 3
