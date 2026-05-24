@@ -2,6 +2,8 @@
 import { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { useKeyboardOffset } from '../hooks/useKeyboardOffset'
+import { CATEGORY_DISPLAY } from '../lib/categories'
+import { getSegmentConfig } from '../config/segments'
 
 interface Props {
   user: User | null
@@ -9,20 +11,18 @@ interface Props {
   onNeedLogin: () => void
 }
 
-const CATEGORIES = [
-  { id: 'food',             name: '🍔  Mat' },
-  { id: 'drink',            name: '🍷  Dryck' },
-  { id: 'famous_profiles',  name: '🌟  Kända profiler' },
-  { id: 'professional',     name: '👨‍🍳  Professionellt' },
-  { id: 'service_guests',   name: '🤝  Service & Gäster' },
-  { id: 'industry_culture', name: '🏆  Branschkultur' },
-  { id: 'fun_reallife',     name: '😄  Kul & Vardag' },
-  { id: 'labor_law',        name: '⚖️  Avtal & Lag' },
-  { id: 'food_cost',        name: '🧾  Kostnad & Lönsamhet' },
-  { id: 'scheduling_labor', name: '⏱️  Schema & Personal' },
-  { id: 'guest_psychology', name: '🧍  Gästpsykologi' },
-  { id: 'service_pressure', name: '⚡  Service Under Tryck' },
-]
+const { questionsTable, id: segmentId } = getSegmentConfig()
+
+const SEGMENT_CATEGORIES: Record<string, string[]> = {
+  quizine: ['food','drink','famous_profiles','professional','service_guests','industry_culture','fun_reallife','labor_law','food_cost','scheduling_labor','guest_psychology','service_pressure'],
+  voo:     ['anatomy_body','diagnoses_symptoms','emergency_firstaid','ethics_communication','infections_hygiene','medical_history','medications_pharma','popculture_healthcare','psychiatry_psychology'],
+  it:      ['programming','cloud_infra','cybersecurity','databases','ai_ml','operating_systems','web_apis','app_development'],
+}
+
+const CATEGORIES = (SEGMENT_CATEGORIES[segmentId] ?? SEGMENT_CATEGORIES.quizine).map((id) => ({
+  id,
+  name: `${CATEGORY_DISPLAY[id]?.emoji ?? ''}  ${CATEGORY_DISPLAY[id]?.name ?? id}`,
+}))
 
 export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
   const keyboardOffset = useKeyboardOffset()
@@ -59,7 +59,7 @@ export function CreateQuestionModal({ user, onClose, onNeedLogin }: Props) {
     setSubmitting(true)
     try {
       const id = `rq_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`
-      const { error: err } = await supabase.from('remote_questions').insert({
+      const { error: err } = await supabase.from(questionsTable).insert({
         id,
         category_id: categoryId,
         question: question.trim(),
