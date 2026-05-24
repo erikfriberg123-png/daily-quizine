@@ -66,7 +66,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     ctaUrl: 'https://quizine.se',
     ctaLabel: '🩺 Vill du spela mer? Besök quizine.se',
     questionsTable: 'voo_remote_questions',
-    storyButtonText: '🏥 Berätta en historia',
+    storyButtonText: '🏥 Berätta en arbetsrelaterad händelse',
   },
   blaljus: {
     id: 'blaljus',

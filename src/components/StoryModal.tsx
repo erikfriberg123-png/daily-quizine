@@ -5,6 +5,7 @@ import {
   validateStoryText, validateDisplayName,
 } from '../lib/stories'
 import { useKeyboardOffset } from '../hooks/useKeyboardOffset'
+import { getSegmentConfig, SEGMENT } from '../config/segments'
 
 interface Props {
   user: User | null
@@ -12,9 +13,16 @@ interface Props {
   onClose: () => void
 }
 
-const DEFAULT_TEXT = 'Berätta en intressant händelse som du varit med om på restaurang.'
+const PLACEHOLDERS: Record<string, string> = {
+  quizine: 'Berätta en intressant händelse som du varit med om på restaurang.',
+  voo:     'Berätta en intressant händelse från din tid i vården.',
+  it:      'Berätta en intressant arbetsrelaterad händelse från din tid i IT-branschen.',
+  blaljus: 'Berätta en intressant händelse från din tid som blåljuspersonal.',
+}
+const DEFAULT_TEXT = PLACEHOLDERS[SEGMENT] ?? 'Berätta en intressant arbetsrelaterad händelse.'
 
 export function StoryModal({ user, username, onClose }: Props) {
+  const seg = getSegmentConfig()
   const keyboardOffset = useKeyboardOffset()
   const [text, setText] = useState('')
   const [isAnonymous, setIsAnonymous] = useState(false)
@@ -132,7 +140,7 @@ export function StoryModal({ user, username, onClose }: Props) {
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 6 }}>
           <div>
             <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--white)' }}>
-              🍽️ Berätta en kroghistoria
+              {seg.storyButtonText}
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.5 }}>
               Intressanta historier kan publiceras på sajten.
