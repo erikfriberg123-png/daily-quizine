@@ -27,8 +27,8 @@
       --hospitality-glow:  rgba(155,89,182,0.35);
       --healthcare:        #00D4FF;
       --healthcare-glow:   rgba(0,212,255,0.3);
-      --retail:            #2ECC71;
-      --retail-glow:       rgba(46,204,113,0.3);
+      --blaljus:           #FF1A3C;
+      --blaljus-glow:      rgba(255,26,60,0.35);
       --it:                #00FF64;
       --it-glow:           rgba(0,255,100,0.35);
     }
@@ -236,7 +236,7 @@
     /* Per-segment glow on hover */
     .card.hospitality:hover  { border-color: rgba(155,89,182,0.5); box-shadow: 0 8px 40px var(--hospitality-glow); }
     .card.healthcare:hover   { border-color: rgba(0,212,255,0.4);  box-shadow: 0 8px 40px var(--healthcare-glow); }
-    .card.retail:hover       { border-color: rgba(46,204,113,0.4); box-shadow: 0 8px 40px var(--retail-glow); }
+    .card.blaljus:hover      { border-color: rgba(255,26,60,0.4);  box-shadow: 0 8px 40px var(--blaljus-glow); }
     .card.it:hover           { border-color: rgba(0,255,100,0.4);  box-shadow: 0 8px 40px var(--it-glow); }
 
     /* Badge */
@@ -262,6 +262,12 @@
       background: rgba(138,115,85,0.15);
       color: var(--text-muted);
       border: 1px solid var(--border-light);
+    }
+
+    .badge-soon-yellow {
+      background: rgba(255,179,0,0.12);
+      color: #FFB300;
+      border: 1px solid rgba(255,179,0,0.35);
     }
 
     /* Neon icon wrapper */
@@ -309,7 +315,7 @@
 
     .hospitality  .card-footer-label { color: var(--hospitality); }
     .healthcare   .card-footer-label { color: var(--healthcare); }
-    .retail       .card-footer-label { color: var(--retail); }
+    .blaljus      .card-footer-label { color: var(--blaljus); }
     .it           .card-footer-label { color: var(--it); }
 
     /* Dimmed for coming soon */
@@ -585,24 +591,30 @@
         </div>
       </a>
 
-      <!-- RETAIL -->
-      <a class="card retail coming-soon" href="/Retail">
-        <div class="card-badge badge-soon">Kommer snart</div>
+      <!-- BLÅLJUSPERSONAL -->
+      <a class="card blaljus" href="/blaljus/">
+        <div class="card-badge badge-soon-yellow">Snart live</div>
 
         <div class="card-icon">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#2ECC71">
-            <!-- Shopping bag -->
-            <path d="M14 20 L12 44 L40 44 L38 20 Z" stroke="#2ECC71" stroke-width="2" stroke-linejoin="round" fill="none"/>
-            <path d="M20 20 C20 14 32 14 32 20" stroke="#2ECC71" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <text x="26" y="37" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#2ECC71">?</text>
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#FF1A3C">
+            <!-- Sirenlyktan -->
+            <rect x="11" y="38" width="30" height="4" rx="2" stroke="#FF1A3C" stroke-width="2" fill="none"/>
+            <path d="M14 38 L16 30 L36 30 L38 38" stroke="#FF1A3C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+            <path d="M16 30 Q18 20 26 18 Q34 20 36 30" stroke="#FF1A3C" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M19 30 Q21 23 26 21 Q31 23 33 30" stroke="#FF1A3C" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+            <line x1="26" y1="18" x2="26" y2="11" stroke="#FF1A3C" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <line x1="26" y1="18" x2="19" y2="13" stroke="#FF1A3C" stroke-width="1.2" stroke-linecap="round" opacity="0.25"/>
+            <line x1="26" y1="18" x2="33" y2="13" stroke="#FF1A3C" stroke-width="1.2" stroke-linecap="round" opacity="0.25"/>
+            <circle cx="26" cy="18" r="2" fill="#FF1A3C" opacity="0.7"/>
+            <text x="26" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#FF1A3C">?</text>
           </svg>
         </div>
 
-        <div class="card-name">Handel</div>
-        <div class="card-tagline">Butiksanställda &amp; säljteam.<br>Slå dina kollegor.</div>
+        <div class="card-name">Blåljuspersonal</div>
+        <div class="card-tagline">Polis, brand &amp; ambulans.<br>Testa dina kunskaper.</div>
 
         <div class="card-footer">
-          <span class="card-footer-label">Meddela mig</span>
+          <span class="card-footer-label">Spela snart</span>
           <span class="card-arrow">→</span>
         </div>
       </a>
