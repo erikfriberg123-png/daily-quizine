@@ -1,6 +1,33 @@
 import { SEGMENT } from '../config/segments'
 
 export function SegmentLogo() {
+  if (SEGMENT === 'blaljus') {
+    return (
+      <div style={{
+        width: 38, height: 38,
+        background: 'transparent',
+        border: '1px solid var(--border-light)',
+        borderRadius: 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 14px var(--gold-glow)',
+        flexShrink: 0,
+      }}>
+        <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
+          style={{ filter: 'drop-shadow(0 0 5px #FF1A3C) drop-shadow(0 0 10px rgba(255,26,60,0.4))' }}>
+          <rect x="11" y="38" width="30" height="4" rx="2" stroke="#FF1A3C" strokeWidth="2" fill="none"/>
+          <path d="M14 38 L16 30 L36 30 L38 38" stroke="#FF1A3C" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" fill="none"/>
+          <path d="M16 30 Q18 20 26 18 Q34 20 36 30" stroke="#FF1A3C" strokeWidth="2" strokeLinecap="round" fill="none"/>
+          <path d="M19 30 Q21 23 26 21 Q31 23 33 30" stroke="#FF1A3C" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.4"/>
+          <line x1="26" y1="18" x2="26" y2="11" stroke="#FF1A3C" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+          <line x1="26" y1="18" x2="19" y2="13" stroke="#FF1A3C" strokeWidth="1.2" strokeLinecap="round" opacity="0.25"/>
+          <line x1="26" y1="18" x2="33" y2="13" stroke="#FF1A3C" strokeWidth="1.2" strokeLinecap="round" opacity="0.25"/>
+          <circle cx="26" cy="18" r="2" fill="#FF1A3C" opacity="0.7"/>
+          <text x="26" y="36" textAnchor="middle" fontFamily="DM Sans,sans-serif" fontSize="10" fontWeight="700" fill="#FF1A3C">?</text>
+        </svg>
+      </div>
+    )
+  }
+
   if (SEGMENT === 'it') {
     return (
       <div style={{

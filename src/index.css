@@ -94,6 +94,34 @@ html[data-segment="voo"] {
   --text-dim:     #2A4545;
 }
 
+/* ── Blåljuspersonal theme ── */
+html[data-segment="blaljus"] {
+  --bg:           #080305;
+  --bg-card:      #120508;
+  --bg-card-2:    #180708;
+  --border:       #2A0A10;
+  --border-light: #3D1020;
+
+  --gold:         #FF1A3C;
+  --gold-light:   #FF4D66;
+  --gold-glow:    rgba(255, 26, 60, 0.35);
+  --rust:         #CC0028;
+  --rust-light:   #FF4D66;
+  --cream:        #FFF0F2;
+  --white:        #FFF0F2;
+
+  --orange:       #FF1A3C;
+  --orange-light: #FF8899;
+  --orange-dark:  #CC0028;
+  --orange-glow:  rgba(255, 26, 60, 0.35);
+
+  --text-muted:   #7A3A48;
+  --text-dim:     #2A0810;
+
+  --timer-bar:    linear-gradient(90deg, #CC0028 0%, #FF1A3C 60%, #FF4D66 100%);
+  --timer-tip:    #FF1A3C;
+}
+
 /* ── IT theme ── */
 html[data-segment="it"] {
   --bg:           #060906;
