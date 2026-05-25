@@ -56,11 +56,18 @@ export default function App() {
         setServerPlayedChecked(true)
       }
     })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) {
         fetchUsername(session.user.id)
         fetchServerPlayed(session.user.id)
+        if (event === 'SIGNED_IN') {
+          const redirect = localStorage.getItem('postAuthRedirect')
+          if (redirect === 'quiz') {
+            localStorage.removeItem('postAuthRedirect')
+            setView('quiz')
+          }
+        }
       } else {
         setUsername(null)
         setServerPlayed(null)

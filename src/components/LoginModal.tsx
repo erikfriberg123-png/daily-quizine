@@ -28,6 +28,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
   const handleAppleSignIn = async () => {
     setAppleLoading(true)
+    localStorage.setItem('postAuthRedirect', 'quiz')
     await supabase.auth.signInWithOAuth({
       provider: 'apple',
       options: { redirectTo: window.location.origin + import.meta.env.BASE_URL },
