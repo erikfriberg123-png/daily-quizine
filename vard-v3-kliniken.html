@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quizine Daily — Kliniken</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=DM+Serif+Display:ital@1&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F0F6FF;
+      --surface: #FFFFFF;
+      --surface2:#F4F8FF;
+      --border:  #D4E2F4;
+
+      --blue:    #1A56DB;
+      --blue-l:  #3B82F6;
+      --blue-bg: rgba(26,86,219,0.07);
+
+      --green:   #057A55;
+      --green-l: #0EA66E;
+      --green-bg:rgba(5,122,85,0.08);
+
+      --dark:    #0F172A;
+      --muted:   #64748B;
+      --dim:     #94A3B8;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font-family: inherit; cursor: pointer; border: none; outline: none; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── HEADER ── */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 1px 8px rgba(15,23,42,0.06);
+    }
+
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: var(--blue-bg);
+      border: 1px solid rgba(26,86,219,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+
+    .logo-main { font-size: 15px; font-weight: 800; color: var(--dark); line-height: 1; }
+    .logo-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .btn-login {
+      font-size: 13px; font-weight: 700;
+      color: var(--blue);
+      background: var(--blue-bg);
+      padding: 8px 16px;
+      border: 1px solid rgba(26,86,219,0.2);
+      border-radius: 10px; transition: all 0.2s;
+    }
+    .btn-login:hover { background: rgba(26,86,219,0.12); }
+
+    /* ── MAIN ── */
+    main { max-width: 560px; margin: 0 auto; padding: 28px 16px 60px; }
+
+    /* ── HERO ── */
+    .hero-strip {
+      background: linear-gradient(135deg, #1A56DB 0%, #1E40AF 100%);
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .hero-strip::after {
+      content: '🏥';
+      position: absolute;
+      right: 20px; top: 50%; transform: translateY(-50%);
+      font-size: 56px; opacity: 0.15;
+    }
+
+    .hero-date {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.6); margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: 26px; font-weight: 900; line-height: 1.2; color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .hero-title em {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      color: #BFDBFE;
+    }
+
+    .hero-sub { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+    .hero-stats {
+      display: flex; gap: 16px; margin-top: 16px;
+    }
+
+    .hero-stat {
+      background: rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 8px 14px;
+      text-align: center;
+    }
+
+    .hero-stat .num { font-size: 20px; font-weight: 900; color: #fff; }
+    .hero-stat .lbl { font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+    /* ── SCHEDULE CARD (today's questions as clinical schedule) ── */
+    .schedule-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(15,23,42,0.06);
+    }
+
+    .sc-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .sc-title { font-size: 14px; font-weight: 800; color: var(--dark); }
+    .sc-sub   { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+    .sc-icon  { font-size: 20px; }
+
+    .sc-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sc-row:last-of-type { border-bottom: none; }
+
+    .sc-step {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--blue-bg);
+      border: 1.5px solid rgba(26,86,219,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .sc-emoji { font-size: 22px; }
+
+    .sc-text { flex: 1; }
+    .sc-text .name { font-size: 14px; font-weight: 700; color: var(--dark); }
+    .sc-text .desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .sc-pill {
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      background: var(--green-bg); color: var(--green);
+      border: 1px solid rgba(5,122,85,0.2); letter-spacing: 0.5px; text-transform: uppercase;
+    }
+
+    .sc-footer {
+      padding: 12px 20px;
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .sf-label { font-size: 12px; color: var(--muted); min-width: 90px; }
+
+    .sf-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+
+    .sf-bar {
+      height: 100%; width: 66%; border-radius: 3px;
+      background: linear-gradient(90deg, #1A56DB 0%, #60A5FA 80%, #BFDBFE 100%);
+    }
+
+    .sf-val { font-size: 18px; font-weight: 900; color: var(--blue); min-width: 32px; }
+
+    /* ── START BUTTON ── */
+    .btn-start {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 17px;
+      background: linear-gradient(135deg, #1A56DB 0%, #1D4ED8 100%);
+      color: #fff; border-radius: 16px;
+      font-size: 17px; font-weight: 800;
+      box-shadow: 0 4px 20px rgba(26,86,219,0.3);
+      border: none; transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.3px; margin-bottom: 12px;
+    }
+    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,86,219,0.4); }
+
+    .login-hint { text-align: center; font-size: 13px; color: var(--muted); }
+    .login-hint a { color: var(--blue); font-weight: 600; text-decoration: underline; }
+
+    .btn-secondary {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 13px; margin-top: 10px;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 14px;
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--blue-l); color: var(--blue); }
+
+    /* ── LEADERBOARD ── */
+    .leaderboard { margin-top: 28px; }
+
+    .lb-title {
+      font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+    }
+
+    .lb-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+    }
+
+    .lb-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px;
+    }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-row.me { background: var(--blue-bg); }
+
+    .lb-rank { min-width: 22px; font-weight: 800; font-size: 13px; color: var(--dim); }
+    .lb-rank.top { color: var(--blue); }
+
+    .lb-name { flex: 1; font-weight: 600; color: var(--dark); }
+    .lb-score { font-weight: 800; color: var(--green); font-size: 13px; }
+
+    .footer-link { margin-top: 28px; text-align: center; }
+    .footer-link a {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--muted);
+      padding: 8px 16px; border: 1px solid var(--border); border-radius: 20px; transition: all 0.2s;
+    }
+    .footer-link a:hover { color: var(--dark); border-color: #94A3B8; }
+
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(12px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">⚕️</div>
+    <div>
+      <div class="logo-main">Quizine Daily</div>
+      <div class="logo-sub">Vård &amp; Omsorg</div>
+    </div>
+  </div>
+  <button class="btn-login">Logga in</button>
+</header>
+
+<main>
+
+  <!-- Hero strip -->
+  <div class="hero-strip fade-in">
+    <div class="hero-date">✦ &nbsp; Måndag 19 maj 2025 &nbsp; ✦</div>
+    <h1 class="hero-title">Dagens quiz är<br><em>inskrivet.</em></h1>
+    <p class="hero-sub">Visa vad du kan om livet i vården. Tävla med dina kollegor.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">3</div><div class="lbl">Frågor</div></div>
+      <div class="hero-stat"><div class="num">15s</div><div class="lbl">Per fråga</div></div>
+      <div class="hero-stat"><div class="num">500</div><div class="lbl">Max XP</div></div>
+    </div>
+  </div>
+
+  <!-- Schedule card -->
+  <div class="schedule-card fade-in" style="animation-delay:0.06s">
+    <div class="sc-header">
+      <div>
+        <div class="sc-title">Dagens schema</div>
+        <div class="sc-sub">3 ämnen · Vardag</div>
+      </div>
+      <div class="sc-icon">📋</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-step">1</div>
+      <div class="sc-emoji">💊</div>
+      <div class="sc-text">
+        <div class="name">Läkemedel</div>
+        <div class="desc">Preparat &amp; dosering</div>
+      </div>
+      <div class="sc-pill">Idag</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-step">2</div>
+      <div class="sc-emoji">🏥</div>
+      <div class="sc-text">
+        <div class="name">Patientvård</div>
+        <div class="desc">Omsorg &amp; bemötande</div>
+      </div>
+      <div class="sc-pill">Idag</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-step">3</div>
+      <div class="sc-emoji">💪</div>
+      <div class="sc-text">
+        <div class="name">Stress &amp; Akut</div>
+        <div class="desc">Akutvård &amp; prioritering</div>
+      </div>
+      <div class="sc-pill">Idag</div>
+    </div>
+
+    <div class="sc-footer">
+      <div class="sf-label">⏱ Per fråga</div>
+      <div class="sf-bar-wrap"><div class="sf-bar"></div></div>
+      <div class="sf-val">15s</div>
+    </div>
+  </div>
+
+  <button class="btn-start fade-in" style="animation-delay:0.1s">
+    <span>⚕️</span>
+    Starta dagens quiz
+  </button>
+
+  <div class="login-hint fade-in" style="animation-delay:0.12s">
+    Spela utan konto — eller <a href="#">logga in</a> för att synas på topplistan
+  </div>
+
+  <button class="btn-secondary fade-in" style="animation-delay:0.14s">✏️ &nbsp;Skicka in en egen fråga</button>
+
+  <div class="leaderboard fade-in" style="animation-delay:0.18s">
+    <div class="lb-title">Topplista — idag</div>
+    <div class="lb-card">
+      <div class="lb-row"><span class="lb-rank top">1</span><span class="lb-name">Anna S.</span><span class="lb-score">500 XP</span></div>
+      <div class="lb-row"><span class="lb-rank top">2</span><span class="lb-name">Erik L.</span><span class="lb-score">450 XP</span></div>
+      <div class="lb-row"><span class="lb-rank top">3</span><span class="lb-name">Maria K.</span><span class="lb-score">450 XP</span></div>
+      <div class="lb-row"><span class="lb-rank">4</span><span class="lb-name">Johan P.</span><span class="lb-score">300 XP</span></div>
+      <div class="lb-row"><span class="lb-rank">5</span><span class="lb-name">Sofia B.</span><span class="lb-score">150 XP</span></div>
+    </div>
+  </div>
+
+  <div class="footer-link"><a href="/"> ← Byt bransch</a></div>
+
+</main>
+</body>
+</html>

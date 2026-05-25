@@ -16,7 +16,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@quizine/config": ["../packages/config/src/index.ts"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "../packages/config/src"]
 }

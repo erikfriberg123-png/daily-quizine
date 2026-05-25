@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quizine Daily — IT & Software</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #060906;
+      --bg-card:  #0C130C;
+      --bg-card2: #101A10;
+      --border:   #1A2E1A;
+      --border-l: #264026;
+
+      --green:       #00FF64;
+      --green-dim:   #00C84E;
+      --green-dark:  #007A30;
+      --green-glow:  rgba(0,255,100,0.2);
+      --green-bg:    rgba(0,255,100,0.07);
+
+      --cream:  #D4F5D4;
+      --muted:  #3A6A3A;
+      --dim:    #1E3C1E;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    button { font-family: inherit; cursor: pointer; border: none; outline: none; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Scanline overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,100,0.012) 2px, rgba(0,255,100,0.012) 4px);
+      pointer-events: none; z-index: 0;
+    }
+
+    .wrap { position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: var(--green-bg);
+      border: 1px solid rgba(0,255,100,0.25);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; font-weight: 700;
+      color: var(--green);
+      box-shadow: 0 0 14px var(--green-glow);
+      letter-spacing: -1px;
+    }
+
+    .logo-main { font-size: 15px; font-weight: 800; color: var(--cream); line-height: 1; }
+    .logo-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+    .btn-login {
+      font-size: 12px; font-weight: 700;
+      color: var(--green);
+      background: var(--green-bg);
+      padding: 8px 16px;
+      border: 1px solid rgba(0,255,100,0.25);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.2s;
+      box-shadow: 0 0 8px var(--green-glow);
+    }
+    .btn-login:hover { background: rgba(0,255,100,0.14); box-shadow: 0 0 16px var(--green-glow); }
+
+    /* ── MAIN ── */
+    main { max-width: 560px; margin: 0 auto; padding: 28px 16px 60px; }
+
+    /* Terminal prompt hero */
+    .terminal-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      background: var(--bg-card2);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #FF5F56; }
+    .dot-y { background: #FFBD2E; }
+    .dot-g { background: var(--green); box-shadow: 0 0 6px var(--green-glow); }
+
+    .terminal-title { flex: 1; text-align: center; font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+    .terminal-body { padding: 20px; }
+
+    .terminal-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .terminal-line .prompt { color: var(--green); }
+    .terminal-line .cmd    { color: var(--cream); }
+    .terminal-line .out    { color: var(--muted); }
+    .terminal-line .out.hi { color: var(--green); font-weight: 700; }
+
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+      box-shadow: 0 0 6px var(--green-glow);
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── SPRINT CARD (today's questions) ── */
+    .sprint-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .sprint-header {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .sprint-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+    .sprint-count { font-size: 11px; font-weight: 700; color: var(--green); font-family: 'JetBrains Mono', monospace; }
+
+    .sprint-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 13px 18px;
+      border-bottom: 1px solid rgba(26,46,26,0.7);
+    }
+    .sprint-row:last-of-type { border-bottom: none; }
+
+    .sprint-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--dim); min-width: 24px;
+    }
+
+    .sprint-emoji { font-size: 20px; }
+
+    .sprint-text .name { font-size: 14px; font-weight: 700; color: var(--cream); }
+    .sprint-text .desc { font-size: 12px; color: var(--muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+    .sprint-badge {
+      margin-left: auto;
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 4px;
+      background: var(--green-bg); color: var(--green);
+      border: 1px solid rgba(0,255,100,0.2); letter-spacing: 1px;
+      font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+    }
+
+    .sprint-footer {
+      padding: 12px 18px; background: var(--bg-card2); border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .sf-label { font-size: 11px; color: var(--muted); min-width: 90px; font-family: 'JetBrains Mono', monospace; }
+    .sf-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .sf-bar { height: 100%; width: 66%; background: linear-gradient(90deg, #007A30 0%, #00C84E 70%, #00FF64 100%); }
+    .sf-val { font-size: 16px; font-weight: 700; color: var(--green); min-width: 32px; font-family: 'JetBrains Mono', monospace; }
+
+    /* ── START BUTTON ── */
+    .btn-start {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 16px;
+      background: transparent;
+      color: var(--green);
+      border: 1.5px solid var(--green);
+      border-radius: 8px;
+      font-size: 16px; font-weight: 800;
+      box-shadow: 0 0 24px var(--green-glow), inset 0 0 24px rgba(0,255,100,0.04);
+      transition: all 0.2s;
+      letter-spacing: 0.5px; margin-bottom: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn-start:hover {
+      background: var(--green-bg);
+      box-shadow: 0 0 40px var(--green-glow), inset 0 0 40px rgba(0,255,100,0.07);
+    }
+
+    .login-hint { text-align: center; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+    .login-hint a { color: var(--green); text-decoration: underline; }
+
+    .btn-secondary {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 12px; margin-top: 10px;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn-secondary:hover { border-color: var(--green-dark); color: var(--green); }
+
+    /* ── LEADERBOARD ── */
+    .leaderboard { margin-top: 32px; }
+    .lb-header { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+    .lb-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .lb-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { min-width: 20px; font-weight: 700; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .lb-rank.top { color: var(--green); text-shadow: 0 0 8px var(--green-glow); }
+    .lb-name { flex: 1; font-weight: 600; color: var(--cream); }
+    .lb-score { font-weight: 700; color: var(--green); font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+
+    .footer-link { margin-top: 28px; text-align: center; }
+    .footer-link a { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px; transition: all 0.2s; font-family: 'JetBrains Mono', monospace; }
+    .footer-link a:hover { color: var(--cream); border-color: var(--border-l); }
+
+    @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeIn 0.35s ease both; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">&lt;/&gt;</div>
+    <div>
+      <div class="logo-main">Quizine Daily</div>
+      <div class="logo-sub mono">IT &amp; Software</div>
+    </div>
+  </div>
+  <button class="btn-login">$ login</button>
+</header>
+
+<main>
+
+  <!-- Terminal hero -->
+  <div class="terminal-hero fade-in">
+    <div class="terminal-bar">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="terminal-title">quizine-daily ~ it-software</span>
+    </div>
+    <div class="terminal-body">
+      <div class="terminal-line"><span class="prompt">→ </span><span class="cmd">quizine start --segment it-software</span></div>
+      <div class="terminal-line out">Hämtar dagens frågor... <span class="hi">✓ klar</span></div>
+      <div class="terminal-line out">Deltagare idag: <span class="hi">247</span> &nbsp;│&nbsp; Toppoäng: <span class="hi">500 XP</span></div>
+      <div class="terminal-line out">Datum: <span class="hi">2025-05-19</span> &nbsp;│&nbsp; Frågor: <span class="hi">3 st</span></div>
+      <div class="terminal-line"><span class="prompt">→ </span><span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <!-- Sprint card -->
+  <div class="sprint-card fade-in" style="animation-delay:0.06s">
+    <div class="sprint-header">
+      <span class="sprint-title">// dagens_frågor</span>
+      <span class="sprint-count">3 tickets</span>
+    </div>
+
+    <div class="sprint-row">
+      <div class="sprint-num">#01</div>
+      <div class="sprint-emoji">💻</div>
+      <div class="sprint-text">
+        <div class="name">Programmering</div>
+        <div class="desc">// kod & tekniker</div>
+      </div>
+      <div class="sprint-badge">Today</div>
+    </div>
+
+    <div class="sprint-row">
+      <div class="sprint-num">#02</div>
+      <div class="sprint-emoji">☁️</div>
+      <div class="sprint-text">
+        <div class="name">Cloud & Infrastruktur</div>
+        <div class="desc">// devops & drift</div>
+      </div>
+      <div class="sprint-badge">Today</div>
+    </div>
+
+    <div class="sprint-row">
+      <div class="sprint-num">#03</div>
+      <div class="sprint-emoji">🔒</div>
+      <div class="sprint-text">
+        <div class="name">Cybersäkerhet</div>
+        <div class="desc">// skydd & hot</div>
+      </div>
+      <div class="sprint-badge">Today</div>
+    </div>
+
+    <div class="sprint-footer">
+      <div class="sf-label">// timeout</div>
+      <div class="sf-bar-wrap"><div class="sf-bar"></div></div>
+      <div class="sf-val">15s</div>
+    </div>
+  </div>
+
+  <button class="btn-start fade-in" style="animation-delay:0.1s">
+    &gt;_ &nbsp; Starta dagens quiz
+  </button>
+
+  <div class="login-hint fade-in" style="animation-delay:0.12s">
+    Anonym mode aktiv — <a href="#">logga in</a> för att synas på topplistan
+  </div>
+
+  <button class="btn-secondary fade-in" style="animation-delay:0.14s">✏️ &nbsp;// skicka_in_en_fråga()</button>
+
+  <div class="leaderboard fade-in" style="animation-delay:0.18s">
+    <div class="lb-header">// topplista --today</div>
+    <div class="lb-card">
+      <div class="lb-row"><span class="lb-rank top">01</span><span class="lb-name">Anna S.</span><span class="lb-score">500 XP</span></div>
+      <div class="lb-row"><span class="lb-rank top">02</span><span class="lb-name">Erik L.</span><span class="lb-score">450 XP</span></div>
+      <div class="lb-row"><span class="lb-rank top">03</span><span class="lb-name">Maria K.</span><span class="lb-score">450 XP</span></div>
+      <div class="lb-row"><span class="lb-rank">04</span><span class="lb-name">Johan P.</span><span class="lb-score">300 XP</span></div>
+      <div class="lb-row"><span class="lb-rank">05</span><span class="lb-name">Sofia B.</span><span class="lb-score">150 XP</span></div>
+    </div>
+  </div>
+
+  <div class="footer-link"><a href="/"> cd .. &nbsp;# byt bransch</a></div>
+
+</main>
+</div>
+</body>
+</html>

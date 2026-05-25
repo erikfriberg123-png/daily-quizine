@@ -1,13 +1,3 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { createSegmentViteConfig } from './viteSegmentConfig'
 
-export default defineConfig({
-  plugins: [react()],
-  base: '/quizine/',
-  build: {
-    outDir: 'dist/quizine',
-  },
-  define: {
-    __SEGMENT__: JSON.stringify('quizine'),
-  },
-})
+export default createSegmentViteConfig('quizine')
