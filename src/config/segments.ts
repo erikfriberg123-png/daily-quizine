@@ -71,7 +71,6 @@ const CONFIGS: Record<string, SegmentConfig> = {
   },
   blaljus: {
     id: 'blaljus',
-    disabled: true,
     name: 'Quizine Daily',
     subtitle: 'Blåljuspersonal',
     icon: '🚨',
@@ -94,7 +93,6 @@ const CONFIGS: Record<string, SegmentConfig> = {
   },
   it: {
     id: 'it',
-    disabled: true,
     name: 'Quizine Daily',
     subtitle: 'IT & Software',
     icon: '💻',

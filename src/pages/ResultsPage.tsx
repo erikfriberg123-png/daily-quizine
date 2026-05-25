@@ -341,7 +341,7 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
         </a>
 
         {/* Leaderboard */}
-        <Leaderboard highlightUsername={username} />
+        <Leaderboard highlightUsername={username} key={String(submitted)} />
 
         {/* Actions */}
         <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
