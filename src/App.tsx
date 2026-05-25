@@ -36,6 +36,34 @@ function ComingSoonPage() {
   )
 }
 
+function AuthErrorBanner({ error, onDismiss }: { error: string; onDismiss: () => void }) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
+      background: 'rgba(3,12,26,0.88)', backdropFilter: 'blur(6px)',
+    }} onClick={onDismiss}>
+      <div style={{
+        background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 24,
+        padding: 28, width: '100%', maxWidth: 400, textAlign: 'center',
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
+        <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>Länken har gått ut</div>
+        <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 24 }}>
+          {error === 'otp_expired'
+            ? 'Din bekräftelseslänk har gått ut eller använts redan. Försök registrera dig igen med samma e-post och lösenord.'
+            : 'Inloggningslänken är ogiltig. Försök igen.'}
+        </div>
+        <button
+          onClick={onDismiss}
+          style={{ width: '100%', padding: '13px', background: 'var(--blue)', color: '#fff', borderRadius: 14, fontSize: 16, fontWeight: 700 }}
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const segment = getSegmentConfig()
   const [view, setView] = useState<View>('home')
@@ -45,6 +73,19 @@ export default function App() {
   const [serverPlayed, setServerPlayed] = useState<ServerPlayed | null>(null)
   const [serverPlayedChecked, setServerPlayedChecked] = useState(false)
   const [justCompleted, setJustCompleted] = useState(false)
+  const [authHashError, setAuthHashError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash.includes('error_code=')) {
+      const params = new URLSearchParams(hash.replace(/^#/, ''))
+      const code = params.get('error_code')
+      if (code) {
+        setAuthHashError(code)
+        window.history.replaceState(null, '', window.location.pathname + window.location.search)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -110,6 +151,7 @@ export default function App() {
 
   return (
     <>
+      {authHashError && <AuthErrorBanner error={authHashError} onDismiss={() => setAuthHashError(null)} />}
       {view === 'home' && (
         <HomePage
           user={user}

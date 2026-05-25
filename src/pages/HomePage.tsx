@@ -217,7 +217,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
           )}
         </div>
 
-        {/* Play more CTA */}
+        {/* Play more CTA + back link */}
         <style>{`
           @keyframes cta-attract {
             0%   { transform: scale(1.04); box-shadow: 0 0 0 6px rgba(29,111,232,0.45), 0 8px 32px rgba(29,111,232,0.55); }
@@ -227,32 +227,37 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
           .cta-attract { animation: cta-attract 2s cubic-bezier(0.22,1,0.36,1) forwards; }
         `}</style>
         <div style={{ marginTop: 20 }}>
-          <a
-            href={seg.ctaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={justCompleted ? 'cta-attract' : undefined}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              padding: '15px',
-              background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
-              color: '#fff',
-              borderRadius: 14,
-              fontSize: 15,
-              fontWeight: 700,
-              textDecoration: 'none',
-              boxShadow: '0 4px 20px var(--blue-glow)',
-            }}
-          >
-            {seg.ctaLabel}
-          </a>
+          {seg.showCta && (
+            <a
+              href={seg.ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={justCompleted ? 'cta-attract' : undefined}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                padding: '15px',
+                background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
+                color: '#fff',
+                borderRadius: 14,
+                fontSize: 15,
+                fontWeight: 700,
+                textDecoration: 'none',
+                boxShadow: '0 4px 20px var(--blue-glow)',
+              }}
+            >
+              {seg.ctaLabel}
+            </a>
+          )}
           {seg.showBackLink && (
-            <div style={{ textAlign: 'center', marginTop: 12 }}>
-              <a href="/" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>
-                ← Byt bransch
+            <div style={{ textAlign: 'center', marginTop: seg.showCta ? 12 : 0 }}>
+              <a
+                href="https://daily.quizine.se"
+                style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}
+              >
+                ← Välj ny Branch
               </a>
             </div>
           )}
@@ -569,7 +574,7 @@ function StartView({
               background: 'var(--timer-bar)',
             }} />
           </div>
-          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--gold-light)', minWidth: 32 }}>20s</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--gold-light)', minWidth: 32 }}>23s</div>
         </div>
       </div>
 

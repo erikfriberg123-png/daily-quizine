@@ -13,6 +13,7 @@ export interface SegmentConfig {
   startBtnIcon: string
   showStoryButton: boolean
   showBackLink: boolean
+  showCta: boolean
   localStoragePrefix: string
   showEkg: boolean
   ctaUrl: string
@@ -39,7 +40,8 @@ const CONFIGS: Record<string, SegmentConfig> = {
     cardIcon: '📋',
     startBtnIcon: '🎯',
     showStoryButton: true,
-    showBackLink: false,
+    showBackLink: true,
+    showCta: false,
     localStoragePrefix: 'dq_',
     showEkg: false,
     ctaUrl: 'https://quizine.se',
@@ -62,6 +64,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     startBtnIcon: '🩺',
     showStoryButton: true,
     showBackLink: true,
+    showCta: true,
     localStoragePrefix: 'voo_',
     showEkg: true,
     ctaUrl: 'https://quizine.se',
@@ -84,6 +87,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     startBtnIcon: '🚨',
     showStoryButton: true,
     showBackLink: true,
+    showCta: true,
     localStoragePrefix: 'blaljus_',
     showEkg: false,
     ctaUrl: 'https://quizine.se',
@@ -106,6 +110,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     startBtnIcon: '💻',
     showStoryButton: true,
     showBackLink: true,
+    showCta: true,
     localStoragePrefix: 'it_',
     showEkg: false,
     ctaUrl: 'https://quizine.se',

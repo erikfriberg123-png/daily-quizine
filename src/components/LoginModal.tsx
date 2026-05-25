@@ -57,11 +57,16 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
         clearAuthRateLimit()
         if (data.user) onSuccess(data.user)
       } else {
-        const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password })
+        const { data, error: e } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: { emailRedirectTo: window.location.origin + import.meta.env.BASE_URL },
+        })
         if (e) {
           recordAuthFailure()
           throw e
         }
+        localStorage.setItem('postAuthRedirect', 'quiz')
         if (data.user && !data.user.email_confirmed_at) {
           setDone(true)
         } else if (data.user) {
