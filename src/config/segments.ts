@@ -118,26 +118,6 @@ const CONFIGS: Record<string, SegmentConfig> = {
     questionsTable: 'it_remote_questions',
     storyButtonText: '💻  Berätta en arbetsrelaterad händelse',
   },
-  it: {
-    id: 'it',
-    name: 'Quizine Daily',
-    subtitle: 'IT & Software',
-    icon: '💻',
-    heroLine1: 'Dagens quiz',
-    heroLine2Start: 'är ',
-    heroEm: 'deployat.',
-    heroCopyLine1: 'Visa vad du kan om IT och mjukvara.',
-    heroCopyLine2: 'Tävla med kollegorna.',
-    cardTitle: 'Dagens sprint',
-    cardIcon: '💻',
-    startBtnIcon: '💻',
-    showStoryButton: true,
-    showBackLink: true,
-    localStoragePrefix: 'it_',
-    showEkg: false,
-    ctaUrl: 'https://quizine.se',
-    ctaLabel: '💻 Vill du spela mer? Besök quizine.se',
-  },
 }
 
 export function getSegmentConfig(): SegmentConfig {

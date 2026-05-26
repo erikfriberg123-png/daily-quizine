@@ -1,16 +1,95 @@
-import { ALL_CATEGORIES } from '@quizine/config'
-
-/**
- * Auto-derived from packages/config/src/categories.ts.
- * Adding a new segment's categories to that file automatically populates here.
- */
-export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; desc: string }> =
-  Object.fromEntries(
-    ALL_CATEGORIES.map(c => [c.id, { name: c.name, emoji: c.icon, desc: c.description }]),
-  )
-
-export const CATEGORY_COLORS: Record<string, string> = Object.fromEntries(
-  ALL_CATEGORIES.map(c => [c.id, c.color]),
-)
+export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; desc: string }> = {
+  // Quizine (krogen)
+  food:                  { name: 'Mat & Tillagning',        emoji: '🍳', desc: 'Tekniker & ingredienser' },
+  drink:                 { name: 'Vin & Dryck',             emoji: '🍷', desc: 'Druvor, regioner, cocktails' },
+  famous_profiles:       { name: 'Kända profiler',          emoji: '⭐', desc: 'Kockar & krogpersonligheter' },
+  professional:          { name: 'Professionellt',          emoji: '💼', desc: 'Yrkeskunskap & karriär' },
+  service_guests:        { name: 'Service & Gäster',        emoji: '🤵', desc: 'Etikett & scenarion' },
+  industry_culture:      { name: 'Branschkultur',           emoji: '🍽️', desc: 'Historia & traditioner' },
+  fun_reallife:          { name: 'Kul & Verklighet',        emoji: '😄', desc: 'Vardagen på krogen' },
+  labor_law:             { name: 'Arbetsrätt',               emoji: '⚖️', desc: 'Lagar & avtal' },
+  food_cost:             { name: 'Food Cost',                emoji: '💰', desc: 'Kalkyl & lönsamhet' },
+  scheduling_labor:      { name: 'Schema & Bemanning',      emoji: '📅', desc: 'Planering & personal' },
+  guest_psychology:      { name: 'Gästpsykologi',           emoji: '🧠', desc: 'Beteende & upplevelse' },
+  service_pressure:      { name: 'Service Under Press',     emoji: '💪', desc: 'Stress & hantering' },
+  // VOO (Vård & Omsorg)
+  anatomy_body:          { name: 'Anatomi & Kroppen',       emoji: '🫀', desc: 'Organ, system & funktioner' },
+  diagnoses_symptoms:    { name: 'Diagnoser & Symtom',      emoji: '🩺', desc: 'Sjukdom, symtom & diagnostik' },
+  emergency_firstaid:    { name: 'Akut & Första hjälpen',   emoji: '🚨', desc: 'Akutvård, HLR & livräddning' },
+  ethics_communication:  { name: 'Etik & Kommunikation',    emoji: '🤝', desc: 'Relationer, sekretess & bemötande' },
+  infections_hygiene:    { name: 'Infektioner & Hygien',    emoji: '🦠', desc: 'Smittspridning & vårdhygien' },
+  medical_history:       { name: 'Medicinsk Historia',      emoji: '📚', desc: 'Genombrott & milstolpar' },
+  medications_pharma:    { name: 'Läkemedel & Farmakologi', emoji: '💊', desc: 'Preparat, mekanismer & biverkningar' },
+  popculture_healthcare: { name: 'Populärkultur & Vård',    emoji: '🌟', desc: 'Kända läkare & vård i media' },
+  psychiatry_psychology: { name: 'Psykiatri & Psykologi',   emoji: '🧠', desc: 'Psykiska tillstånd & behandling' },
+  // Blåljuspersonal
+  filmer_serier:        { name: 'Filmer & serier',          emoji: '🎬', desc: 'Blåljus på film & TV' },
+  spannande_fakta:      { name: 'Spännande fakta',          emoji: '⚡', desc: 'Häpnadsväckande fakta' },
+  lagar_regler:         { name: 'Lagar & regler',           emoji: '⚖️', desc: 'Lagar, förordningar & rätt' },
+  forsta_hjalpen:       { name: 'Första hjälpen',           emoji: '🩺', desc: 'Akutvård & livräddning' },
+  brandbekampning:      { name: 'Brandbekämpning',          emoji: '🔥', desc: 'Brand, teknik & säkerhet' },
+  polisarbete:          { name: 'Polisarbete',              emoji: '👮', desc: 'Taktik, lag & ordning' },
+  akutvard_ambulans:    { name: 'Akutvård & ambulans',      emoji: '🚑', desc: 'Medicin, ABC & protokoll' },
+  krisberedskap:        { name: 'Krisberedskap',            emoji: '🚨', desc: 'Larm, samverkan & kris' },
+  raddningsoperationer: { name: 'Räddningsoperationer',     emoji: '🚒', desc: 'Räddning & insatstaktik' },
+  trafiksakerhet:       { name: 'Trafiksäkerhet',           emoji: '🚦', desc: 'Trafik, regler & olyckor' },
+  // IT (IT & Software)
+  programming:           { name: 'Programmering',           emoji: '💻', desc: 'Kod, algoritmer & tekniker' },
+  cloud_infra:           { name: 'Cloud & Infrastruktur',   emoji: '☁️', desc: 'DevOps, drift & nätverk' },
+  cybersecurity:         { name: 'Cybersäkerhet',           emoji: '🔒', desc: 'Skydd, hot & sårbarheter' },
+  databases:             { name: 'Databaser',               emoji: '🗄️', desc: 'SQL, NoSQL & datamodellering' },
+  ai_ml:                 { name: 'AI & Maskininlärning',    emoji: '🧠', desc: 'ChatGPT, LLM:er & AI-verktyg' },
+  operating_systems:     { name: 'Operativsystem',          emoji: '🖥️', desc: 'Linux, Windows & systemarkitektur' },
+  web_apis:              { name: 'Webb & API:er',           emoji: '🌐', desc: 'HTTP, REST, frontend & backend' },
+  app_development:       { name: 'Applikationsutveckling',  emoji: '📱', desc: 'Appar, frameworks & livscykel' },
+  tools_workflow:        { name: 'Verktyg & Arbetsflöde',   emoji: '🛠️', desc: 'Git, IDE:er, agile & felsökning' },
+  tech_history:          { name: 'Teknikhistoria & Kultur',  emoji: '🏛️', desc: 'Kända företag, uppfinnare & milstolpar' },
+  fun_culture:           { name: 'Roligt & Kultur',         emoji: '😄', desc: 'Techhumor, memes & developer-liv' },
+}
 
 export const ROMAN = ['I.', 'II.', 'III.']
+
+export const CATEGORY_COLORS: Record<string, string> = {
+  food: '#FF6B35',
+  drink: '#8B2FC9',
+  famous_profiles: '#E8B84B',
+  professional: '#F7C948',
+  service_guests: '#2EC4B6',
+  industry_culture: '#9B5DE5',
+  fun_reallife: '#F15BB5',
+  labor_law: '#3A86FF',
+  food_cost: '#06D6A0',
+  scheduling_labor: '#FFB347',
+  guest_psychology: '#FF6B9D',
+  service_pressure: '#FF5555',
+  filmer_serier: '#1A5BFF',
+  spannande_fakta: '#FFD700',
+  lagar_regler: '#5599FF',
+  forsta_hjalpen: '#FF4D66',
+  brandbekampning: '#FF6B35',
+  polisarbete: '#3A86FF',
+  akutvard_ambulans: '#00E676',
+  krisberedskap: '#FF1A3C',
+  raddningsoperationer: '#FF8C00',
+  trafiksakerhet: '#FFB300',
+  anatomy_body: '#FF6B35',
+  diagnoses_symptoms: '#9B5DE5',
+  emergency_firstaid: '#FF5555',
+  ethics_communication: '#2EC4B6',
+  infections_hygiene: '#06D6A0',
+  medical_history: '#E8B84B',
+  medications_pharma: '#3A86FF',
+  popculture_healthcare: '#F15BB5',
+  psychiatry_psychology: '#8B2FC9',
+  programming: '#00FF64',
+  cloud_infra: '#00CC50',
+  cybersecurity: '#00FF64',
+  databases: '#00CC50',
+  ai_ml: '#00FF64',
+  operating_systems: '#00CC50',
+  web_apis: '#00FF64',
+  app_development: '#00CC50',
+  tools_workflow: '#00FF64',
+  tech_history: '#00CC50',
+  fun_culture: '#00FF64',
+}

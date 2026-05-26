@@ -1,23 +1,31 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
-import { getSegment } from '../packages/config/src/index'
 
-const CONFIG_ALIAS = path.resolve(__dirname, '../packages/config/src/index.ts')
 const DEFAULT_TITLE = 'Quizine Daily – Dagens quiz för restaurangfolk'
 
-/**
- * Creates the Vite config for a daily-quizine segment build.
- * Segment title and description are read from packages/config/src/index.ts.
- *
- * Usage in vite.config.[seg].ts:
- *   import { createSegmentViteConfig } from './viteSegmentConfig'
- *   export default createSegmentViteConfig('voo')
- */
+const SEGMENT_META: Record<string, { title: string; description: string }> = {
+  quizine: {
+    title: DEFAULT_TITLE,
+    description: 'Visa vad du kan om livet på krogen. Tävla med kollegorna.',
+  },
+  voo: {
+    title: 'Quizine Daily – Vård & Omsorg',
+    description: 'Dagens quiz för vård- och omsorgspersonal. Tävla med dina kollegor.',
+  },
+  blaljus: {
+    title: 'Quizine Daily – Blåljuspersonal',
+    description: 'Dagens quiz för blåljuspersonal. Testa dina kunskaper om polis, brand och ambulans.',
+  },
+  it: {
+    title: 'Quizine Daily – IT & Software',
+    description: 'Dagens quiz för IT och mjukvaruutvecklare. Tävla med kollegorna.',
+  },
+}
+
 export function createSegmentViteConfig(segmentId: string) {
-  const seg = getSegment(segmentId)
-  const title = seg?.daily.title ?? DEFAULT_TITLE
-  const description = seg?.daily.description ?? ''
+  const meta = SEGMENT_META[segmentId] ?? SEGMENT_META.quizine
+  const title = meta.title
+  const description = meta.description
   const needsHtmlTransform = title !== DEFAULT_TITLE
 
   return defineConfig({
@@ -42,8 +50,5 @@ export function createSegmentViteConfig(segmentId: string) {
     base: `/${segmentId}/`,
     build: { outDir: `dist/${segmentId}` },
     define: { __SEGMENT__: JSON.stringify(segmentId) },
-    resolve: {
-      alias: { '@quizine/config': CONFIG_ALIAS },
-    },
   })
 }

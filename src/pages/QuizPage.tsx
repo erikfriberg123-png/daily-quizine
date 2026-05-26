@@ -8,7 +8,7 @@ import { AnswerButton } from '../components/AnswerButton'
 import { CATEGORY_DISPLAY, CATEGORY_COLORS } from '../lib/categories'
 
 const QUESTION_COUNT = 3
-const TIMER_SECONDS = 23
+const TIMER_SECONDS = 25
 
 interface Props {
   user: User | null

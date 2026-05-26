@@ -20,6 +20,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
   const keyboardOffset = useKeyboardOffset()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [appleLoading, setAppleLoading] = useState(false)
@@ -38,6 +39,10 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
   const handleSubmit = async () => {
     if (!email.trim() || !password.trim()) return
+    if (mode === 'register' && password !== confirmPassword) {
+      setError('Lösenorden matchar inte.')
+      return
+    }
 
     const secondsLocked = getLockedSeconds()
     if (secondsLocked > 0) {
@@ -176,9 +181,19 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
               placeholder="Lösenord"
               value={password}
               onChange={(e) => { setPassword(e.target.value); setError('') }}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
+              onKeyDown={(e) => { if (e.key === 'Enter' && mode === 'login') handleSubmit() }}
               style={{ ...inputStyle, marginTop: 10 }}
             />
+            {mode === 'register' && (
+              <input
+                type="password"
+                placeholder="Bekräfta lösenord"
+                value={confirmPassword}
+                onChange={(e) => { setConfirmPassword(e.target.value); setError('') }}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
+                style={{ ...inputStyle, marginTop: 10 }}
+              />
+            )}
 
             {error && (
               <div style={{ color: 'var(--error)', fontSize: 13, fontWeight: 600, marginTop: 8, marginBottom: 4 }}>
@@ -188,7 +203,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
             <button
               onClick={handleSubmit}
-              disabled={loading || !email.trim() || !password.trim()}
+              disabled={loading || !email.trim() || !password.trim() || (mode === 'register' && !confirmPassword.trim())}
               style={{
                 width: '100%',
                 marginTop: 16,
@@ -198,7 +213,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
                 borderRadius: 14,
                 fontSize: 16,
                 fontWeight: 700,
-                opacity: (!email.trim() || !password.trim()) ? 0.5 : 1,
+                opacity: (!email.trim() || !password.trim() || (mode === 'register' && !confirmPassword.trim())) ? 0.5 : 1,
                 cursor: loading ? 'default' : 'pointer',
                 transition: 'all 0.2s',
               }}
@@ -239,7 +254,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
             <div style={{ marginTop: 14, textAlign: 'center' }}>
               <button
-                onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError('') }}
+                onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setConfirmPassword('') }}
                 style={{
                   background: 'none',
                   color: 'var(--text-muted)',
