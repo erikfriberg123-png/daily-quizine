@@ -13,7 +13,7 @@
     "build:it": "vite build --config vite.config.it.ts",
     "build:blaljus": "vite build --config vite.config.blaljus.ts",
     "build:handel": "vite build --config vite.config.handel.ts",
-    "build": "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus",
+    "build": "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel",
     "preview": "vite preview"
   },
   "dependencies": {
