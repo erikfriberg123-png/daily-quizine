@@ -570,11 +570,11 @@ function StartView({
           <div style={{ fontSize: 12, color: 'var(--text-muted)', minWidth: 90 }}>⏱ Tid per fråga</div>
           <div style={{ flex: 1, height: 6, background: 'var(--border)', borderRadius: 3 }}>
             <div style={{
-              height: '100%', width: '66%', borderRadius: 3,
+              height: '100%', width: '83%', borderRadius: 3,
               background: 'var(--timer-bar)',
             }} />
           </div>
-          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--gold-light)', minWidth: 32 }}>23s</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--gold-light)', minWidth: 32 }}>25s</div>
         </div>
       </div>
 
