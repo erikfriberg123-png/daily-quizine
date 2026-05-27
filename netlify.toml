@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && cp landing-page.html dist/index.html"
+  command = "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && cp landing-page.html dist/index.html"
   publish = "dist"
 
 # Landing page at root
@@ -41,6 +41,16 @@
 [[redirects]]
   from = "/it/*"
   to = "/it/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/handel"
+  to = "/handel/"
+  status = 301
+
+[[redirects]]
+  from = "/handel/*"
+  to = "/handel/index.html"
   status = 200
 
 [[redirects]]

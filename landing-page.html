@@ -31,6 +31,8 @@
       --blaljus-glow:      rgba(255,26,60,0.35);
       --it:                #00FF64;
       --it-glow:           rgba(0,255,100,0.35);
+      --handel:            #FF6B2B;
+      --handel-glow:       rgba(255,107,43,0.35);
     }
 
     html, body {
@@ -238,6 +240,7 @@
     .card.healthcare:hover   { border-color: rgba(0,212,255,0.4);  box-shadow: 0 8px 40px var(--healthcare-glow); }
     .card.blaljus:hover      { border-color: rgba(255,26,60,0.4);  box-shadow: 0 8px 40px var(--blaljus-glow); }
     .card.it:hover           { border-color: rgba(0,255,100,0.4);  box-shadow: 0 8px 40px var(--it-glow); }
+    .card.handel:hover       { border-color: rgba(255,107,43,0.4); box-shadow: 0 8px 40px var(--handel-glow); }
 
     /* Badge */
     .card-badge {
@@ -317,6 +320,7 @@
     .healthcare   .card-footer-label { color: var(--healthcare); }
     .blaljus      .card-footer-label { color: var(--blaljus); }
     .it           .card-footer-label { color: var(--it); }
+    .handel       .card-footer-label { color: var(--handel); }
 
     /* Dimmed for coming soon */
     .card.coming-soon {
@@ -637,6 +641,31 @@
 
         <div class="card-footer">
           <span class="card-footer-label">Spela dagens quiz</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- HANDEL -->
+      <a class="card handel" href="/handel/">
+        <div class="card-badge badge-soon-yellow">Snart</div>
+
+        <div class="card-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="filter: drop-shadow(0 0 6px #FF6B2B) drop-shadow(0 0 14px rgba(255,107,43,0.4))">
+            <!-- Briefcase body -->
+            <rect x="6" y="20" width="40" height="28" rx="5" stroke="#FF6B2B" stroke-width="2" fill="none"/>
+            <!-- Handle -->
+            <rect x="18" y="11" width="16" height="10" rx="3" stroke="#FF6B2B" stroke-width="2" fill="none"/>
+            <!-- Question mark -->
+            <text x="26" y="39" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="15" font-weight="800" fill="#FF6B2B">?</text>
+          </svg>
+        </div>
+
+        <div class="card-name">Handel &amp; Butik</div>
+        <div class="card-tagline">Butikspersonal &amp; handelsproffs.<br>Testa dina kunskaper.</div>
+
+        <div class="card-footer">
+          <span class="card-footer-label">Kommer snart</span>
           <span class="card-arrow">→</span>
         </div>
       </a>
