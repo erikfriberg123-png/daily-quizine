@@ -62,9 +62,12 @@ export function SegmentLogo() {
       }}>
         <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
           style={{ filter: 'drop-shadow(0 0 6px #FF6B2B) drop-shadow(0 0 14px rgba(255,107,43,0.4))' }}>
-          <rect x="8" y="23" width="36" height="26" rx="4" stroke="#FF6B2B" strokeWidth="2.5" fill="none"/>
-          <path d="M17 23 L17 17 Q17 8 26 8 Q35 8 35 17 L35 23"
-            fill="none" stroke="#FF6B2B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          {/* Briefcase body */}
+          <rect x="6" y="20" width="40" height="28" rx="5" stroke="#FF6B2B" strokeWidth="2.5" fill="none"/>
+          {/* Handle — rectangular, sits on top */}
+          <rect x="18" y="11" width="16" height="10" rx="3" stroke="#FF6B2B" strokeWidth="2.5" fill="none"/>
+          {/* Question mark */}
+          <text x="26" y="39" textAnchor="middle" fontFamily="DM Sans,sans-serif" fontSize="15" fontWeight="800" fill="#FF6B2B">?</text>
         </svg>
       </div>
     )
