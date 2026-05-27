@@ -20,6 +20,10 @@ const SEGMENT_META: Record<string, { title: string; description: string }> = {
     title: 'Quizine Daily – IT & Software',
     description: 'Dagens quiz för IT och mjukvaruutvecklare. Tävla med kollegorna.',
   },
+  handel: {
+    title: 'Quizine Daily – Handel & Butik',
+    description: 'Dagens quiz för dig som jobbar i butik. Tävla med kollegorna.',
+  },
 }
 
 export function createSegmentViteConfig(segmentId: string) {
