@@ -138,7 +138,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     showEkg: false,
     ctaUrl: 'https://quizine.se',
     ctaLabel: '🛒 Vill du spela mer? Besök quizine.se',
-    questionsTable: 'handel_remote_questions',
+    questionsTable: 'handels_remote_questions',
     storyButtonText: '🛒 Berätta en historia från butiken',
   },
 }
