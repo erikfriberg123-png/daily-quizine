@@ -33,6 +33,15 @@ export const CATEGORY_DISPLAY: Record<string, { name: string; emoji: string; des
   krisberedskap:        { name: 'Krisberedskap',            emoji: '🚨', desc: 'Larm, samverkan & kris' },
   raddningsoperationer: { name: 'Räddningsoperationer',     emoji: '🚒', desc: 'Räddning & insatstaktik' },
   trafiksakerhet:       { name: 'Trafiksäkerhet',           emoji: '🚦', desc: 'Trafik, regler & olyckor' },
+  // Handel & Butik
+  kund_service:    { name: 'Kundservice',        emoji: '🤝', desc: 'Bemötande & kundrelationer' },
+  sortiment_varor: { name: 'Sortiment & Varor',  emoji: '📦', desc: 'Produktkunskap & varuhantering' },
+  handel_ekonomi:  { name: 'Handel & Ekonomi',   emoji: '💰', desc: 'Prissättning, marginaler & svinn' },
+  lagar_butik:     { name: 'Lagar i butiken',    emoji: '⚖️', desc: 'Konsumentköplagen & arbetsrätt' },
+  teknik_kassa:    { name: 'Teknik & Kassa',     emoji: '🖥️', desc: 'Kassasystem & betalningar' },
+  personal_hr:     { name: 'Personal & HR',      emoji: '👥', desc: 'Schema, avtal & onboarding' },
+  marknad_trend:   { name: 'Marknad & Trender',  emoji: '📈', desc: 'E-handel, trender & marknadsföring' },
+  kul_butiksliv:   { name: 'Kul & Butiksliv',   emoji: '😄', desc: 'Klassiska stunder från butiksgolvet' },
   // IT (IT & Software)
   programming:           { name: 'Programmering',           emoji: '💻', desc: 'Kod, algoritmer & tekniker' },
   cloud_infra:           { name: 'Cloud & Infrastruktur',   emoji: '☁️', desc: 'DevOps, drift & nätverk' },
@@ -92,4 +101,12 @@ export const CATEGORY_COLORS: Record<string, string> = {
   tools_workflow: '#00FF64',
   tech_history: '#00CC50',
   fun_culture: '#00FF64',
+  kund_service: '#F7921E',
+  sortiment_varor: '#E67B00',
+  handel_ekonomi: '#F7921E',
+  lagar_butik: '#E67B00',
+  teknik_kassa: '#F7921E',
+  personal_hr: '#E67B00',
+  marknad_trend: '#F7921E',
+  kul_butiksliv: '#E67B00',
 }

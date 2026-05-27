@@ -49,6 +49,28 @@ export function SegmentLogo() {
     )
   }
 
+  if (SEGMENT === 'handel') {
+    return (
+      <div style={{
+        width: 38, height: 38,
+        background: 'var(--bg-card-2)',
+        border: '1px solid var(--border-light)',
+        borderRadius: 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 14px var(--gold-glow)',
+        flexShrink: 0,
+      }}>
+        <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
+          style={{ filter: 'drop-shadow(0 0 5px #F7921E)' }}>
+          <rect x="10" y="24" width="32" height="20" rx="2" stroke="#F7921E" strokeWidth="2.5" fill="none"/>
+          <path d="M10 24 L8 14 L44 14 L42 24" stroke="#F7921E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+          <path d="M8 14 L6 8 L46 8 L44 14" stroke="#F7921E" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.45"/>
+          <rect x="20" y="30" width="12" height="14" rx="2" stroke="#F7921E" strokeWidth="2" fill="none"/>
+        </svg>
+      </div>
+    )
+  }
+
   if (SEGMENT === 'voo') {
     return (
       <div style={{
