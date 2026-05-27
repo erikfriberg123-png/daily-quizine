@@ -140,7 +140,6 @@ const CONFIGS: Record<string, SegmentConfig> = {
     ctaLabel: '🛒 Vill du spela mer? Besök quizine.se',
     questionsTable: 'handel_remote_questions',
     storyButtonText: '🛒 Berätta en historia från butiken',
-    disabled: true,
   },
 }
 
