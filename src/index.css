@@ -178,6 +178,34 @@ html[data-segment="handel"] {
   --timer-tip:    #FF6B2B;
 }
 
+/* ── Handel theme ── */
+html[data-segment="handel"] {
+  --bg:           #080600;
+  --bg-card:      #130E04;
+  --bg-card-2:    #1A1206;
+  --border:       #2E1F00;
+  --border-light: #3D2B00;
+
+  --gold:         #FF8C00;
+  --gold-light:   #FFB347;
+  --gold-glow:    rgba(255, 140, 0, 0.3);
+  --rust:         #CC5500;
+  --rust-light:   #FF7518;
+  --cream:        #FFF5E0;
+  --white:        #FFF5E0;
+
+  --orange:       #FF8C00;
+  --orange-light: #FFD080;
+  --orange-dark:  #CC5500;
+  --orange-glow:  rgba(255, 140, 0, 0.3);
+
+  --text-muted:   #7A5500;
+  --text-dim:     #3A2800;
+
+  --timer-bar:    linear-gradient(90deg, #CC5500 0%, #FF8C00 60%, #FFB347 100%);
+  --timer-tip:    #FF8C00;
+}
+
 html, body, #root {
   height: 100%;
   background-color: var(--bg);

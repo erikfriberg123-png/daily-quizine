@@ -114,7 +114,7 @@
 
     /* ── MAIN ── */
     main {
-      max-width: 680px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 48px 20px 80px;
     }
@@ -204,8 +204,20 @@
       gap: 14px;
     }
 
-    @media (max-width: 480px) {
+    .grid-industries {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .grid-industries { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 420px) {
       .grid { grid-template-columns: 1fr; }
+      .grid-industries { grid-template-columns: 1fr; }
     }
 
     /* ── SEGMENT CARD ── */
@@ -546,101 +558,50 @@
     <!-- SEGMENT GRID -->
     <p class="segment-label">Välj din bransch</p>
 
+    <!-- FEATURED: Krog & Hotell -->
     <div class="grid fade-in" style="animation-delay:0.1s">
-
-      <!-- HOSPITALITY -->
-      <a class="card hospitality" href="/quizine/">
+      <a class="card hospitality" href="/quizine/" style="grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 24px;">
         <div class="card-badge badge-live">● Live</div>
 
-        <div class="card-icon">
+        <div class="card-icon" style="flex-shrink:0">
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#9B59B6">
-            <!-- Martini glass -->
             <line x1="8" y1="8" x2="26" y2="34" stroke="#9B59B6" stroke-width="2" stroke-linecap="round"/>
             <line x1="44" y1="8" x2="26" y2="34" stroke="#9B59B6" stroke-width="2" stroke-linecap="round"/>
             <line x1="26" y1="34" x2="26" y2="46" stroke="#9B59B6" stroke-width="2" stroke-linecap="round"/>
             <line x1="19" y1="46" x2="33" y2="46" stroke="#9B59B6" stroke-width="2" stroke-linecap="round"/>
-            <!-- Question mark -->
             <text x="26" y="27" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#9B59B6">?</text>
           </svg>
         </div>
 
-        <div class="card-name">Krog &amp; Hotell</div>
-        <div class="card-tagline">Restauranger, barer &amp; hotell.<br>Visa vad du går för.</div>
+        <div style="flex:1; min-width:0">
+          <div class="card-name">Krog &amp; Hotell</div>
+          <div class="card-tagline" style="margin-top:6px">Restauranger, barer &amp; hotell — visa vad du går för.</div>
+        </div>
 
-        <div class="card-footer">
+        <div class="card-footer" style="margin-top:0; padding-top:0; border-top:none; flex-shrink:0">
           <span class="card-footer-label">Spela dagens quiz</span>
-          <span class="card-arrow">→</span>
+          <span class="card-arrow" style="margin-left:8px">→</span>
         </div>
       </a>
+    </div>
+
+    <!-- 4-column industry grid -->
+    <div class="grid-industries fade-in" style="animation-delay:0.18s">
 
       <!-- HEALTHCARE -->
       <a class="card healthcare" href="/voo/">
         <div class="card-badge badge-live">● Live</div>
-
         <div class="card-icon">
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#00D4FF">
-            <!-- Stethoscope simplified -->
             <path d="M16 10 C16 10 12 14 12 20 C12 27 18 32 26 32 C34 32 40 27 40 20 C40 14 36 10 36 10" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" fill="none"/>
             <circle cx="26" cy="34" r="8" stroke="#00D4FF" stroke-width="2" fill="none"/>
             <text x="26" y="38" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="#00D4FF">?</text>
           </svg>
         </div>
-
         <div class="card-name">Vård &amp; Omsorg</div>
-        <div class="card-tagline">Sjuksköterskor, läkare &amp; vårdpersonal.<br>Testa dina kunskaper.</div>
-
+        <div class="card-tagline">Sjuksköterskor, läkare &amp; vårdpersonal.</div>
         <div class="card-footer">
-          <span class="card-footer-label">Spela dagens quiz</span>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <!-- BLÅLJUSPERSONAL -->
-      <a class="card blaljus" href="/blaljus/">
-        <div class="card-badge badge-live">● Live</div>
-
-        <div class="card-icon">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#FF1A3C">
-            <!-- Sirenlyktan -->
-            <rect x="11" y="38" width="30" height="4" rx="2" stroke="#FF1A3C" stroke-width="2" fill="none"/>
-            <path d="M14 38 L16 30 L36 30 L38 38" stroke="#FF1A3C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
-            <path d="M16 30 Q18 20 26 18 Q34 20 36 30" stroke="#FF1A3C" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <path d="M19 30 Q21 23 26 21 Q31 23 33 30" stroke="#FF1A3C" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
-            <line x1="26" y1="18" x2="26" y2="11" stroke="#FF1A3C" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-            <line x1="26" y1="18" x2="19" y2="13" stroke="#FF1A3C" stroke-width="1.2" stroke-linecap="round" opacity="0.25"/>
-            <line x1="26" y1="18" x2="33" y2="13" stroke="#FF1A3C" stroke-width="1.2" stroke-linecap="round" opacity="0.25"/>
-            <circle cx="26" cy="18" r="2" fill="#FF1A3C" opacity="0.7"/>
-            <text x="26" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#FF1A3C">?</text>
-          </svg>
-        </div>
-
-        <div class="card-name">Blåljuspersonal</div>
-        <div class="card-tagline">Polis, brand &amp; ambulans.<br>Testa dina kunskaper.</div>
-
-        <div class="card-footer">
-          <span class="card-footer-label">Spela dagens quiz</span>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <!-- IT -->
-      <a class="card it" href="/it/">
-        <div class="card-badge badge-live">● Live</div>
-
-        <div class="card-icon">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#00FF64">
-            <!-- <? > code logo -->
-            <path d="M20 8 L8 26 L20 44" stroke="#00FF64" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <path d="M32 8 L44 26 L32 44" stroke="#00FF64" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <text x="26" y="32" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="17" font-weight="700" fill="#00FF64">?</text>
-          </svg>
-        </div>
-
-        <div class="card-name">IT &amp; Software</div>
-        <div class="card-tagline">Utvecklare, DevOps &amp; IT-proffs.<br>Visa vad du kan.</div>
-
-        <div class="card-footer">
-          <span class="card-footer-label">Spela dagens quiz</span>
+          <span class="card-footer-label">Spela</span>
           <span class="card-arrow">→</span>
         </div>
       </a>
@@ -648,29 +609,64 @@
       <!-- HANDEL -->
       <a class="card handel" href="/handel/">
         <div class="card-badge badge-live">● Live</div>
-
         <div class="card-icon">
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"
             style="filter: drop-shadow(0 0 6px #FF6B2B) drop-shadow(0 0 14px rgba(255,107,43,0.4))">
-            <!-- Briefcase body -->
             <rect x="6" y="20" width="40" height="28" rx="5" stroke="#FF6B2B" stroke-width="2" fill="none"/>
-            <!-- Handle -->
             <rect x="18" y="11" width="16" height="10" rx="3" stroke="#FF6B2B" stroke-width="2" fill="none"/>
-            <!-- Question mark -->
             <text x="26" y="39" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="15" font-weight="800" fill="#FF6B2B">?</text>
           </svg>
         </div>
-
         <div class="card-name">Handel &amp; Butik</div>
-        <div class="card-tagline">Butikspersonal &amp; handelsproffs.<br>Testa dina kunskaper.</div>
-
+        <div class="card-tagline">Butikspersonal &amp; handelsproffs.</div>
         <div class="card-footer">
-          <span class="card-footer-label">Spela dagens quiz</span>
+          <span class="card-footer-label">Spela</span>
           <span class="card-arrow">→</span>
         </div>
       </a>
 
-    </div><!-- /grid -->
+      <!-- BLÅLJUSPERSONAL -->
+      <a class="card blaljus" href="/blaljus/">
+        <div class="card-badge badge-live">● Live</div>
+        <div class="card-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#FF1A3C">
+            <rect x="11" y="38" width="30" height="4" rx="2" stroke="#FF1A3C" stroke-width="2" fill="none"/>
+            <path d="M14 38 L16 30 L36 30 L38 38" stroke="#FF1A3C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+            <path d="M16 30 Q18 20 26 18 Q34 20 36 30" stroke="#FF1A3C" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M19 30 Q21 23 26 21 Q31 23 33 30" stroke="#FF1A3C" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+            <line x1="26" y1="18" x2="26" y2="11" stroke="#FF1A3C" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <circle cx="26" cy="18" r="2" fill="#FF1A3C" opacity="0.7"/>
+            <text x="26" y="36" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="#FF1A3C">?</text>
+          </svg>
+        </div>
+        <div class="card-name">Blåljuspersonal</div>
+        <div class="card-tagline">Polis, brand &amp; ambulans.</div>
+        <div class="card-footer">
+          <span class="card-footer-label">Spela</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- IT -->
+      <a class="card it" href="/it/">
+        <div class="card-badge badge-live">● Live</div>
+        <div class="card-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#00FF64">
+            <path d="M20 8 L8 26 L20 44" stroke="#00FF64" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M32 8 L44 26 L32 44" stroke="#00FF64" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <text x="26" y="32" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="17" font-weight="700" fill="#00FF64">?</text>
+          </svg>
+        </div>
+        <div class="card-name">IT &amp; Software</div>
+        <div class="card-tagline">Utvecklare, DevOps &amp; IT-proffs.</div>
+        <div class="card-footer">
+          <span class="card-footer-label">Spela</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+
+    </div><!-- /grid-industries -->
 
     <!-- FOOTER -->
     <footer>
