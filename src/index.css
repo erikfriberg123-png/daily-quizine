@@ -152,30 +152,30 @@ html[data-segment="it"] {
 
 /* ── Handel & Butik theme ── */
 html[data-segment="handel"] {
-  --bg:           #080601;
-  --bg-card:      #140D02;
-  --bg-card-2:    #1A1203;
-  --border:       #2E1F05;
-  --border-light: #3E2A08;
+  --bg:           #08070A;
+  --bg-card:      #121018;
+  --bg-card-2:    #181520;
+  --border:       #1E1A28;
+  --border-light: #2A2438;
 
-  --gold:         #F7921E;
-  --gold-light:   #FFAB50;
-  --gold-glow:    rgba(247, 146, 30, 0.25);
-  --rust:         #B35C00;
-  --rust-light:   #D97820;
-  --cream:        #FFF3E8;
-  --white:        #FFF3E8;
+  --gold:         #FF6B2B;
+  --gold-light:   #FF9A5E;
+  --gold-glow:    rgba(255, 107, 43, 0.25);
+  --rust:         #CC3A10;
+  --rust-light:   #E05A28;
+  --cream:        #F0EAF8;
+  --white:        #F0EAF8;
 
-  --orange:       #F7921E;
-  --orange-light: #FFAB50;
-  --orange-dark:  #C97A10;
-  --orange-glow:  rgba(247, 146, 30, 0.25);
+  --orange:       #FF6B2B;
+  --orange-light: #FF9A5E;
+  --orange-dark:  #CC3A10;
+  --orange-glow:  rgba(255, 107, 43, 0.25);
 
-  --text-muted:   #7A5030;
-  --text-dim:     #3A2010;
+  --text-muted:   #6B5F7A;
+  --text-dim:     #3A3248;
 
-  --timer-bar:    linear-gradient(90deg, #B35C00 0%, #F7921E 80%, #FFAB50 100%);
-  --timer-tip:    #F7921E;
+  --timer-bar:    linear-gradient(90deg, #CC3A10 0%, #FF6B2B 80%, #FF9A5E 100%);
+  --timer-tip:    #FF6B2B;
 }
 
 html, body, #root {

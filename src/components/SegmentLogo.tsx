@@ -61,11 +61,10 @@ export function SegmentLogo() {
         flexShrink: 0,
       }}>
         <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
-          style={{ filter: 'drop-shadow(0 0 5px #F7921E)' }}>
-          <rect x="10" y="24" width="32" height="20" rx="2" stroke="#F7921E" strokeWidth="2.5" fill="none"/>
-          <path d="M10 24 L8 14 L44 14 L42 24" stroke="#F7921E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-          <path d="M8 14 L6 8 L46 8 L44 14" stroke="#F7921E" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.45"/>
-          <rect x="20" y="30" width="12" height="14" rx="2" stroke="#F7921E" strokeWidth="2" fill="none"/>
+          style={{ filter: 'drop-shadow(0 0 6px #FF6B2B) drop-shadow(0 0 14px rgba(255,107,43,0.4))' }}>
+          <rect x="8" y="23" width="36" height="26" rx="4" stroke="#FF6B2B" strokeWidth="2.5" fill="none"/>
+          <path d="M17 23 L17 17 Q17 8 26 8 Q35 8 35 17 L35 23"
+            fill="none" stroke="#FF6B2B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
     )
