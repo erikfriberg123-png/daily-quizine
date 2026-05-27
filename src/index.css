@@ -152,58 +152,30 @@ html[data-segment="it"] {
 
 /* ── Handel & Butik theme ── */
 html[data-segment="handel"] {
-  --bg:           #08070A;
-  --bg-card:      #121018;
-  --bg-card-2:    #181520;
-  --border:       #1E1A28;
-  --border-light: #2A2438;
+  --bg:           #0A080C;
+  --bg-card:      #1A1520;
+  --bg-card-2:    #130F17;
+  --border:       #241E2C;
+  --border-light: #302840;
 
   --gold:         #FF6B2B;
   --gold-light:   #FF9A5E;
-  --gold-glow:    rgba(255, 107, 43, 0.25);
+  --gold-glow:    rgba(255, 107, 43, 0.35);
   --rust:         #CC3A10;
-  --rust-light:   #E05A28;
+  --rust-light:   #FF9A5E;
   --cream:        #F0EAF8;
   --white:        #F0EAF8;
 
   --orange:       #FF6B2B;
   --orange-light: #FF9A5E;
   --orange-dark:  #CC3A10;
-  --orange-glow:  rgba(255, 107, 43, 0.25);
+  --orange-glow:  rgba(255, 107, 43, 0.35);
 
   --text-muted:   #6B5F7A;
   --text-dim:     #3A3248;
 
-  --timer-bar:    linear-gradient(90deg, #CC3A10 0%, #FF6B2B 80%, #FF9A5E 100%);
+  --timer-bar:    linear-gradient(90deg, #CC3A10 0%, #FF6B2B 80%, #FFB830 100%);
   --timer-tip:    #FF6B2B;
-}
-
-/* ── Handel theme ── */
-html[data-segment="handel"] {
-  --bg:           #080600;
-  --bg-card:      #130E04;
-  --bg-card-2:    #1A1206;
-  --border:       #2E1F00;
-  --border-light: #3D2B00;
-
-  --gold:         #FF8C00;
-  --gold-light:   #FFB347;
-  --gold-glow:    rgba(255, 140, 0, 0.3);
-  --rust:         #CC5500;
-  --rust-light:   #FF7518;
-  --cream:        #FFF5E0;
-  --white:        #FFF5E0;
-
-  --orange:       #FF8C00;
-  --orange-light: #FFD080;
-  --orange-dark:  #CC5500;
-  --orange-glow:  rgba(255, 140, 0, 0.3);
-
-  --text-muted:   #7A5500;
-  --text-dim:     #3A2800;
-
-  --timer-bar:    linear-gradient(90deg, #CC5500 0%, #FF8C00 60%, #FFB347 100%);
-  --timer-tip:    #FF8C00;
 }
 
 html, body, #root {
