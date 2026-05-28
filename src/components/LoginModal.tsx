@@ -168,58 +168,63 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
                 : 'Skapa ett konto som fungerar på Quizine.se också'}
             </div>
 
-            <input
-              type="email"
-              placeholder="E-postadress"
-              value={email}
-              onChange={(e) => { setEmail(e.target.value); setError('') }}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
-              style={inputStyle}
-            />
-            <input
-              type="password"
-              placeholder="Lösenord"
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); setError('') }}
-              onKeyDown={(e) => { if (e.key === 'Enter' && mode === 'login') handleSubmit() }}
-              style={{ ...inputStyle, marginTop: 10 }}
-            />
-            {mode === 'register' && (
+            <form
+              onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
+              style={{ display: 'contents' }}
+            >
+              <input
+                type="email"
+                placeholder="E-postadress"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setError('') }}
+                autoComplete="email"
+                style={inputStyle}
+              />
               <input
                 type="password"
-                placeholder="Bekräfta lösenord"
-                value={confirmPassword}
-                onChange={(e) => { setConfirmPassword(e.target.value); setError('') }}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
+                placeholder="Lösenord"
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError('') }}
+                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                 style={{ ...inputStyle, marginTop: 10 }}
               />
-            )}
+              {mode === 'register' && (
+                <input
+                  type="password"
+                  placeholder="Bekräfta lösenord"
+                  value={confirmPassword}
+                  onChange={(e) => { setConfirmPassword(e.target.value); setError('') }}
+                  autoComplete="new-password"
+                  style={{ ...inputStyle, marginTop: 10 }}
+                />
+              )}
 
-            {error && (
-              <div style={{ color: 'var(--error)', fontSize: 13, fontWeight: 600, marginTop: 8, marginBottom: 4 }}>
-                {error}
-              </div>
-            )}
+              {error && (
+                <div style={{ color: 'var(--error)', fontSize: 13, fontWeight: 600, marginTop: 8, marginBottom: 4 }}>
+                  {error}
+                </div>
+              )}
 
-            <button
-              onClick={handleSubmit}
-              disabled={loading || !email.trim() || !password.trim() || (mode === 'register' && !confirmPassword.trim())}
-              style={{
-                width: '100%',
-                marginTop: 16,
-                padding: '14px',
-                background: loading ? 'var(--border)' : 'var(--blue)',
-                color: '#fff',
-                borderRadius: 14,
-                fontSize: 16,
-                fontWeight: 700,
-                opacity: (!email.trim() || !password.trim() || (mode === 'register' && !confirmPassword.trim())) ? 0.5 : 1,
-                cursor: loading ? 'default' : 'pointer',
-                transition: 'all 0.2s',
-              }}
-            >
-              {loading ? 'Laddar...' : mode === 'login' ? 'Logga in' : 'Skapa konto'}
-            </button>
+              <button
+                type="submit"
+                disabled={loading || !email.trim() || !password.trim() || (mode === 'register' && !confirmPassword.trim())}
+                style={{
+                  width: '100%',
+                  marginTop: 16,
+                  padding: '14px',
+                  background: loading ? 'var(--border)' : 'var(--blue)',
+                  color: '#fff',
+                  borderRadius: 14,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  opacity: (!email.trim() || !password.trim() || (mode === 'register' && !confirmPassword.trim())) ? 0.5 : 1,
+                  cursor: loading ? 'default' : 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                {loading ? 'Laddar...' : mode === 'login' ? 'Logga in' : 'Skapa konto'}
+              </button>
+            </form>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0 4px' }}>
               <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
