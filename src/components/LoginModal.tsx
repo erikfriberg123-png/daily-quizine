@@ -170,7 +170,7 @@ export function LoginModal({ onSuccess, onClose, hint }: Props) {
 
             <form
               onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
-              style={{ display: 'contents' }}
+              style={{ display: 'block', width: '100%' }}
             >
               <input
                 type="email"
