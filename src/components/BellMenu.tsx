@@ -17,7 +17,7 @@ function urlBase64ToUint8Array(base64: string): Uint8Array {
 
 async function getSwRegistration(): Promise<ServiceWorkerRegistration | null> {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null
-  return navigator.serviceWorker.register('/sw.js').catch(() => null)
+  return navigator.serviceWorker.register(import.meta.env.BASE_URL + 'sw.js').catch(() => null)
 }
 
 export function BellMenu({ user }: Props) {
