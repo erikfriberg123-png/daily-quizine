@@ -6,6 +6,8 @@ import { submitDailyScore } from '../lib/dailyScores'
 import { Timer } from '../components/Timer'
 import { AnswerButton } from '../components/AnswerButton'
 import { CATEGORY_DISPLAY, CATEGORY_COLORS } from '../lib/categories'
+import { UserMenu } from '../components/UserMenu'
+import { BellMenu } from '../components/BellMenu'
 
 const QUESTION_COUNT = 3
 const TIMER_SECONDS = 25
@@ -15,11 +17,12 @@ interface Props {
   username: string | null
   onComplete: (result: { score: number; correct: number; total: number; dateStr: string }) => void
   onExit: () => void
+  onUsernameChange: (name: string) => void
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong' | 'disabled'
 
-export default function QuizPage({ user, username, onComplete, onExit }: Props) {
+export default function QuizPage({ user, username, onComplete, onExit, onUsernameChange }: Props) {
   const [questions, setQuestions] = useState<DailyQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -269,16 +272,14 @@ export default function QuizPage({ user, username, onComplete, onExit }: Props) 
             Fråga {qIndex + 1}/{questions.length}
           </div>
         </div>
-        <div
-          style={{
-            fontSize: 14,
-            fontWeight: 800,
-            color: 'var(--orange)',
-            minWidth: 60,
-            textAlign: 'right',
-          }}
-        >
-          {score.toLocaleString('sv-SE')} XP
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--orange)', marginRight: 2 }}>
+            {score.toLocaleString('sv-SE')} XP
+          </div>
+          {user && <BellMenu user={user} />}
+          {user && (
+            <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />
+          )}
         </div>
       </div>
 

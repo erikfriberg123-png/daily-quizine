@@ -7,6 +7,8 @@ import { LoginModal } from '../components/LoginModal'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
 import { FeedbackModal } from '../components/FeedbackModal'
 import { StoryModal } from '../components/StoryModal'
+import { UserMenu } from '../components/UserMenu'
+import { BellMenu } from '../components/BellMenu'
 
 interface Props {
   result: { score: number; correct: number; total: number; dateStr: string }
@@ -14,6 +16,7 @@ interface Props {
   username: string | null
   onPlayAgain: () => void
   onAuthChange: (user: User | null) => void
+  onUsernameChange: (name: string) => void
 }
 
 function scoreEmoji(correct: number, total: number) {
@@ -41,7 +44,7 @@ const handleCreateBtnMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
   e.currentTarget.style.background = 'transparent'
 }
 
-export default function ResultsPage({ result, user, username, onPlayAgain, onAuthChange }: Props) {
+export default function ResultsPage({ result, user, username, onPlayAgain, onAuthChange, onUsernameChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [feedbackVisible, setFeedbackVisible] = useState(false)
@@ -118,26 +121,34 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
           background: 'var(--bg-card)',
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
+          justifyContent: 'space-between',
         }}
       >
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 18,
-            fontWeight: 900,
-            color: '#fff',
-          }}
-        >
-          Q
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 18,
+              fontWeight: 900,
+              color: '#fff',
+            }}
+          >
+            Q
+          </div>
+          <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)' }}>Quizine Daily</div>
         </div>
-        <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)' }}>Quizine Daily</div>
+        {user && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <BellMenu user={user} />
+            <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />
+          </div>
+        )}
       </header>
 
       <main

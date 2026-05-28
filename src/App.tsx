@@ -7,6 +7,7 @@ import { getSegmentConfig } from './config/segments'
 import HomePage from './pages/HomePage'
 import QuizPage from './pages/QuizPage'
 import ResultsPage from './pages/ResultsPage'
+import { NicknameModal } from './components/NicknameModal'
 
 type View = 'home' | 'quiz' | 'results'
 
@@ -69,6 +70,7 @@ export default function App() {
   const [view, setView] = useState<View>('home')
   const [user, setUser] = useState<User | null>(null)
   const [username, setUsername] = useState<string | null>(null)
+  const [usernameChecked, setUsernameChecked] = useState(false)
   const [result, setResult] = useState<QuizResult | null>(null)
   const [serverPlayed, setServerPlayed] = useState<ServerPlayed | null>(null)
   const [serverPlayedChecked, setServerPlayedChecked] = useState(false)
@@ -94,33 +96,40 @@ export default function App() {
         fetchUsername(session.user.id)
         fetchServerPlayed(session.user.id)
       } else {
+        setUsernameChecked(true)
         setServerPlayedChecked(true)
       }
     })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) {
-        fetchUsername(session.user.id)
+        const name = await fetchUsername(session.user.id)
         fetchServerPlayed(session.user.id)
         if (event === 'SIGNED_IN') {
           const redirect = localStorage.getItem('postAuthRedirect')
-          if (redirect === 'quiz') {
-            localStorage.removeItem('postAuthRedirect')
+          localStorage.removeItem('postAuthRedirect')
+          if (name && redirect === 'quiz') {
             setView('quiz')
           }
+          // No username = new user; stay on home so NicknameModal shows first
         }
       } else {
         setUsername(null)
+        setUsernameChecked(false)
         setServerPlayed(null)
         setServerPlayedChecked(true)
+        if (event === 'SIGNED_OUT') setView('home')
       }
     })
     return () => subscription.unsubscribe()
   }, [])
 
-  const fetchUsername = async (uid: string) => {
+  const fetchUsername = async (uid: string): Promise<string | null> => {
     const { data } = await supabase.from('profiles').select('username').eq('id', uid).single()
-    setUsername((data?.username as string | null) ?? null)
+    const name = (data?.username as string | null) ?? null
+    setUsername(name)
+    setUsernameChecked(true)
+    return name
   }
 
   const fetchServerPlayed = async (uid: string) => {
@@ -142,6 +151,7 @@ export default function App() {
       fetchServerPlayed(u.id)
     } else {
       setUsername(null)
+      setUsernameChecked(false)
       setServerPlayed(null)
       setServerPlayedChecked(true)
     }
@@ -152,6 +162,9 @@ export default function App() {
   return (
     <>
       {authHashError && <AuthErrorBanner error={authHashError} onDismiss={() => setAuthHashError(null)} />}
+      {user && usernameChecked && !username && (
+        <NicknameModal user={user} onSave={(name) => setUsername(name)} />
+      )}
       {view === 'home' && (
         <HomePage
           user={user}
@@ -161,6 +174,7 @@ export default function App() {
           justCompleted={justCompleted}
           onStartQuiz={() => setView('quiz')}
           onAuthChange={handleAuthChange}
+          onUsernameChange={(name) => setUsername(name)}
         />
       )}
       {view === 'quiz' && (
@@ -169,15 +183,17 @@ export default function App() {
           username={username}
           onComplete={(r) => { setResult(r); setView('results') }}
           onExit={() => setView('home')}
+          onUsernameChange={(name) => setUsername(name)}
         />
       )}
-{view === 'results' && result && (
+      {view === 'results' && result && (
         <ResultsPage
           result={result}
           user={user}
           username={username}
           onPlayAgain={() => { setJustCompleted(true); setView('home') }}
           onAuthChange={handleAuthChange}
+          onUsernameChange={(name) => setUsername(name)}
         />
       )}
     </>

@@ -11,6 +11,9 @@ import { ServerPlayed } from '../App'
 import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
 import { getSegmentConfig, SegmentConfig } from '../config/segments'
 import { SegmentLogo } from '../components/SegmentLogo'
+import { FeedbackModal } from '../components/FeedbackModal'
+import { UserMenu } from '../components/UserMenu'
+import { BellMenu } from '../components/BellMenu'
 
 const QUESTION_COUNT = 3
 
@@ -22,13 +25,14 @@ interface Props {
   justCompleted: boolean
   onStartQuiz: () => void
   onAuthChange: (user: User | null) => void
+  onUsernameChange: (name: string) => void
 }
 
 const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag'][
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange }: Props) {
+export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange, onUsernameChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -47,11 +51,6 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
       : localPlayed
     : localPlayed
   const checkingServer = user !== null && !serverPlayedChecked
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    onAuthChange(null)
-  }
 
   return (
     <div
@@ -87,25 +86,10 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-                {username ?? user.email?.split('@')[0]}
-              </span>
-              <button
-                onClick={handleLogout}
-                style={{
-                  fontSize: 12,
-                  color: 'var(--text-dim)',
-                  background: 'none',
-                  padding: '4px 10px',
-                  border: '1px solid var(--border)',
-                  borderRadius: 8,
-                  cursor: 'pointer',
-                }}
-              >
-                Logga ut
-              </button>
-            </div>
+            <>
+              <BellMenu user={user} />
+              <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />
+            </>
           ) : (
             <button
               onClick={() => setLoginVisible(true)}
@@ -445,6 +429,7 @@ function StartView({
 }) {
   const weekday = TODAY_WEEKDAY
   const [menuItems, setMenuItems] = useState<Array<{ name: string; emoji: string; desc: string }>>([])
+  const [showFeedback, setShowFeedback] = useState(false)
 
   useEffect(() => {
     fetchDailyQuestions()
@@ -621,6 +606,19 @@ function StartView({
           Du spelar som{' '}
           <strong style={{ color: 'var(--gold-light)' }}>{username}</strong>
         </div>
+      )}
+
+      <div style={{ textAlign: 'center', marginTop: 16 }}>
+        <button
+          onClick={() => setShowFeedback(true)}
+          style={{ background: 'none', color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer', textDecoration: 'underline' }}
+        >
+          💬 Lämna feedback
+        </button>
+      </div>
+
+      {showFeedback && (
+        <FeedbackModal user={user} username={username} onClose={() => setShowFeedback(false)} />
       )}
     </div>
   )
