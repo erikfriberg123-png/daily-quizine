@@ -14,6 +14,7 @@ const TIMER_SECONDS = 25
 
 interface Props {
   user: User | null
+  sessionChecked: boolean
   username: string | null
   onComplete: (result: { score: number; correct: number; total: number; dateStr: string }) => void
   onExit: () => void
@@ -22,7 +23,7 @@ interface Props {
 
 type AnswerState = 'idle' | 'correct' | 'wrong' | 'disabled'
 
-export default function QuizPage({ user, username, onComplete, onExit, onUsernameChange }: Props) {
+export default function QuizPage({ user, sessionChecked, username, onComplete, onExit, onUsernameChange }: Props) {
   const [questions, setQuestions] = useState<DailyQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -276,8 +277,8 @@ export default function QuizPage({ user, username, onComplete, onExit, onUsernam
           <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--orange)', marginRight: 2 }}>
             {score.toLocaleString('sv-SE')} XP
           </div>
-          {user && <BellMenu user={user} />}
-          {user && (
+          {sessionChecked && user && <BellMenu user={user} />}
+          {sessionChecked && user && (
             <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />
           )}
         </div>

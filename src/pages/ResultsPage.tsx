@@ -13,6 +13,7 @@ import { BellMenu } from '../components/BellMenu'
 interface Props {
   result: { score: number; correct: number; total: number; dateStr: string }
   user: User | null
+  sessionChecked: boolean
   username: string | null
   onPlayAgain: () => void
   onAuthChange: (user: User | null) => void
@@ -44,7 +45,7 @@ const handleCreateBtnMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
   e.currentTarget.style.background = 'transparent'
 }
 
-export default function ResultsPage({ result, user, username, onPlayAgain, onAuthChange, onUsernameChange }: Props) {
+export default function ResultsPage({ result, user, sessionChecked, username, onPlayAgain, onAuthChange, onUsernameChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [feedbackVisible, setFeedbackVisible] = useState(false)
@@ -143,7 +144,7 @@ export default function ResultsPage({ result, user, username, onPlayAgain, onAut
           </div>
           <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)' }}>Quizine Daily</div>
         </div>
-        {user && (
+        {sessionChecked && user && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <BellMenu user={user} />
             <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />

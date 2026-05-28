@@ -112,6 +112,57 @@
       border-color: rgba(201,146,42,0.55);
     }
 
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--bg-card-2); border: 1px solid var(--border);
+      color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; flex-shrink: 0; position: relative;
+    }
+    .icon-btn:hover, .icon-btn.active {
+      background: rgba(201,146,42,0.18);
+      border-color: rgba(201,146,42,0.4); color: var(--gold-light);
+    }
+    .icon-dropdown {
+      position: absolute; right: 0; top: calc(100% + 8px);
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; min-width: 220px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5); overflow: hidden;
+      z-index: 200; display: none;
+    }
+    .icon-dropdown.open { display: block; }
+    .dropdown-header { padding: 12px 14px 10px; border-bottom: 1px solid var(--border); }
+    .dropdown-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; }
+    .dropdown-name { font-size: 14px; font-weight: 700; color: var(--cream); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dropdown-row {
+      padding: 11px 14px; display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border); cursor: pointer;
+      font-size: 14px; font-weight: 600; color: var(--cream);
+      background: none; width: 100%; text-align: left; transition: background 0.1s;
+    }
+    .dropdown-row:last-child { border-bottom: none; }
+    .dropdown-row:hover { background: rgba(255,255,255,0.04); }
+    .dropdown-row.danger { color: #FF4757; }
+    .dropdown-toggle-row {
+      padding: 11px 14px; display: flex; align-items: center;
+      justify-content: space-between; gap: 10px;
+      border-bottom: 1px solid var(--border); font-size: 13px; color: var(--cream);
+    }
+    .toggle-info { display: flex; align-items: center; gap: 9px; }
+    .toggle-btn {
+      width: 44px; height: 26px; border-radius: 13px;
+      background: var(--bg-card-2); border: 1px solid var(--border);
+      position: relative; cursor: pointer; flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .toggle-btn.on { background: var(--gold); border-color: var(--gold); }
+    .toggle-btn::after {
+      content: ''; position: absolute; top: 4px; left: 4px;
+      width: 16px; height: 16px; border-radius: 50%; background: #fff;
+      transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .toggle-btn.on::after { left: 22px; }
+
     /* ── MAIN ── */
     main {
       max-width: 960px;
@@ -522,8 +573,46 @@
       </div>
     </div>
     <div class="header-right">
-      <span id="header-username" style="font-size:13px;color:var(--text-muted);display:none;"></span>
-      <button class="btn-logout" id="btn-logout" onclick="handleLogout()">Logga ut</button>
+      <!-- Bell (logged-in only) -->
+      <div style="position:relative;display:none;" id="bell-wrap">
+        <button class="icon-btn" id="btn-bell" onclick="toggleBellMenu()" aria-label="Påminnelser">
+          <svg id="bell-icon-outline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <svg id="bell-icon-filled" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <div class="icon-dropdown" id="bell-dropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-label">Dagliga påminnelser</div>
+            <div class="dropdown-name" style="font-size:12px;font-weight:400;color:var(--text-muted);">Skickas kl. 08:00 varje dag</div>
+          </div>
+          <div class="dropdown-toggle-row">
+            <div class="toggle-info">
+              <span style="font-size:18px;">📧</span>
+              <div>
+                <div style="font-size:13px;font-weight:600;">E-post</div>
+                <div id="bell-email-label" style="font-size:11px;color:var(--text-muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+              </div>
+            </div>
+            <button class="toggle-btn" id="email-toggle" onclick="toggleEmailReminder()"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- User icon (logged-in only) -->
+      <div style="position:relative;display:none;" id="user-wrap">
+        <button class="icon-btn" id="btn-user" onclick="toggleUserMenu()" aria-label="Användarmeny">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </button>
+        <div class="icon-dropdown" id="user-dropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-label">Inloggad som</div>
+            <div class="dropdown-name" id="user-dropdown-name"></div>
+          </div>
+          <button class="dropdown-row" onclick="openNicknameModal()"><span>✏️</span><span id="nickname-btn-label">Ange smeknamn</span></button>
+          <button class="dropdown-row danger" onclick="handleLogout()"><span>↩</span>Logga ut</button>
+        </div>
+      </div>
+
+      <!-- Login (logged-out only) -->
       <button class="btn-login" id="btn-login" onclick="openLogin()">Logga in</button>
     </div>
   </header>
@@ -695,6 +784,19 @@
   </main>
 
   <!-- LOGIN MODAL -->
+  <!-- Nickname modal -->
+  <div class="modal-overlay" id="nickname-overlay" onclick="if(event.target===this)closeNicknameModal()" style="align-items:flex-end;padding:0;">
+    <div class="modal" style="position:relative;border-radius:24px 24px 0 0;margin:0;width:100%;max-width:460px;">
+      <button class="modal-close" onclick="closeNicknameModal()">✕</button>
+      <div style="font-size:36px;text-align:center;margin-bottom:10px;">👤</div>
+      <div class="modal-title" id="nickname-modal-title">Byt smeknamn</div>
+      <div class="modal-sub">Smeknamnet syns på topplistan och fungerar på hela Quizine.</div>
+      <input class="input-field" type="text" placeholder="Ditt smeknamn" id="nickname-input" maxlength="30" oninput="onNicknameInput()" onkeydown="if(event.key==='Enter')submitNickname()"/>
+      <div id="nickname-status" style="font-size:12px;min-height:18px;margin:6px 0 10px;padding-left:2px;"></div>
+      <button class="btn-submit" id="nickname-submit" onclick="submitNickname()" disabled>Välj smeknamn</button>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="login-overlay" onclick="handleOverlayClick(event)">
     <div class="modal" style="position:relative">
       <button class="modal-close" onclick="closeLogin()">✕</button>
@@ -823,23 +925,149 @@
 
     async function handleLogout() {
       await sb.auth.signOut()
+      closeAllMenus()
     }
 
-    function updateLoggedInUI(user) {
-      const username = user.user_metadata?.username || user.email?.split('@')[0] || 'Användare'
-      document.getElementById('username-label').textContent = username
-      document.getElementById('user-pill').style.display = 'inline-flex'
-      document.getElementById('header-username').textContent = username
-      document.getElementById('header-username').style.display = 'inline'
+    // ── Bell menu ──────────────────────────────────────────────────────────
+    let emailReminderOn = false
+    let currentUserId = null
+
+    function toggleBellMenu() {
+      const d = document.getElementById('bell-dropdown')
+      const ud = document.getElementById('user-dropdown')
+      ud.classList.remove('open')
+      document.getElementById('btn-user').classList.remove('active')
+      const open = d.classList.toggle('open')
+      document.getElementById('btn-bell').classList.toggle('active', open)
+    }
+
+    async function toggleEmailReminder() {
+      if (!currentUserId) return
+      emailReminderOn = !emailReminderOn
+      updateBellToggleUI()
+      await sb.from('profiles').update({ email_reminders: emailReminderOn }).eq('id', currentUserId)
+    }
+
+    function updateBellToggleUI() {
+      const btn = document.getElementById('email-toggle')
+      btn.classList.toggle('on', emailReminderOn)
+      const outline = document.getElementById('bell-icon-outline')
+      const filled = document.getElementById('bell-icon-filled')
+      const bellBtn = document.getElementById('btn-bell')
+      if (emailReminderOn) {
+        outline.style.display = 'none'; filled.style.display = ''; bellBtn.classList.add('active')
+      } else {
+        outline.style.display = ''; filled.style.display = 'none'; bellBtn.classList.remove('active')
+      }
+    }
+
+    // ── User menu ──────────────────────────────────────────────────────────
+    function toggleUserMenu() {
+      const d = document.getElementById('user-dropdown')
+      const bd = document.getElementById('bell-dropdown')
+      bd.classList.remove('open')
+      document.getElementById('btn-bell').classList.remove('active')
+      const open = d.classList.toggle('open')
+      document.getElementById('btn-user').classList.toggle('active', open)
+    }
+
+    function closeAllMenus() {
+      document.getElementById('bell-dropdown').classList.remove('open')
+      document.getElementById('user-dropdown').classList.remove('open')
+      document.getElementById('btn-bell').classList.remove('active')
+      document.getElementById('btn-user').classList.remove('active')
+    }
+
+    document.addEventListener('mousedown', (e) => {
+      const bw = document.getElementById('bell-wrap')
+      const uw = document.getElementById('user-wrap')
+      if (!bw.contains(e.target) && !uw.contains(e.target)) closeAllMenus()
+    })
+
+    // ── Nickname modal ─────────────────────────────────────────────────────
+    let currentUsername = null
+
+    function openNicknameModal() {
+      closeAllMenus()
+      document.getElementById('nickname-overlay').classList.add('open')
+      document.getElementById('nickname-input').value = ''
+      document.getElementById('nickname-status').textContent = ''
+      document.getElementById('nickname-submit').disabled = true
+      document.getElementById('nickname-submit').textContent = 'Välj smeknamn'
+      setTimeout(() => document.getElementById('nickname-input').focus(), 100)
+    }
+    function closeNicknameModal() {
+      document.getElementById('nickname-overlay').classList.remove('open')
+      clearTimeout(nicknameCheckTimer)
+    }
+
+    let nicknameCheckTimer = null
+    async function onNicknameInput() {
+      const val = document.getElementById('nickname-input').value.trim()
+      const status = document.getElementById('nickname-status')
+      const submit = document.getElementById('nickname-submit')
+      submit.disabled = true
+      if (!val) { status.textContent = ''; return }
+      if (val.length < 2) { status.textContent = 'Minst 2 tecken'; status.style.color = '#FF4757'; return }
+      if (val.length > 30) { status.textContent = 'Max 30 tecken'; status.style.color = '#FF4757'; return }
+      if (!/^[A-Za-zÅÄÖåäö0-9 _-]+$/.test(val)) { status.textContent = 'Bokstäver, siffror, mellanslag, - och _'; status.style.color = '#FF4757'; return }
+      status.textContent = 'Kontrollerar…'; status.style.color = 'var(--text-muted)'
+      clearTimeout(nicknameCheckTimer)
+      nicknameCheckTimer = setTimeout(async () => {
+        const { data } = await sb.from('profiles').select('id').eq('username', val).maybeSingle()
+        if (data) { status.textContent = 'Det smeknamnet är redan taget'; status.style.color = '#FF4757' }
+        else { status.textContent = 'Smeknamnet är ledigt!'; status.style.color = '#4ade80'; submit.disabled = false }
+      }, 600)
+    }
+
+    async function submitNickname() {
+      const val = document.getElementById('nickname-input').value.trim()
+      if (!val || !currentUserId) return
+      document.getElementById('nickname-submit').disabled = true
+      document.getElementById('nickname-submit').textContent = 'Sparar…'
+      const { error } = await sb.from('profiles').update({ username: val }).eq('id', currentUserId)
+      if (!error) {
+        currentUsername = val
+        updateUsernameDisplays(val)
+        closeNicknameModal()
+      }
+      document.getElementById('nickname-submit').textContent = 'Välj smeknamn'
+    }
+
+    function updateUsernameDisplays(name) {
+      document.getElementById('username-label').textContent = name
+      document.getElementById('user-dropdown-name').textContent = name
+      document.getElementById('nickname-btn-label').textContent = 'Byt smeknamn'
+    }
+
+    // ── Auth state ─────────────────────────────────────────────────────────
+    async function updateLoggedInUI(user) {
+      currentUserId = user.id
+      document.getElementById('bell-email-label').textContent = user.email || ''
       document.getElementById('btn-login').style.display = 'none'
-      document.getElementById('btn-logout').style.display = 'inline-block'
+      document.getElementById('bell-wrap').style.display = ''
+      document.getElementById('user-wrap').style.display = ''
+
+      // Fetch username + email_reminders from profiles
+      const { data } = await sb.from('profiles').select('username, email_reminders').eq('id', user.id).maybeSingle()
+      const name = data?.username || user.email?.split('@')[0] || 'Användare'
+      currentUsername = data?.username || null
+      emailReminderOn = data?.email_reminders ?? false
+
+      updateUsernameDisplays(name)
+      document.getElementById('username-label').textContent = name
+      document.getElementById('user-pill').style.display = 'inline-flex'
+      document.getElementById('nickname-btn-label').textContent = currentUsername ? 'Byt smeknamn' : 'Ange smeknamn'
+      updateBellToggleUI()
     }
 
     function updateLoggedOutUI() {
+      currentUserId = null
       document.getElementById('user-pill').style.display = 'none'
-      document.getElementById('header-username').style.display = 'none'
       document.getElementById('btn-login').style.display = 'inline-block'
-      document.getElementById('btn-logout').style.display = 'none'
+      document.getElementById('bell-wrap').style.display = 'none'
+      document.getElementById('user-wrap').style.display = 'none'
+      closeAllMenus()
     }
 
     sb.auth.getSession().then(({ data: { session } }) => {

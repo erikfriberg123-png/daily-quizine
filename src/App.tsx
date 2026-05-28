@@ -69,6 +69,7 @@ export default function App() {
   const segment = getSegmentConfig()
   const [view, setView] = useState<View>('home')
   const [user, setUser] = useState<User | null>(null)
+  const [sessionChecked, setSessionChecked] = useState(false)
   const [username, setUsername] = useState<string | null>(null)
   const [usernameChecked, setUsernameChecked] = useState(false)
   const [result, setResult] = useState<QuizResult | null>(null)
@@ -92,6 +93,7 @@ export default function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
+      setSessionChecked(true)
       if (session?.user) {
         fetchUsername(session.user.id)
         fetchServerPlayed(session.user.id)
@@ -168,6 +170,7 @@ export default function App() {
       {view === 'home' && (
         <HomePage
           user={user}
+          sessionChecked={sessionChecked}
           username={username}
           serverPlayed={serverPlayed}
           serverPlayedChecked={serverPlayedChecked}
@@ -180,6 +183,7 @@ export default function App() {
       {view === 'quiz' && (
         <QuizPage
           user={user}
+          sessionChecked={sessionChecked}
           username={username}
           onComplete={(r) => { setResult(r); setView('results') }}
           onExit={() => setView('home')}
@@ -190,6 +194,7 @@ export default function App() {
         <ResultsPage
           result={result}
           user={user}
+          sessionChecked={sessionChecked}
           username={username}
           onPlayAgain={() => { setJustCompleted(true); setView('home') }}
           onAuthChange={handleAuthChange}

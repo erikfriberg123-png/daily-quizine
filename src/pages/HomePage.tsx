@@ -18,6 +18,7 @@ const QUESTION_COUNT = 3
 
 interface Props {
   user: User | null
+  sessionChecked: boolean
   username: string | null
   serverPlayed: ServerPlayed | null
   serverPlayedChecked: boolean
@@ -31,7 +32,7 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange, onUsernameChange }: Props) {
+export default function HomePage({ user, sessionChecked, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange, onUsernameChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -84,7 +85,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {user ? (
+          {sessionChecked && (user ? (
             <>
               <BellMenu user={user} />
               <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />
@@ -105,7 +106,7 @@ export default function HomePage({ user, username, serverPlayed, serverPlayedChe
             >
               Logga in
             </button>
-          )}
+          ))}
         </div>
       </header>
 
