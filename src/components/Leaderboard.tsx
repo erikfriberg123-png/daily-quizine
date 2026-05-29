@@ -23,12 +23,13 @@ const MEDALS = ['🥇', '🥈', '🥉']
 export function Leaderboard({ highlightUsername }: Props) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [showHallOfFame, setShowHallOfFame] = useState(false)
 
   useEffect(() => {
     getWeeklyLeaderboard()
       .then(setEntries)
-      .catch(() => setEntries([]))
+      .catch((err) => { console.error('[Leaderboard] fetch failed:', err); setFetchError(String(err?.message ?? err)); setEntries([]) })
       .finally(() => setLoading(false))
   }, [])
 
@@ -64,6 +65,12 @@ export function Leaderboard({ highlightUsername }: Props) {
       {loading && (
         <div style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)', fontSize: 14 }}>
           Laddar...
+        </div>
+      )}
+
+      {fetchError && (
+        <div style={{ padding: 12, fontSize: 12, color: 'var(--error)', background: 'rgba(255,0,0,0.05)', borderBottom: '1px solid var(--border)' }}>
+          DB-fel: {fetchError}
         </div>
       )}
 
