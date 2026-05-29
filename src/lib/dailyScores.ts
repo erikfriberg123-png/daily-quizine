@@ -86,15 +86,25 @@ export async function getMyTodayScore(
   userId: string,
   date: string,
 ): Promise<{ score: number; correct: number } | null> {
-  const { data } = await supabase
-    .from('daily_scores')
-    .select('score, correct')
-    .eq('user_id', userId)
-    .eq('date', date)
-    .eq('segment', SEGMENT)
-    .maybeSingle()
-  if (!data) return null
-  return { score: data.score, correct: data.correct }
+  // Use raw fetch so this never waits on the supabase-js auth lock.
+  // daily_scores is publicly readable (leaderboard), so the anon key is sufficient.
+  const q = new URLSearchParams([
+    ['select', 'score,correct'],
+    ['user_id', `eq.${userId}`],
+    ['date', `eq.${date}`],
+    ['segment', `eq.${SEGMENT}`],
+    ['limit', '1'],
+  ])
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/daily_scores?${q}`, {
+      headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${supabaseAnonKey}` },
+    })
+    if (!res.ok) return null
+    const rows = await res.json() as { score: number; correct: number }[]
+    return rows[0] ?? null
+  } catch {
+    return null
+  }
 }
 
 export interface WeeklyWinner {
@@ -158,12 +168,21 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
 
 export async function getUserWeekScore(userId: string): Promise<number> {
   const { start, end } = getParisWeekBounds()
-  const { data } = await supabase
-    .from('daily_scores')
-    .select('score')
-    .eq('user_id', userId)
-    .eq('segment', SEGMENT)
-    .gte('date', start)
-    .lte('date', end)
-  return (data ?? []).reduce((sum: number, row: { score: number }) => sum + row.score, 0)
+  const q = new URLSearchParams([
+    ['select', 'score'],
+    ['user_id', `eq.${userId}`],
+    ['segment', `eq.${SEGMENT}`],
+    ['date', `gte.${start}`],
+    ['date', `lte.${end}`],
+  ])
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/daily_scores?${q}`, {
+      headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${supabaseAnonKey}` },
+    })
+    if (!res.ok) return 0
+    const rows = await res.json() as { score: number }[]
+    return rows.reduce((sum, row) => sum + row.score, 0)
+  } catch {
+    return 0
+  }
 }
