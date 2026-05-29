@@ -249,7 +249,7 @@ export default function HomePage({ user, sessionChecked, username, serverPlayed,
 
         {/* Leaderboard */}
         <div style={{ marginTop: 24 }}>
-          <Leaderboard highlightUsername={username} />
+          <Leaderboard highlightUsername={username} key={user?.id ?? 'anon'} />
         </div>
       </main>
 

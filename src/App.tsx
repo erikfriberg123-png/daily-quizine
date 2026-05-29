@@ -130,8 +130,9 @@ export default function App() {
   }, [])
 
   const fetchUsername = async (uid: string): Promise<string | null> => {
+    setUsernameChecked(false)  // Reset so modal never shows while fetch is in progress or on error
     const { data, error } = await supabase.from('profiles').select('username').eq('id', uid).maybeSingle()
-    if (error) return null  // Don't mark checked — modal won't force-show on fetch failure
+    if (error) return null
     const name = (data?.username as string | null) ?? null
     setUsername(name)
     setUsernameChecked(true)
