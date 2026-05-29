@@ -1,4 +1,4 @@
-import { supabase, anonSupabase } from './supabase'
+import { supabase, anonSupabase, supabaseUrl, supabaseAnonKey } from './supabase'
 import { getParisWeekBounds, getWeekStartForDate, getWeekEndForStart } from './dailyUtils'
 import { SEGMENT } from '../config/segments'
 
