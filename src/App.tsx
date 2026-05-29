@@ -137,7 +137,8 @@ export default function App() {
   const fetchServerPlayed = async (uid: string) => {
     setServerPlayedChecked(false)
     try {
-      const data = await getMyTodayScore(uid, getParisDate())
+      const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000))
+      const data = await Promise.race([getMyTodayScore(uid, getParisDate()), timeout])
       setServerPlayed(data)
     } catch {
       setServerPlayed(null)
