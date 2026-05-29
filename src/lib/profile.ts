@@ -22,7 +22,6 @@ export async function checkUsernameAvailable(username: string): Promise<boolean>
 export async function saveUsername(userId: string, username: string): Promise<void> {
   const { error } = await supabase
     .from('profiles')
-    .update({ username: username.trim() })
-    .eq('id', userId)
+    .upsert({ id: userId, username: username.trim() }, { onConflict: 'id' })
   if (error) throw error
 }

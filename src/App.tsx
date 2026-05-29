@@ -130,7 +130,7 @@ export default function App() {
   }, [])
 
   const fetchUsername = async (uid: string): Promise<string | null> => {
-    const { data } = await supabase.from('profiles').select('username').eq('id', uid).single()
+    const { data } = await supabase.from('profiles').select('username').eq('id', uid).maybeSingle()
     const name = (data?.username as string | null) ?? null
     setUsername(name)
     setUsernameChecked(true)
