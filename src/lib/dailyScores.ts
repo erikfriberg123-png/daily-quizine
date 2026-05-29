@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, anonSupabase } from './supabase'
 import { getParisWeekBounds, getWeekStartForDate, getWeekEndForStart } from './dailyUtils'
 import { SEGMENT } from '../config/segments'
 
@@ -49,7 +49,7 @@ export async function submitDailyScore(params: {
 export async function getWeeklyLeaderboard(): Promise<LeaderboardEntry[]> {
   const { start, end } = getParisWeekBounds()
 
-  const { data, error } = await supabase
+  const { data, error } = await anonSupabase
     .from('daily_scores')
     .select('username, score, date')
     .eq('segment', SEGMENT)
@@ -117,7 +117,7 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
   const yearStart = `${year}-01-01`
   const { start: currentWeekStart } = getParisWeekBounds()
 
-  const { data, error } = await supabase
+  const { data, error } = await anonSupabase
     .from('daily_scores')
     .select('username, score, date')
     .eq('segment', SEGMENT)
