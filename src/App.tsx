@@ -91,7 +91,10 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const sessionTimeout = new Promise<{ data: { session: null } }>(resolve =>
+      setTimeout(() => resolve({ data: { session: null } }), 5000)
+    )
+    Promise.race([supabase.auth.getSession(), sessionTimeout]).then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       setSessionChecked(true)
       if (session?.user) {
