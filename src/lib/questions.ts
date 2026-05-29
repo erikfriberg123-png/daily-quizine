@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabaseUrl, supabaseAnonKey } from './supabase'
 import { getSegmentConfig } from '../config/segments'
 
 export interface DailyQuestion {
@@ -11,18 +11,33 @@ export interface DailyQuestion {
   forklaring?: string
 }
 
+// Use plain fetch instead of the supabase-js client so auth state
+// (expired tokens, locked refresh) can never block question loading.
 export async function fetchDailyQuestions(): Promise<DailyQuestion[]> {
   const { questionsTable } = getSegmentConfig()
-  const { data, error } = await supabase
-    .from(questionsTable)
-    .select('id, question, answers, correct_index, category_id, image_url, forklaring')
-    .eq('active', true)
-    .order('id')
+  const params = new URLSearchParams({
+    select: 'id,question,answers,correct_index,category_id,image_url,forklaring',
+    active: 'eq.true',
+    order: 'id',
+  })
+  const res = await fetch(
+    `${supabaseUrl}/rest/v1/${questionsTable}?${params}`,
+    {
+      headers: {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`,
+      },
+    },
+  )
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const data: unknown[] = await res.json()
 
-  if (error) throw error
-
-  return (data ?? [])
-    .filter((row) => Array.isArray(row.answers) && row.answers.length === 4)
+  return data
+    .filter((row): row is Record<string, unknown> =>
+      typeof row === 'object' && row !== null &&
+      Array.isArray((row as Record<string, unknown>).answers) &&
+      ((row as Record<string, unknown>).answers as unknown[]).length === 4
+    )
     .map((row) => ({
       id: row.id as string,
       question: row.question as string,
