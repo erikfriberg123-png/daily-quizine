@@ -21,13 +21,15 @@ export async function fetchDailyQuestions(): Promise<DailyQuestion[]> {
 
   if (error) throw error
 
-  return (data ?? []).map((row) => ({
-    id: row.id as string,
-    question: row.question as string,
-    answers: row.answers as [string, string, string, string],
-    correctIndex: row.correct_index as 0 | 1 | 2 | 3,
-    categoryId: row.category_id as string,
-    ...(row.image_url ? { imageUrl: row.image_url as string } : {}),
-    ...(row.forklaring ? { forklaring: row.forklaring as string } : {}),
-  }))
+  return (data ?? [])
+    .filter((row) => Array.isArray(row.answers) && row.answers.length === 4)
+    .map((row) => ({
+      id: row.id as string,
+      question: row.question as string,
+      answers: row.answers as [string, string, string, string],
+      correctIndex: row.correct_index as 0 | 1 | 2 | 3,
+      categoryId: row.category_id as string,
+      ...(row.image_url ? { imageUrl: row.image_url as string } : {}),
+      ...(row.forklaring ? { forklaring: row.forklaring as string } : {}),
+    }))
 }
