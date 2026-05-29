@@ -612,8 +612,19 @@
         </div>
       </div>
 
-      <!-- Login (logged-out only, hidden until auth state is confirmed) -->
+      <!-- Login (hidden only when a stored session exists; shown immediately otherwise) -->
       <button class="btn-login" id="btn-login" onclick="openLogin()" style="display:none;">Logga in</button>
+      <script>
+        // Show login button immediately if no supabase session is stored.
+        // If a session key exists we wait for onAuthStateChange to confirm
+        // so we never flash "Logga in" for an already-logged-in user.
+        try {
+          const noSession = !Object.keys(localStorage).some(
+            k => k.startsWith('sb-') && k.endsWith('-auth-token')
+          )
+          if (noSession) document.getElementById('btn-login').style.display = 'inline-block'
+        } catch {}
+      </script>
     </div>
   </header>
 

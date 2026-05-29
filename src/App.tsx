@@ -65,11 +65,22 @@ function AuthErrorBanner({ error, onDismiss }: { error: string; onDismiss: () =>
   )
 }
 
+function hasLocalSession(): boolean {
+  try {
+    return Object.keys(localStorage).some(
+      k => k.startsWith('sb-') && k.endsWith('-auth-token')
+    )
+  } catch { return false }
+}
+
 export default function App() {
   const segment = getSegmentConfig()
   const [view, setView] = useState<View>('home')
   const [user, setUser] = useState<User | null>(null)
-  const [sessionChecked, setSessionChecked] = useState(false)
+  // Start as true (show Logga in immediately) when no session is stored.
+  // Start as false (show nothing) when a session exists — wait for auth
+  // to confirm so we never flash "Logga in" for a logged-in user.
+  const [sessionChecked, setSessionChecked] = useState(() => !hasLocalSession())
   const [username, setUsername] = useState<string | null>(null)
   const [usernameChecked, setUsernameChecked] = useState(false)
   const [result, setResult] = useState<QuizResult | null>(null)
