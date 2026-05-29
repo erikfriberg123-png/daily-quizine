@@ -100,7 +100,7 @@ export default function App() {
       setSessionChecked(true)
       if (session?.user) {
         const name = await fetchUsername(session.user.id)
-        fetchServerPlayed(session.user.id)
+        if (event !== 'TOKEN_REFRESHED') fetchServerPlayed(session.user.id)
         if (event === 'SIGNED_IN') {
           const redirect = localStorage.getItem('postAuthRedirect')
           localStorage.removeItem('postAuthRedirect')

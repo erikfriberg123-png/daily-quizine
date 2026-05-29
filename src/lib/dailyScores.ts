@@ -86,15 +86,14 @@ export async function getMyTodayScore(
   userId: string,
   date: string,
 ): Promise<{ score: number; correct: number } | null> {
-  const { data, error } = await anonSupabase
+  const { data } = await supabase
     .from('daily_scores')
     .select('score, correct')
     .eq('user_id', userId)
     .eq('date', date)
     .eq('segment', SEGMENT)
-    .limit(1)
-    .single()
-  if (error || !data) return null
+    .maybeSingle()
+  if (!data) return null
   return { score: data.score, correct: data.correct }
 }
 
@@ -159,7 +158,7 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
 
 export async function getUserWeekScore(userId: string): Promise<number> {
   const { start, end } = getParisWeekBounds()
-  const { data } = await anonSupabase
+  const { data } = await supabase
     .from('daily_scores')
     .select('score')
     .eq('user_id', userId)
