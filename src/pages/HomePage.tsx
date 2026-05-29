@@ -53,7 +53,9 @@ export default function HomePage({ user, sessionChecked, username, serverPlayed,
       ? { ...serverPlayed, total: QUESTION_COUNT }
       : localPlayed
     : localPlayed
-  const checkingServer = user !== null && !serverPlayedChecked
+  // Only block on the server check when we have NO local data to fall back on.
+  // If localPlayed exists we already know the result — show it immediately.
+  const checkingServer = user !== null && !serverPlayedChecked && !localPlayed
 
   return (
     <div
