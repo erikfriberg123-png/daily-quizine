@@ -36,6 +36,7 @@ export default function HomePage({ user, sessionChecked, username, serverPlayed,
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
+  const [feedbackVisible, setFeedbackVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
   const seg = getSegmentConfig()
   const weekend = isWeekend()
@@ -199,6 +200,35 @@ export default function HomePage({ user, sessionChecked, username, serverPlayed,
               {seg.storyButtonText}
             </button>
           )}
+          <button
+            onClick={() => setFeedbackVisible(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              width: '100%',
+              padding: '13px',
+              background: 'transparent',
+              color: 'var(--text-muted)',
+              border: '1px solid var(--border)',
+              borderRadius: 14,
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--orange)'
+              e.currentTarget.style.color = 'var(--orange)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border)'
+              e.currentTarget.style.color = 'var(--text-muted)'
+            }}
+          >
+            💬  Lämna feedback
+          </button>
         </div>
 
         {/* Play more CTA + back link */}
@@ -282,6 +312,14 @@ export default function HomePage({ user, sessionChecked, username, serverPlayed,
           user={user}
           username={username}
           onClose={() => setStoryVisible(false)}
+        />
+      )}
+
+      {feedbackVisible && (
+        <FeedbackModal
+          user={user}
+          username={username}
+          onClose={() => setFeedbackVisible(false)}
         />
       )}
     </div>
