@@ -5,22 +5,24 @@ import { useKeyboardOffset } from '../hooks/useKeyboardOffset'
 
 interface Props {
   user: User
+  currentUsername?: string | null
   onSave: (username: string) => void
   onClose?: () => void
 }
 
-export function NicknameModal({ user, onSave, onClose }: Props) {
+export function NicknameModal({ user, currentUsername, onSave, onClose }: Props) {
   const keyboardOffset = useKeyboardOffset()
-  const [nick, setNick] = useState('')
+  const [nick, setNick] = useState(currentUsername ?? '')
   const [validationError, setValidationError] = useState<string | null>(null)
   const [checking, setChecking] = useState(false)
-  const [available, setAvailable] = useState<boolean | null>(null)
+  const [available, setAvailable] = useState<boolean | null>(currentUsername ? true : null)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const trimmed = nick.trim()
+
     if (!trimmed) {
       setValidationError(null)
       setAvailable(null)
@@ -38,18 +40,28 @@ export function NicknameModal({ user, onSave, onClose }: Props) {
       return
     }
 
+    // Unchanged from current username — no need to check availability
+    if (trimmed === currentUsername?.trim()) {
+      setValidationError(null)
+      setAvailable(true)
+      setChecking(false)
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+      return
+    }
+
     setValidationError(null)
     setChecking(true)
     setAvailable(null)
 
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(async () => {
-      const ok = await checkUsernameAvailable(trimmed)
+      const ok = await checkUsernameAvailable(trimmed, user.id)
       setChecking(false)
       setAvailable(ok)
     }, 600)
-  }, [nick])
+  }, [nick, currentUsername, user.id])
 
+  const isUnchanged = nick.trim() === currentUsername?.trim()
   const canSubmit = !validationError && available === true && !saving && nick.trim().length >= 2
 
   const handleSave = async () => {
@@ -79,9 +91,11 @@ export function NicknameModal({ user, onSave, onClose }: Props) {
     ? { text: validationError, color: 'var(--error)' }
     : available === false
     ? { text: 'Det smeknamnet är redan taget', color: 'var(--error)' }
-    : available === true
+    : available === true && !isUnchanged
     ? { text: 'Smeknamnet är ledigt!', color: '#4ade80' }
     : null
+
+  const isEditMode = !!currentUsername || !!onClose
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200 }}>
@@ -124,7 +138,7 @@ export function NicknameModal({ user, onSave, onClose }: Props) {
           )}
           <div style={{ fontSize: 40, textAlign: 'center', marginBottom: 10 }}>👤</div>
           <div style={{ fontSize: 20, fontWeight: 800, textAlign: 'center', marginBottom: 6, color: 'var(--cream)' }}>
-            {onClose ? 'Byt smeknamn' : 'Välj ditt smeknamn'}
+            {isEditMode ? 'Byt smeknamn' : 'Välj ditt smeknamn'}
           </div>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.6, marginBottom: 22 }}>
             Smeknamnet syns på topplistan och fungerar på hela Quizine.
@@ -185,7 +199,7 @@ export function NicknameModal({ user, onSave, onClose }: Props) {
               boxShadow: canSubmit ? '0 4px 20px var(--gold-glow)' : 'none',
             }}
           >
-            {saving ? 'Sparar...' : 'Välj smeknamn'}
+            {saving ? 'Sparar...' : isEditMode ? 'Spara smeknamn' : 'Välj smeknamn'}
           </button>
         </div>
       </div>

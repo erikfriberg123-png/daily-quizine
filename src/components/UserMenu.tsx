@@ -137,6 +137,7 @@ export function UserMenu({ user, username, onUsernameChange }: Props) {
       {showNickname && (
         <NicknameModal
           user={user}
+          currentUsername={username}
           onSave={(name) => { onUsernameChange(name); setShowNickname(false) }}
           onClose={() => setShowNickname(false)}
         />

@@ -10,12 +10,10 @@ export function validateUsername(value: string): string | null {
   return null
 }
 
-export async function checkUsernameAvailable(username: string): Promise<boolean> {
-  const { data } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('username', username.trim())
-    .maybeSingle()
+export async function checkUsernameAvailable(username: string, excludeUserId?: string): Promise<boolean> {
+  let query = supabase.from('profiles').select('id').eq('username', username.trim())
+  if (excludeUserId) query = query.neq('id', excludeUserId)
+  const { data } = await query.maybeSingle()
   return !data
 }
 

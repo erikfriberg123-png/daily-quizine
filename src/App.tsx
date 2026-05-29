@@ -130,7 +130,8 @@ export default function App() {
   }, [])
 
   const fetchUsername = async (uid: string): Promise<string | null> => {
-    const { data } = await supabase.from('profiles').select('username').eq('id', uid).maybeSingle()
+    const { data, error } = await supabase.from('profiles').select('username').eq('id', uid).maybeSingle()
+    if (error) return null  // Don't mark checked — modal won't force-show on fetch failure
     const name = (data?.username as string | null) ?? null
     setUsername(name)
     setUsernameChecked(true)
@@ -169,7 +170,12 @@ export default function App() {
     <>
       {authHashError && <AuthErrorBanner error={authHashError} onDismiss={() => setAuthHashError(null)} />}
       {user && usernameChecked && !username && (
-        <NicknameModal user={user} onSave={(name) => setUsername(name)} />
+        <NicknameModal
+          user={user}
+          currentUsername={username}
+          onSave={(name) => setUsername(name)}
+          onClose={() => setUsernameChecked(false)}
+        />
       )}
       {view === 'home' && (
         <HomePage
