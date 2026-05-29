@@ -91,22 +91,13 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const sessionTimeout = new Promise<{ data: { session: null } }>(resolve =>
-      setTimeout(() => resolve({ data: { session: null } }), 5000)
-    )
-    Promise.race([supabase.auth.getSession(), sessionTimeout]).then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setSessionChecked(true)
-      if (session?.user) {
-        fetchUsername(session.user.id)
-        fetchServerPlayed(session.user.id)
-      } else {
-        setUsernameChecked(true)
-        setServerPlayedChecked(true)
-      }
-    })
+    // onAuthStateChange fires INITIAL_SESSION almost immediately (reads localStorage
+    // synchronously — no network, no lock). This is the correct place to set
+    // sessionChecked so the header never relies on getSession() which can hang
+    // when the auth lock is contended.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
+      setSessionChecked(true)
       if (session?.user) {
         const name = await fetchUsername(session.user.id)
         fetchServerPlayed(session.user.id)
@@ -116,11 +107,10 @@ export default function App() {
           if (name && redirect === 'quiz') {
             setView('quiz')
           }
-          // No username = new user; stay on home so NicknameModal shows first
         }
       } else {
         setUsername(null)
-        setUsernameChecked(false)
+        setUsernameChecked(true)
         setServerPlayed(null)
         setServerPlayedChecked(true)
         if (event === 'SIGNED_OUT') setView('home')
