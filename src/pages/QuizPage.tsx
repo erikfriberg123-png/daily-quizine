@@ -8,6 +8,7 @@ import { AnswerButton } from '../components/AnswerButton'
 import { CATEGORY_DISPLAY, CATEGORY_COLORS } from '../lib/categories'
 import { UserMenu } from '../components/UserMenu'
 import { BellMenu } from '../components/BellMenu'
+import { FeedbackModal } from '../components/FeedbackModal'
 
 const QUESTION_COUNT = 3
 const TIMER_SECONDS = 25
@@ -35,6 +36,7 @@ export default function QuizPage({ user, sessionChecked, username, onComplete, o
   const [answered, setAnswered] = useState(false)
   const [answerStates, setAnswerStates] = useState<AnswerState[]>(['idle', 'idle', 'idle', 'idle'])
   const [showNext, setShowNext] = useState(false)
+  const [feedbackVisible, setFeedbackVisible] = useState(false)
 
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -411,8 +413,20 @@ export default function QuizPage({ user, sessionChecked, username, onComplete, o
           >
             {qIndex + 1 >= questions.length ? 'Visa resultat →' : 'Nästa fråga →'}
           </button>
+          <div style={{ textAlign: 'center', marginTop: 12 }}>
+            <button
+              onClick={() => setFeedbackVisible(true)}
+              style={{ background: 'none', color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              💬 Lämna feedback
+            </button>
+          </div>
         </div>
       </div>
+
+      {feedbackVisible && (
+        <FeedbackModal user={user} username={username} onClose={() => setFeedbackVisible(false)} />
+      )}
     </div>
   )
 }
