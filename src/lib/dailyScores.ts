@@ -31,7 +31,7 @@ export async function submitDailyScore(params: {
   if (!isValidScore(params.score, params.correct)) {
     throw new Error('Ogiltig poäng.')
   }
-
+  // Write requires the user's auth token — keep using supabase-js.
   const { error } = await supabase.from('daily_scores').upsert(
     {
       user_id: params.userId,
@@ -58,18 +58,15 @@ export async function getWeeklyLeaderboard(): Promise<LeaderboardEntry[]> {
     .not('user_id', 'is', null)
     .order('score', { ascending: false })
 
-  if (error) throw error
+  const rows = (error ? [] : data) as { username: string; score: number; date: string }[]
 
-  // Aggregate by username client-side
   const map = new Map<string, { total: number; days: number; lastPlayed: string }>()
-  for (const row of data ?? []) {
-    const key = row.username as string
-    const prev = map.get(key) ?? { total: 0, days: 0, lastPlayed: '' }
-    const rowDate = row.date as string
-    map.set(key, {
-      total: prev.total + (row.score as number),
+  for (const row of rows) {
+    const prev = map.get(row.username) ?? { total: 0, days: 0, lastPlayed: '' }
+    map.set(row.username, {
+      total: prev.total + row.score,
       days: prev.days + 1,
-      lastPlayed: rowDate > prev.lastPlayed ? rowDate : prev.lastPlayed,
+      lastPlayed: row.date > prev.lastPlayed ? row.date : prev.lastPlayed,
     })
   }
 
@@ -89,15 +86,16 @@ export async function getMyTodayScore(
   userId: string,
   date: string,
 ): Promise<{ score: number; correct: number } | null> {
-  const { data } = await supabase
+  const { data, error } = await anonSupabase
     .from('daily_scores')
     .select('score, correct')
     .eq('user_id', userId)
     .eq('date', date)
     .eq('segment', SEGMENT)
-    .maybeSingle()
-  if (!data) return null
-  return { score: data.score as number, correct: data.correct as number }
+    .limit(1)
+    .single()
+  if (error || !data) return null
+  return { score: data.score, correct: data.correct }
 }
 
 export interface WeeklyWinner {
@@ -125,10 +123,8 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
     .not('user_id', 'is', null)
     .order('date', { ascending: true })
 
-  if (error) throw error
-  const rows = (data ?? []) as { username: string; score: number; date: string }[]
+  const rows = (error ? [] : data) as { username: string; score: number; date: string }[]
 
-  // Yearly top — aggregate all rows in the year by username
   const yearMap = new Map<string, { total: number; days: number }>()
   for (const row of rows) {
     const prev = yearMap.get(row.username) ?? { total: 0, days: 0 }
@@ -140,23 +136,19 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
     .slice(0, 20)
     .map((e, i) => ({ ...e, rank: i + 1 }))
 
-  // Weekly winners — only past weeks (exclude current week)
   const pastRows = rows.filter(r => r.date < currentWeekStart)
   const weekMap = new Map<string, Map<string, number>>()
   for (const row of pastRows) {
     const weekKey = getWeekStartForDate(row.date)
     if (!weekMap.has(weekKey)) weekMap.set(weekKey, new Map())
-    const userMap = weekMap.get(weekKey)!
-    userMap.set(row.username, (userMap.get(row.username) ?? 0) + row.score)
+    weekMap.get(weekKey)!.set(row.username, (weekMap.get(weekKey)!.get(row.username) ?? 0) + row.score)
   }
 
   const weeklyWinners: WeeklyWinner[] = Array.from(weekMap.entries())
     .map(([weekStart, userMap]) => {
       let topUser = ''
       let topScore = 0
-      userMap.forEach((score, username) => {
-        if (score > topScore) { topScore = score; topUser = username }
-      })
+      userMap.forEach((score, username) => { if (score > topScore) { topScore = score; topUser = username } })
       return { week_start: weekStart, week_end: getWeekEndForStart(weekStart), username: topUser, total_score: topScore }
     })
     .sort((a, b) => b.week_start.localeCompare(a.week_start))
@@ -167,14 +159,12 @@ export async function getHallOfFameData(): Promise<HallOfFameData> {
 
 export async function getUserWeekScore(userId: string): Promise<number> {
   const { start, end } = getParisWeekBounds()
-  const { data, error } = await supabase
+  const { data } = await anonSupabase
     .from('daily_scores')
     .select('score')
     .eq('user_id', userId)
     .eq('segment', SEGMENT)
     .gte('date', start)
     .lte('date', end)
-
-  if (error) return 0
-  return (data ?? []).reduce((sum, row) => sum + (row.score as number), 0)
+  return (data ?? []).reduce((sum: number, row: { score: number }) => sum + row.score, 0)
 }
