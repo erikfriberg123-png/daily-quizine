@@ -99,8 +99,11 @@ export default function App() {
       setUser(session?.user ?? null)
       setSessionChecked(true)
       if (session?.user) {
-        const name = await fetchUsername(session.user.id)
+        // Fire fetchServerPlayed immediately — do NOT wait for fetchUsername first.
+        // fetchUsername queries supabase.from('profiles') which can hang if the
+        // auth lock is contended, and that would keep serverPlayedChecked=false forever.
         if (event !== 'TOKEN_REFRESHED') fetchServerPlayed(session.user.id)
+        const name = await fetchUsername(session.user.id)
         if (event === 'SIGNED_IN') {
           const redirect = localStorage.getItem('postAuthRedirect')
           localStorage.removeItem('postAuthRedirect')
@@ -186,7 +189,14 @@ export default function App() {
           user={user}
           sessionChecked={sessionChecked}
           username={username}
-          onComplete={(r) => { setResult(r); setView('results') }}
+          onComplete={(r) => {
+            setResult(r)
+            setView('results')
+            // Record the result immediately so returning to home never shows the spinner.
+            // The server fetch may still be in-flight, but the result is already known locally.
+            setServerPlayed({ score: r.score, correct: r.correct })
+            setServerPlayedChecked(true)
+          }}
           onExit={() => setView('home')}
           onUsernameChange={(name) => setUsername(name)}
         />
