@@ -356,11 +356,7 @@ export default function QuizPage({ user, sessionChecked, username, onComplete, o
 
         {/* Answers */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {(q.answers ?? []).length === 0 ? (
-            <div style={{ color: 'var(--error)', fontSize: 14, padding: '12px 0' }}>
-              Svarsalternativen saknas för denna fråga. Kontakta admin.
-            </div>
-          ) : (q.answers ?? []).map((answer, i) => (
+          {q.answers.map((answer, i) => (
             <AnswerButton
               key={i}
               label={answer}
