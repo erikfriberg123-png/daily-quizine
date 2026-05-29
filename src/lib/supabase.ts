@@ -14,7 +14,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 // For public read-only queries (leaderboard, questions).
 // Never uses a user JWT so it can't be blocked by token expiry or refresh failures.
 export const anonSupabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: false, autoRefreshToken: false },
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
 })
 
 export { supabaseUrl, supabaseAnonKey }

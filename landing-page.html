@@ -612,8 +612,8 @@
         </div>
       </div>
 
-      <!-- Login (logged-out only) -->
-      <button class="btn-login" id="btn-login" onclick="openLogin()">Logga in</button>
+      <!-- Login (logged-out only, hidden until auth state is confirmed) -->
+      <button class="btn-login" id="btn-login" onclick="openLogin()" style="display:none;">Logga in</button>
     </div>
   </header>
 
@@ -1069,10 +1069,6 @@
       document.getElementById('user-wrap').style.display = 'none'
       closeAllMenus()
     }
-
-    sb.auth.getSession().then(({ data: { session } }) => {
-      if (session) updateLoggedInUI(session.user)
-    })
 
     sb.auth.onAuthStateChange((_event, session) => {
       if (session) updateLoggedInUI(session.user)
