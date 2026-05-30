@@ -20,10 +20,15 @@ export function FeedbackModal({ user, username, onClose }: Props) {
     if (!text.trim()) return
     setSending(true)
     setError('')
-    const { error: err } = await submitFeedback(text, user?.id ?? null, username)
-    setSending(false)
-    if (err) { setError('Något gick fel. Försök igen.'); return }
-    setSent(true)
+    try {
+      const { error: err } = await submitFeedback(text, user?.id ?? null, username)
+      if (err) { setError('Något gick fel. Försök igen.'); return }
+      setSent(true)
+    } catch {
+      setError('Något gick fel. Försök igen.')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (

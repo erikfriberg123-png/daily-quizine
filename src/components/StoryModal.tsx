@@ -85,13 +85,15 @@ export function StoryModal({ user, username, onClose }: Props) {
     }
 
     const finalName = isAnonymous ? null : (displayName.trim() || null)
-    const { error } = await submitStory(text, finalName, uploadedUrl, user?.id ?? null)
-    setSending(false)
-    if (error) {
+    try {
+      const { error } = await submitStory(text, finalName, uploadedUrl, user?.id ?? null)
+      if (error) { setTextError('Något gick fel. Försök igen.'); return }
+      setSent(true)
+    } catch {
       setTextError('Något gick fel. Försök igen.')
-      return
+    } finally {
+      setSending(false)
     }
-    setSent(true)
   }
 
   const charLeft = 2000 - text.length
