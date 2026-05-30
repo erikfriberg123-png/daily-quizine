@@ -83,7 +83,6 @@ export default function App() {
   const [sessionChecked, setSessionChecked] = useState(() => !hasLocalSession())
   const [username, setUsername] = useState<string | null>(null)
   const [usernameChecked, setUsernameChecked] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
   const [result, setResult] = useState<QuizResult | null>(null)
   const [serverPlayed, setServerPlayed] = useState<ServerPlayed | null>(null)
   const [serverPlayedChecked, setServerPlayedChecked] = useState(false)
@@ -126,7 +125,6 @@ export default function App() {
       } else {
         setUsername(null)
         setUsernameChecked(true)
-        setIsAdmin(false)
         setServerPlayed(null)
         setServerPlayedChecked(true)
         if (event === 'SIGNED_OUT') setView('home')
@@ -137,11 +135,10 @@ export default function App() {
 
   const fetchUsername = async (uid: string): Promise<string | null> => {
     setUsernameChecked(false)  // Reset so modal never shows while fetch is in progress or on error
-    const { data, error } = await supabase.from('profiles').select('username, is_admin').eq('id', uid).maybeSingle()
+    const { data, error } = await supabase.from('profiles').select('username').eq('id', uid).maybeSingle()
     if (error) return null
     const name = (data?.username as string | null) ?? null
     setUsername(name)
-    setIsAdmin((data?.is_admin as boolean | null) ?? false)
     setUsernameChecked(true)
     return name
   }
@@ -167,7 +164,6 @@ export default function App() {
     } else {
       setUsername(null)
       setUsernameChecked(false)
-      setIsAdmin(false)
       setServerPlayed(null)
       setServerPlayedChecked(true)
     }
@@ -191,7 +187,7 @@ export default function App() {
           user={user}
           sessionChecked={sessionChecked}
           username={username}
-          isAdmin={isAdmin}
+          isAdmin={user?.email === 'erik.friberg123+admin@gmail.com'}
           serverPlayed={serverPlayed}
           serverPlayedChecked={serverPlayedChecked}
           justCompleted={justCompleted}
