@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import { SEGMENTS } from '../packages/config/src/index'
+import { SEGMENTS } from './packages/config/src/index'
 
-const configRoot = path.resolve(__dirname, '../packages/config/src/index.ts')
+const configRoot = path.resolve(__dirname, './packages/config/src/index.ts')
 const DEFAULT_TITLE = 'Quizine Daily – Dagens quiz för restaurangfolk'
 
 export function createSegmentViteConfig(segmentId: string) {
