@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blåljuspersonal — Design 5: Code Red</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red:       #FF1A3C;
+    --red-l:     #FF4D66;
+    --red-xl:    #FF8899;
+    --red-dark:  #CC0028;
+    --red-glow:  rgba(255,26,60,0.35);
+    --red-dim:   rgba(255,26,60,0.1);
+
+    --blue:      #1A5BFF;
+    --blue-l:    #5599FF;
+    --blue-glow: rgba(26,91,255,0.3);
+    --blue-dim:  rgba(26,91,255,0.1);
+
+    --bg:        #080305;
+    --bg-card:   #120508;
+    --bg-card2:  #180708;
+    --border:    #2A0A10;
+    --border-l:  #3D1020;
+
+    --white:     #FFF0F2;
+    --muted:     #7A3A48;
+    --dim:       #2A0810;
+    --green:     #00E676;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── ALERT PULSE BG ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,26,60,0.06) 0%, transparent 55%);
+    animation: bgPulse 2s ease-in-out infinite;
+  }
+  @keyframes bgPulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  /* ── HEADER ── */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 18px;
+    background: rgba(8,3,5,0.98);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 20;
+  }
+
+  /* ════ LOGO: FLAME SHIELD ════ */
+  .logo-row { display: flex; align-items: center; gap: 12px; }
+
+  .logo-name-cr { line-height: 1; }
+  .logo-title-cr {
+    font-size: 18px; font-weight: 900; letter-spacing: -0.3px;
+  }
+  .logo-title-cr .r { color: var(--red-l); }
+  .logo-title-cr .b { color: var(--blue-l); }
+  .logo-sub-cr {
+    font-size: 9px; color: var(--muted); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 3px;
+  }
+
+  .alarm-chip {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--red); border: 1px solid rgba(255,26,60,0.4);
+    padding: 5px 10px; border-radius: 6px;
+    background: var(--red-dim);
+    animation: alarmPulse 1s ease-in-out infinite;
+  }
+  @keyframes alarmPulse { 0%,100%{box-shadow:0 0 8px rgba(255,26,60,0.3);} 50%{box-shadow:0 0 20px rgba(255,26,60,0.6);} }
+  .alarm-dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: blink 0.5s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: 0;
+  }
+
+  /* Diagonal red sweep */
+  .hero-sweep {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(160deg, rgba(255,26,60,0.2) 0%, rgba(255,26,60,0.05) 40%, transparent 65%),
+      linear-gradient(0deg, rgba(26,91,255,0.08) 0%, transparent 50%);
+  }
+  /* Animated alarm stripes */
+  .alarm-stripes {
+    position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent 0px, transparent 20px,
+      rgba(255,26,60,0.025) 20px, rgba(255,26,60,0.025) 40px
+    );
+  }
+
+  .hero-inner { position: relative; z-index: 1; padding: 28px 18px 24px; }
+
+  /* CODE RED banner */
+  .code-red-banner {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--red); border-radius: 10px;
+    padding: 10px 16px; margin-bottom: 22px;
+    animation: bannerGlow 1.5s ease-in-out infinite;
+  }
+  @keyframes bannerGlow { 0%,100%{box-shadow:0 4px 20px rgba(255,26,60,0.5);} 50%{box-shadow:0 4px 40px rgba(255,26,60,0.8);} }
+  .code-red-text {
+    font-size: 13px; font-weight: 900; color: #fff; letter-spacing: 2px; text-transform: uppercase; flex: 1;
+  }
+  .code-red-date { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 600; }
+
+  .hero-title-cr {
+    font-size: clamp(32px, 8vw, 52px); font-weight: 900;
+    line-height: 1.05; margin-bottom: 10px; text-transform: uppercase;
+  }
+  .hero-title-cr .line1 { color: var(--red-l); }
+  .hero-title-cr .line2 { color: var(--white); }
+  .hero-title-cr .line3 { color: var(--blue-l); }
+
+  .hero-sub-cr { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+
+  /* Timer — red dominant */
+  .timer-cr {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-card); border: 1px solid var(--border-l);
+    padding: 12px 16px; border-radius: 12px; margin-bottom: 18px;
+    position: relative; overflow: hidden;
+  }
+  .timer-cr::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--red);
+    animation: alarmPulse 1s ease-in-out infinite;
+  }
+  .timer-icon-cr { font-size: 22px; }
+  .timer-label-cr { font-size: 12px; color: var(--muted); font-weight: 600; min-width: 64px; }
+  .timer-track-cr { flex: 1; height: 8px; background: var(--dim); border-radius: 4px; overflow: hidden; }
+  .timer-fill-cr {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--red-dark) 0%, var(--red) 60%, var(--red-l) 100%);
+    animation: crBurn 3s linear infinite;
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+  @keyframes crBurn { from{width:100%;} to{width:0%;} }
+  .timer-num-cr { font-size: 22px; font-weight: 900; color: var(--red-l); min-width: 32px; text-align: right; }
+
+  .btn-start-cr {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 17px; border-radius: 14px;
+    font-size: 18px; font-weight: 900; cursor: pointer; border: none;
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 50%, var(--red-l) 100%);
+    color: #fff;
+    box-shadow: 0 4px 28px var(--red-glow);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.5px; margin-bottom: 10px;
+  }
+  .btn-start-cr:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255,26,60,0.6); }
+
+  .anon-cr { font-size: 12px; color: var(--muted); text-align: center; }
+  .anon-cr a { color: var(--blue-l); cursor: pointer; }
+
+  /* ── LOGO SHOWCASE ── */
+  .logo-section { padding: 0 18px; margin-bottom: 20px; }
+  .logo-box-cr {
+    background: var(--bg-card); border: 1px solid var(--border-l);
+    border-radius: 16px; padding: 18px;
+  }
+  .ls-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 14px; }
+  .logo-var-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+
+  /* ── UNIT CARDS (horizontal) ── */
+  .unit-list { padding: 0 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .unit-card-cr {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px; cursor: pointer;
+    transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .unit-card-cr::before {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .unit-card-cr.pol::before { background: var(--blue); }
+  .unit-card-cr.bra::before { background: var(--red); }
+  .unit-card-cr.amb::before { background: var(--green); }
+  .unit-card-cr.mil::before { background: #FFB300; }
+  .unit-card-cr:hover { border-color: var(--border-l); background: var(--bg-card2); transform: translateX(-2px); }
+
+  .uc-icon { font-size: 26px; flex-shrink: 0; }
+  .uc-info { flex: 1; }
+  .uc-name  { font-size: 15px; font-weight: 800; color: var(--white); }
+  .uc-desc  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .uc-count {
+    font-size: 22px; font-weight: 900;
+  }
+  .unit-card-cr.pol .uc-count { color: var(--blue-l); }
+  .unit-card-cr.bra .uc-count { color: var(--red-l); }
+  .unit-card-cr.amb .uc-count { color: var(--green); }
+  .unit-card-cr.mil .uc-count { color: #FFB300; }
+  .uc-unit { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ── LEADERBOARD ── */
+  .section-cr { padding: 0 18px; margin-bottom: 20px; }
+  .section-title-cr {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+  .section-title-cr::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .lb-cr { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .lb-row-cr {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; border-bottom: 1px solid rgba(42,10,16,0.8);
+    transition: background 0.15s;
+  }
+  .lb-row-cr:last-child { border-bottom: none; }
+  .lb-row-cr:hover { background: var(--bg-card2); }
+  .lb-row-cr.me { background: rgba(26,91,255,0.07); border-left: 3px solid var(--blue); }
+
+  .lb-rank-cr { font-size: 13px; font-weight: 800; color: var(--dim); min-width: 22px; text-align: center; }
+  .lb-rank-cr.g { font-size:17px; color:#FFD700; }
+  .lb-rank-cr.s { font-size:17px; color:#C0C0C0; }
+  .lb-rank-cr.b { font-size:17px; color:#CD7F32; }
+  .lb-av-cr { font-size:18px; }
+  .lb-info-cr { flex: 1; }
+  .lb-name-cr  { font-size: 14px; font-weight: 700; color: var(--white); }
+  .lb-unit-cr  { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .lb-score-cr { font-size: 14px; font-weight: 900; color: var(--red-l); }
+  .lb-xp-cr    { font-size: 10px; color: var(--muted); }
+
+  /* ── ACTIONS ── */
+  .actions-cr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 18px; margin-bottom: 20px; }
+  .action-cr {
+    display: flex; align-items: center; gap: 8px; padding: 13px 14px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; transition: all 0.2s;
+  }
+  .action-cr:hover { border-color: var(--red-l); color: var(--red-l); background: var(--bg-card2); }
+
+  /* ── FOOTER ── */
+  footer { padding: 18px; border-top: 1px solid var(--border); text-align: center; }
+  .footer-cr {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted);
+    padding: 7px 16px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; transition: all 0.2s;
+  }
+  .footer-cr:hover { color: var(--red-l); border-color: rgba(255,26,60,0.3); }
+
+  .design-label {
+    position: fixed; bottom: 16px; right: 16px;
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: #fff; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 20px; z-index: 100; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-row">
+    <!-- LOGO: FLAME SHIELD -->
+    <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Shield body -->
+      <path d="M21 3L5 10V24C5 33 12.5 40 21 42C29.5 40 37 33 37 24V10L21 3Z" fill="#120508" stroke="url(#flameStroke)" stroke-width="1.5"/>
+      <!-- Shield fill -->
+      <path d="M21 6L8 12.5V24C8 31.5 14 38 21 40C28 38 34 31.5 34 24V12.5L21 6Z" fill="url(#flameFill)"/>
+      <!-- Flame shape inside -->
+      <path d="M21 12C21 12 26 17 26 21C26 24.3 23.8 27 21 28C18.2 27 16 24.3 16 21C16 21 17 23 19 22C17 20 17 17 21 12Z" fill="url(#flameInner)" opacity="0.9"/>
+      <!-- Blue cross bar -->
+      <rect x="8" y="21" width="26" height="4" rx="2" fill="url(#blueBar)" opacity="0.7"/>
+      <defs>
+        <linearGradient id="flameStroke" x1="21" y1="3" x2="21" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FF4D66"/>
+          <stop offset="100%" stop-color="#FF1A3C"/>
+        </linearGradient>
+        <linearGradient id="flameFill" x1="21" y1="6" x2="21" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#3D1020"/>
+          <stop offset="100%" stop-color="#120508"/>
+        </linearGradient>
+        <linearGradient id="flameInner" x1="21" y1="12" x2="21" y2="28" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FF8800"/>
+          <stop offset="50%" stop-color="#FF1A3C"/>
+          <stop offset="100%" stop-color="#CC0028"/>
+        </linearGradient>
+        <linearGradient id="blueBar" x1="8" y1="23" x2="34" y2="23" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#1A5BFF" stop-opacity="0.8"/>
+          <stop offset="50%" stop-color="#5599FF"/>
+          <stop offset="100%" stop-color="#1A5BFF" stop-opacity="0.8"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="logo-name-cr">
+      <div class="logo-title-cr"><span class="r">BLÅ</span><span class="b">LJUS</span></div>
+      <div class="logo-sub-cr">Quizine · Personal</div>
+    </div>
+  </div>
+  <div class="alarm-chip"><div class="alarm-dot"></div>LARM</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-sweep"></div>
+  <div class="alarm-stripes"></div>
+
+  <div class="hero-inner">
+    <!-- CODE RED banner -->
+    <div class="code-red-banner">
+      <span style="font-size:20px;">🚨</span>
+      <div class="code-red-text">DAGENS QUIZ AKTIVERAT</div>
+      <div class="code-red-date">14 MAJ 2026</div>
+    </div>
+
+    <h1 class="hero-title-cr">
+      <div class="line1">POLIS.</div>
+      <div class="line2">BRAND.</div>
+      <div class="line3">AMBULANS.</div>
+    </h1>
+    <div class="hero-sub-cr">Vem kan krogen sin kår bäst? Testa dig mot kollegorna.</div>
+
+    <!-- Timer -->
+    <div class="timer-cr">
+      <div class="timer-icon-cr">🚨</div>
+      <div class="timer-label-cr">Nedräkning</div>
+      <div class="timer-track-cr"><div class="timer-fill-cr"></div></div>
+      <div class="timer-num-cr" id="crTimer">15</div>
+    </div>
+
+    <button class="btn-start-cr" onclick="alert('Startar...')">🔴 STARTA QUIZ</button>
+    <div class="anon-cr">Spela gratis · eller <a>logga in</a> för topplistan</div>
+  </div>
+</div>
+
+<!-- LOGO SHOWCASE -->
+<div class="logo-section">
+  <div class="logo-box-cr">
+    <div class="ls-label">Logo-varianter</div>
+    <div class="logo-var-row">
+      <!-- Shield large -->
+      <svg width="52" height="52" viewBox="0 0 42 42" fill="none">
+        <path d="M21 3L5 10V24C5 33 12.5 40 21 42C29.5 40 37 33 37 24V10L21 3Z" fill="#120508" stroke="url(#fS2)" stroke-width="1.5"/>
+        <path d="M21 6L8 12.5V24C8 31.5 14 38 21 40C28 38 34 31.5 34 24V12.5L21 6Z" fill="url(#fF2)"/>
+        <path d="M21 12C21 12 26 17 26 21C26 24.3 23.8 27 21 28C18.2 27 16 24.3 16 21C16 21 17 23 19 22C17 20 17 17 21 12Z" fill="url(#fI2)" opacity="0.9"/>
+        <rect x="8" y="21" width="26" height="4" rx="2" fill="url(#bB2)" opacity="0.7"/>
+        <defs>
+          <linearGradient id="fS2" x1="21" y1="3" x2="21" y2="42" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF4D66"/><stop offset="100%" stop-color="#FF1A3C"/></linearGradient>
+          <linearGradient id="fF2" x1="21" y1="6" x2="21" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3D1020"/><stop offset="100%" stop-color="#120508"/></linearGradient>
+          <linearGradient id="fI2" x1="21" y1="12" x2="21" y2="28" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF8800"/><stop offset="50%" stop-color="#FF1A3C"/><stop offset="100%" stop-color="#CC0028"/></linearGradient>
+          <linearGradient id="bB2" x1="8" y1="23" x2="34" y2="23" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#1A5BFF" stop-opacity="0.8"/><stop offset="50%" stop-color="#5599FF"/><stop offset="100%" stop-color="#1A5BFF" stop-opacity="0.8"/></linearGradient>
+        </defs>
+      </svg>
+      <!-- Horizontal wordmark -->
+      <div>
+        <div style="font-size:20px; font-weight:900;"><span style="color:var(--red-l);">BLÅ</span><span style="color:var(--blue-l);">LJUS</span></div>
+        <div style="font-size:9px; color:var(--muted); letter-spacing:2.5px; text-transform:uppercase; margin-top:3px;">Personal · Quizine</div>
+      </div>
+      <!-- Icon only in square -->
+      <div style="width:48px;height:48px;border-radius:12px;background:var(--bg-card);border:1px solid var(--border-l);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,26,60,0.2);">
+        <svg width="32" height="32" viewBox="0 0 42 42" fill="none">
+          <path d="M21 3L5 10V24C5 33 12.5 40 21 42C29.5 40 37 33 37 24V10L21 3Z" fill="#120508" stroke="#FF4D66" stroke-width="1.5"/>
+          <path d="M21 6L8 12.5V24C8 31.5 14 38 21 40C28 38 34 31.5 34 24V12.5L21 6Z" fill="url(#fF3)"/>
+          <path d="M21 12C21 12 26 17 26 21C26 24.3 23.8 27 21 28C18.2 27 16 24.3 16 21C16 21 17 23 19 22C17 20 17 17 21 12Z" fill="url(#fI3)" opacity="0.9"/>
+          <rect x="8" y="21" width="26" height="4" rx="2" fill="#5599FF" opacity="0.7"/>
+          <defs>
+            <linearGradient id="fF3" x1="21" y1="6" x2="21" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3D1020"/><stop offset="100%" stop-color="#120508"/></linearGradient>
+            <linearGradient id="fI3" x1="21" y1="12" x2="21" y2="28" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF8800"/><stop offset="50%" stop-color="#FF1A3C"/><stop offset="100%" stop-color="#CC0028"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNIT LIST -->
+<div class="unit-list">
+  <div class="unit-card-cr pol"><div class="uc-icon">👮</div><div class="uc-info"><div class="uc-name">Polis</div><div class="uc-desc">Lag, rättegång, taktik</div></div><div style="text-align:right;"><div class="uc-count">38</div><div class="uc-unit">frågor</div></div></div>
+  <div class="unit-card-cr bra"><div class="uc-icon">🚒</div><div class="uc-info"><div class="uc-name">Räddningstjänst</div><div class="uc-desc">Brand, teknik, säkerhet</div></div><div style="text-align:right;"><div class="uc-count">31</div><div class="uc-unit">frågor</div></div></div>
+  <div class="unit-card-cr amb"><div class="uc-icon">🚑</div><div class="uc-info"><div class="uc-name">Ambulans</div><div class="uc-desc">Medicin, ABC, protokoll</div></div><div style="text-align:right;"><div class="uc-count">29</div><div class="uc-unit">frågor</div></div></div>
+  <div class="unit-card-cr mil"><div class="uc-icon">🪖</div><div class="uc-info"><div class="uc-name">Militär</div><div class="uc-desc">Taktik, vapen, organisation</div></div><div style="text-align:right;"><div class="uc-count">24</div><div class="uc-unit">frågor</div></div></div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="section-cr">
+  <div class="section-title-cr">Topplista · Vecka 20</div>
+  <div class="lb-cr">
+    <div class="lb-row-cr"><div class="lb-rank-cr g">🥇</div><div class="lb-av-cr">👮</div><div class="lb-info-cr"><div class="lb-name-cr">Kvist_P</div><div class="lb-unit-cr">Polis · Stockholm</div></div><div><div class="lb-score-cr">4 850</div><div class="lb-xp-cr">XP</div></div></div>
+    <div class="lb-row-cr"><div class="lb-rank-cr s">🥈</div><div class="lb-av-cr">🚒</div><div class="lb-info-cr"><div class="lb-name-cr">Lindberg_R</div><div class="lb-unit-cr">Brand · Göteborg</div></div><div><div class="lb-score-cr">4 200</div><div class="lb-xp-cr">XP</div></div></div>
+    <div class="lb-row-cr"><div class="lb-rank-cr b">🥉</div><div class="lb-av-cr">🚑</div><div class="lb-info-cr"><div class="lb-name-cr">Hansson_M</div><div class="lb-unit-cr">Ambulans · Malmö</div></div><div><div class="lb-score-cr">3 900</div><div class="lb-xp-cr">XP</div></div></div>
+    <div class="lb-row-cr"><div class="lb-rank-cr">4</div><div class="lb-av-cr">🪖</div><div class="lb-info-cr"><div class="lb-name-cr">Eriksson_T</div><div class="lb-unit-cr">Militär · Boden</div></div><div><div class="lb-score-cr">3 450</div><div class="lb-xp-cr">XP</div></div></div>
+    <div class="lb-row-cr me"><div class="lb-rank-cr">—</div><div class="lb-av-cr">😎</div><div class="lb-info-cr"><div class="lb-name-cr" style="color:var(--blue-l);">Du (logga in!)</div><div class="lb-unit-cr">Välj din kår</div></div><div><div class="lb-score-cr" style="color:var(--blue-l);">—</div><div class="lb-xp-cr">XP</div></div></div>
+  </div>
+</div>
+
+<!-- ACTIONS -->
+<div class="actions-cr">
+  <button class="action-cr">✏️ Skicka in fråga</button>
+  <button class="action-cr">🚨 Dela larm</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-cr">⚔️ Quizine.se — spela mer</div>
+</footer>
+
+<div class="design-label">Design 5 · Code Red</div>
+
+<script>
+  let t = 15;
+  const el = document.getElementById('crTimer');
+  setInterval(() => {
+    t = t <= 0 ? 15 : t - 1;
+    el.textContent = t;
+    el.style.color = t <= 5 ? '#FF8899' : 'var(--red-l)';
+  }, 200);
+</script>
+</body>
+</html>

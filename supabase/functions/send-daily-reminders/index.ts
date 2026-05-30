@@ -180,6 +180,14 @@ function pushPayload(siteUrl: string) {
 // ─── Main handler ─────────────────────────────────────────────────────────────
 
 serve(async () => {
+  // Skip weekends — no daily quiz on Saturday or Sunday
+  const stockholmDay = new Date(
+    new Date().toLocaleString('en-US', { timeZone: 'Europe/Stockholm' })
+  ).getDay() // 0 = Sunday, 6 = Saturday
+  if (stockholmDay === 0 || stockholmDay === 6) {
+    return new Response(JSON.stringify({ skipped: 'weekend' }), { status: 200 })
+  }
+
   try {
     // ── Email reminders ───────────────────────────────────────────────────────
     const { data: emailUsers, error: emailErr } = await supabase
