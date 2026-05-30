@@ -171,8 +171,8 @@ export default function QuizPage({ user, sessionChecked, username, onComplete, o
             score: finalScore,
             correct: finalCorrect,
           })
-        } catch {
-          // Score saved locally; leaderboard submission failed silently
+        } catch (err) {
+          console.error('[submitDailyScore]', err)
         }
       }
 

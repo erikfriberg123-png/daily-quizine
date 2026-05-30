@@ -31,19 +31,34 @@ export async function submitDailyScore(params: {
   if (!isValidScore(params.score, params.correct)) {
     throw new Error('Ogiltig poäng.')
   }
-  // Write requires the user's auth token — keep using supabase-js.
-  const { error } = await supabase.from('daily_scores').upsert(
-    {
-      user_id: params.userId,
-      username: params.username,
-      date: params.date,
-      score: params.score,
-      correct: params.correct,
-      segment: SEGMENT,
-    },
-    { onConflict: 'user_id,date,segment' }
-  )
-  if (error) throw error
+
+  const row = {
+    user_id: params.userId,
+    username: params.username,
+    date: params.date,
+    score: params.score,
+    correct: params.correct,
+    segment: SEGMENT,
+  }
+
+  // INSERT first. If the row already exists (unique violation, code 23505),
+  // fall back to UPDATE — the upsert onConflict approach doesn't work with
+  // partial unique indexes (WHERE user_id IS NOT NULL).
+  const { error: insertError } = await supabase.from('daily_scores').insert(row)
+  if (!insertError) return
+
+  if (insertError.code === '23505') {
+    const { error: updateError } = await supabase
+      .from('daily_scores')
+      .update({ score: params.score, correct: params.correct, username: params.username })
+      .eq('user_id', params.userId)
+      .eq('date', params.date)
+      .eq('segment', SEGMENT)
+    if (updateError) throw updateError
+    return
+  }
+
+  throw insertError
 }
 
 export async function getWeeklyLeaderboard(): Promise<LeaderboardEntry[]> {
