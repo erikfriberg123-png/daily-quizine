@@ -21,6 +21,7 @@ interface Props {
   user: User | null
   sessionChecked: boolean
   username: string | null
+  isAdmin: boolean
   serverPlayed: ServerPlayed | null
   serverPlayedChecked: boolean
   justCompleted: boolean
@@ -33,7 +34,7 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, sessionChecked, username, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange, onUsernameChange }: Props) {
+export default function HomePage({ user, sessionChecked, username, isAdmin, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange, onUsernameChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -41,7 +42,7 @@ export default function HomePage({ user, sessionChecked, username, serverPlayed,
   const [shareVisible, setShareVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
   const seg = getSegmentConfig()
-  const weekend = isWeekend()
+  const weekend = isWeekend() && !isAdmin
   const dateStr = getParisDate()
 
   // For logged-in users: server record is authoritative (cross-device gate).
