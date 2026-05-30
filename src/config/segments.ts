@@ -20,6 +20,7 @@ export interface SegmentConfig {
   ctaLabel: string
   questionsTable: string
   storyButtonText: string
+  tablePrefix: string
   disabled?: boolean
 }
 
@@ -48,6 +49,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     ctaLabel: '⚔️ Vill du spela mer? Besök Quizine.se',
     questionsTable: 'remote_questions',
     storyButtonText: '🍽️  Berätta en kroghistoria',
+    tablePrefix: '',
   },
   voo: {
     id: 'voo',
@@ -71,6 +73,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     ctaLabel: '🩺 Vill du spela mer? Besök quizine.se',
     questionsTable: 'voo_remote_questions',
     storyButtonText: '🏥 Berätta en arbetsrelaterad händelse',
+    tablePrefix: 'voo_',
   },
   blaljus: {
     id: 'blaljus',
@@ -94,6 +97,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     ctaLabel: '🚨 Vill du spela mer? Besök quizine.se',
     questionsTable: 'blaljus_remote_questions',
     storyButtonText: '🚨 Berätta en historia',
+    tablePrefix: 'blaljus_',
   },
   it: {
     id: 'it',
@@ -117,6 +121,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     ctaLabel: '💻 Vill du spela mer? Besök quizine.se',
     questionsTable: 'it_remote_questions',
     storyButtonText: '💻  Berätta en arbetsrelaterad händelse',
+    tablePrefix: 'it_',
   },
   handel: {
     id: 'handel',
@@ -140,6 +145,7 @@ const CONFIGS: Record<string, SegmentConfig> = {
     ctaLabel: '🛒 Vill du spela mer? Besök quizine.se',
     questionsTable: 'handels_remote_questions',
     storyButtonText: '🛒 Berätta en historia från butiken',
+    tablePrefix: 'handel_',
   },
 }
 

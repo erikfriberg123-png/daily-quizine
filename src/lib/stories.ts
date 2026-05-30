@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { getSegmentConfig } from '../config/segments'
 
 // Only letters (incl. Swedish), digits, spaces and ,.!?
 // Newlines are allowed inside the story text.
@@ -30,7 +31,8 @@ export async function submitStory(
   imageUrl: string | null,
   userId: string | null,
 ): Promise<{ error?: string }> {
-  const { error } = await supabase.from('restaurant_stories').insert({
+  const { tablePrefix } = getSegmentConfig()
+  const { error } = await supabase.from(`${tablePrefix}restaurant_stories`).insert({
     user_id: userId ?? null,
     display_name: displayName?.trim() || null,
     story_text: storyText.trim(),

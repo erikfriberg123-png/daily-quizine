@@ -1,14 +1,18 @@
 import { supabase } from './supabase'
+import { getSegmentConfig } from '../config/segments'
 
 export async function submitFeedback(
   message: string,
   userId: string | null,
   username: string | null,
 ): Promise<{ error?: string }> {
+  const { tablePrefix } = getSegmentConfig()
+  const table = `${tablePrefix}feedback`
+
   if (userId) {
     const cooldownStart = new Date(Date.now() - 60 * 60 * 1000).toISOString()
     const { count } = await supabase
-      .from('feedback')
+      .from(table)
       .select('id', { count: 'exact', head: true })
       .eq('user_id', userId)
       .gt('created_at', cooldownStart)
@@ -17,7 +21,7 @@ export async function submitFeedback(
     }
   }
 
-  const { error } = await supabase.from('feedback').insert({
+  const { error } = await supabase.from(table).insert({
     user_id: userId ?? null,
     username: username ?? null,
     message: message.trim(),
