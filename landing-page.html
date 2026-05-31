@@ -72,6 +72,9 @@
       --hr-lon-glow:       rgba(255,184,48,0.35);
       --bygg:              #F5E0B0;
       --bygg-glow:         rgba(245,224,176,0.35);
+      --blue-light:        #5DA4F6;
+      --vote:              #C9922A;
+      --vote-glow:         rgba(201,146,42,0.35);
     }
 
     html, body {
@@ -339,6 +342,7 @@
     .card.handel:hover       { border-color: rgba(255,107,43,0.4); box-shadow: 0 8px 40px var(--handel-glow); }
     .card.hr-lon:hover       { border-color: rgba(255,184,48,0.4); box-shadow: 0 8px 40px var(--hr-lon-glow); }
     .card.bygg:hover         { border-color: rgba(245,224,176,0.4); box-shadow: 0 8px 40px var(--bygg-glow); }
+    .card.vote-card:hover    { border-color: rgba(201,146,42,0.45); box-shadow: 0 8px 40px var(--vote-glow); }
 
     /* Badge */
     .card-badge {
@@ -836,6 +840,19 @@
         </div>
       </a>
 
+      <!-- VOTE CARD -->
+      <div class="card vote-card" id="vote-card" onclick="openVoteModal()">
+        <div class="card-icon">
+          <img src="/neon-question-mark.png" alt="Rösta" style="width:56px;height:56px;border-radius:10px;object-fit:cover;background:#000;" />
+        </div>
+        <div class="card-name">Nästa branch?</div>
+        <div class="card-tagline">Rösta på vilken yrkesgrupp vi bygger ett quiz för härnäst.</div>
+        <div class="card-footer">
+          <span class="card-footer-label" id="vote-card-label" style="color:var(--vote);">Rösta nu</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </div>
+
     </div><!-- /grid-industries -->
 
     <!-- FOOTER -->
@@ -863,6 +880,11 @@
     </footer>
 
   </main>
+
+  <!-- VOTE MODAL -->
+  <div class="modal-overlay" id="vote-overlay" style="align-items:flex-end;padding:0;" onclick="if(event.target===this)closeVoteModal()">
+    <div id="vote-modal-content" style="width:100%;max-width:460px;"></div>
+  </div>
 
   <!-- LOGIN MODAL -->
   <!-- Nickname modal -->
@@ -1155,6 +1177,216 @@
       if (session) updateLoggedInUI(session.user)
       else updateLoggedOutUI()
     })
+
+    // ── Vote poll ──────────────────────────────────────────────────────────
+    const VOTE_PREFIX = 'quizine_poll_v'
+    const VOTE_SESSION_KEY = 'quizine_session_id'
+    const TOTAL_POINTS = 5
+
+    const ALL_SECTORS = [
+      { id: 'restaurang', label: 'Restaurang & Krog', emoji: '🍽️' },
+      { id: 'handel', label: 'Handel & Detaljhandel', emoji: '🛒' },
+      { id: 'bygg', label: 'Bygg & Anläggning', emoji: '🏗️' },
+      { id: 'it', label: 'IT & Teknik', emoji: '💻' },
+      { id: 'hr_lon', label: 'HR & Lön', emoji: '👔' },
+      { id: 'sjukvard', label: 'Sjukvård & Omsorg', emoji: '🏥' },
+      { id: 'transport', label: 'Transport & Logistik', emoji: '🚛' },
+      { id: 'industri', label: 'Industri & Tillverkning', emoji: '🏭' },
+      { id: 'utbildning', label: 'Utbildning & Skola', emoji: '📚' },
+      { id: 'fastighet', label: 'Fastighet & Mäkleri', emoji: '🏠' },
+      { id: 'juridik', label: 'Juridik & Finans', emoji: '⚖️' },
+      { id: 'fordon', label: 'Fordon & Mekanik', emoji: '🔧' },
+      { id: 'sakerhet', label: 'Säkerhet & Bevakning', emoji: '🔒' },
+      { id: 'energi', label: 'Energi & Miljö', emoji: '⚡' },
+      { id: 'skog', label: 'Skog & Lantbruk', emoji: '🌲' },
+      { id: 'media', label: 'Media & Kommunikation', emoji: '📡' },
+      { id: 'kultur', label: 'Kultur & Event', emoji: '🎭' },
+      { id: 'offentlig', label: 'Offentlig Förvaltning', emoji: '🏛️' },
+      { id: 'halsa', label: 'Friskvård & Skönhet', emoji: '💆' },
+      { id: 'marknad', label: 'Marknad & Reklam', emoji: '📣' },
+    ]
+
+    let pollConfig = null
+    let pollTotals = {}
+    let votePoints = {}
+
+    function getOrCreateVoteSessionId() {
+      let id = localStorage.getItem(VOTE_SESSION_KEY)
+      if (!id) { id = crypto.randomUUID(); localStorage.setItem(VOTE_SESSION_KEY, id) }
+      return id
+    }
+
+    function hasVoted() {
+      if (!pollConfig) return false
+      try { return JSON.parse(localStorage.getItem(VOTE_PREFIX + pollConfig.version) || '{}').voted || false } catch { return false }
+    }
+
+    function getActiveSectors() {
+      const removed = pollConfig ? (pollConfig.removed_segments || []) : []
+      return ALL_SECTORS.filter(s => !removed.includes(s.id))
+    }
+
+    async function openVoteModal() {
+      if (!pollConfig) {
+        try {
+          const { data } = await sb.from('poll_config').select('version,removed_segments').order('id', { ascending: false }).limit(1).maybeSingle()
+          pollConfig = data || { version: 1, removed_segments: [] }
+        } catch { pollConfig = { version: 1, removed_segments: [] } }
+      }
+
+      const voted = hasVoted()
+      if (voted) {
+        try {
+          const { data } = await sb.from('segment_votes').select('segment_id,points').eq('poll_version', pollConfig.version)
+          pollTotals = {}
+          if (data) data.forEach(r => { pollTotals[r.segment_id] = (pollTotals[r.segment_id] || 0) + r.points })
+        } catch {}
+      }
+
+      votePoints = {}
+      buildVoteModal(voted)
+      document.getElementById('vote-overlay').classList.add('open')
+    }
+
+    function closeVoteModal() {
+      document.getElementById('vote-overlay').classList.remove('open')
+    }
+
+    function buildVoteModal(voted) {
+      const sectors = getActiveSectors()
+      const container = document.getElementById('vote-modal-content')
+
+      if (voted) {
+        const sorted = [...sectors].sort((a, b) => (pollTotals[b.id] || 0) - (pollTotals[a.id] || 0))
+        const maxV = Math.max(...Object.values(pollTotals), 1)
+        container.innerHTML = `
+          <div style="background:var(--bg-card);border-radius:24px 24px 0 0;border:1px solid var(--border-light);padding:20px 20px 32px;max-height:85dvh;overflow-y:auto;position:relative;">
+            <button onclick="closeVoteModal()" style="position:absolute;top:16px;right:16px;background:none;color:var(--text-muted);font-size:20px;cursor:pointer;border:none;">✕</button>
+            <div style="font-size:17px;font-weight:800;color:var(--cream);margin-bottom:4px;">📊 Röstningsresultat</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Ny omröstning öppnar när nästa branch lanseras.</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${sorted.map(s => {
+                const v = pollTotals[s.id] || 0
+                const pct = Math.round((v / maxV) * 100)
+                return `<div style="padding:10px 12px;background:var(--bg-card-2);border:1px solid var(--border);border-radius:12px;">
+                  <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                    <span style="font-size:18px;">${s.emoji}</span>
+                    <span style="font-size:13px;font-weight:700;color:var(--cream);flex:1;">${s.label}</span>
+                    <span style="font-size:11px;color:var(--text-muted);">${v} poäng</span>
+                  </div>
+                  <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
+                    <div style="height:100%;width:${pct}%;background:var(--gold);border-radius:2px;"></div>
+                  </div>
+                </div>`
+              }).join('')}
+            </div>
+          </div>`
+      } else {
+        container.innerHTML = `
+          <div style="background:var(--bg-card);border-radius:24px 24px 0 0;border:1px solid var(--border-light);padding:20px 20px 0;max-height:88dvh;overflow-y:auto;position:relative;">
+            <button onclick="closeVoteModal()" style="position:absolute;top:16px;right:16px;background:none;color:var(--text-muted);font-size:20px;cursor:pointer;border:none;">✕</button>
+            <div style="font-size:17px;font-weight:800;color:var(--cream);margin-bottom:4px;">🗳️ Rösta på nästa branch</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Fördela 5 poäng fritt — du kan ge allt till ett alternativ eller sprida dem.</div>
+            <div id="pts-indicator" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(201,146,42,0.08);border:1px solid rgba(201,146,42,0.2);border-radius:10px;margin-bottom:16px;">
+              <div style="display:flex;gap:4px;">
+                ${[0,1,2,3,4].map(i => `<div id="vdot-${i}" style="width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.15s;"></div>`).join('')}
+              </div>
+              <div id="pts-label" style="font-size:12px;color:var(--gold-light);font-weight:700;">5 poäng kvar</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:80px;">
+              ${sectors.map(s => `
+                <div id="vrow-${s.id}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-card-2);border:1px solid var(--border);border-radius:12px;transition:all 0.15s;">
+                  <div style="font-size:20px;flex-shrink:0;">${s.emoji}</div>
+                  <div style="flex:1;font-size:13px;font-weight:700;color:var(--cream);">${s.label}</div>
+                  <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                    <button onclick="vRemove('${s.id}')" id="vminus-${s.id}" style="width:28px;height:28px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;">−</button>
+                    <div id="vpts-${s.id}" style="width:20px;text-align:center;font-size:14px;font-weight:800;color:var(--text-muted);">0</div>
+                    <button onclick="vAdd('${s.id}')" id="vplus-${s.id}" style="width:28px;height:28px;border-radius:50%;background:rgba(29,111,232,0.15);border:1px solid rgba(29,111,232,0.3);color:#5DA4F6;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;">+</button>
+                  </div>
+                </div>`).join('')}
+            </div>
+            <div style="position:sticky;bottom:0;background:var(--bg-card);padding:8px 0 max(20px,env(safe-area-inset-bottom));">
+              <button id="vote-submit" onclick="submitVote()" disabled style="width:100%;padding:14px;background:var(--bg-card-2);color:var(--text-muted);border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:default;font-family:inherit;transition:all 0.15s;">Skicka in röst</button>
+            </div>
+          </div>`
+      }
+    }
+
+    function vAdd(id) {
+      const spent = Object.values(votePoints).reduce((a,b)=>a+b,0)
+      if (spent >= TOTAL_POINTS) return
+      votePoints[id] = (votePoints[id] || 0) + 1
+      updateVoteUI()
+    }
+
+    function vRemove(id) {
+      if (!votePoints[id]) return
+      votePoints[id]--
+      if (!votePoints[id]) delete votePoints[id]
+      updateVoteUI()
+    }
+
+    function updateVoteUI() {
+      const spent = Object.values(votePoints).reduce((a,b)=>a+b,0)
+      const remaining = TOTAL_POINTS - spent
+      for (let i=0;i<5;i++) {
+        const d = document.getElementById(`vdot-${i}`)
+        if (d) d.style.background = i < spent ? 'var(--gold)' : 'var(--border)'
+      }
+      const lbl = document.getElementById('pts-label')
+      if (lbl) lbl.textContent = remaining === 0 ? 'Alla poäng fördelade!' : `${remaining} poäng kvar`
+      getActiveSectors().forEach(s => {
+        const pts = votePoints[s.id] || 0
+        const el = document.getElementById(`vpts-${s.id}`)
+        const row = document.getElementById(`vrow-${s.id}`)
+        const minus = document.getElementById(`vminus-${s.id}`)
+        const plus = document.getElementById(`vplus-${s.id}`)
+        if (el) { el.textContent = pts; el.style.color = pts>0 ? 'var(--gold-light)' : 'var(--text-muted)' }
+        if (row) { row.style.background = pts>0 ? 'rgba(201,146,42,0.08)' : 'var(--bg-card-2)'; row.style.borderColor = pts>0 ? 'rgba(201,146,42,0.25)' : 'var(--border)' }
+        if (minus) { minus.style.background = pts>0 ? 'rgba(201,146,42,0.15)' : 'transparent'; minus.style.borderColor = pts>0 ? 'rgba(201,146,42,0.3)' : 'var(--border)'; minus.style.color = pts>0 ? 'var(--gold-light)' : 'var(--text-muted)'; minus.style.cursor = pts>0 ? 'pointer' : 'default' }
+        if (plus) { plus.style.background = remaining>0 ? 'rgba(29,111,232,0.15)' : 'transparent'; plus.style.borderColor = remaining>0 ? 'rgba(29,111,232,0.3)' : 'var(--border)'; plus.style.color = remaining>0 ? '#5DA4F6' : 'var(--text-muted)'; plus.style.cursor = remaining>0 ? 'pointer' : 'default' }
+      })
+      const btn = document.getElementById('vote-submit')
+      if (btn) {
+        btn.disabled = spent === 0
+        btn.style.background = spent>0 ? 'linear-gradient(135deg,var(--gold) 0%,#C0441A 100%)' : 'var(--bg-card-2)'
+        btn.style.color = spent>0 ? 'var(--cream)' : 'var(--text-muted)'
+        btn.style.cursor = spent>0 ? 'pointer' : 'default'
+      }
+    }
+
+    async function submitVote() {
+      const spent = Object.values(votePoints).reduce((a,b)=>a+b,0)
+      if (!spent) return
+      const btn = document.getElementById('vote-submit')
+      if (btn) { btn.disabled = true; btn.textContent = '…' }
+      const sessionId = getOrCreateVoteSessionId()
+      const rows = Object.entries(votePoints).filter(([,v])=>v>0).map(([segment_id,points])=>({ segment_id, points, session_id: sessionId, poll_version: pollConfig.version }))
+      await sb.from('segment_votes').insert(rows)
+      localStorage.setItem(VOTE_PREFIX + pollConfig.version, JSON.stringify({ voted: true, sessionId }))
+      try {
+        const { data } = await sb.from('segment_votes').select('segment_id,points').eq('poll_version', pollConfig.version)
+        pollTotals = {}
+        if (data) data.forEach(r => { pollTotals[r.segment_id] = (pollTotals[r.segment_id]||0) + r.points })
+      } catch {}
+      closeVoteModal()
+      buildVoteModal(true)
+      document.getElementById('vote-overlay').classList.add('open')
+      const lbl = document.getElementById('vote-card-label')
+      if (lbl) lbl.textContent = 'Se resultat'
+    }
+
+    // Update vote card label if already voted on page load
+    ;(async () => {
+      try {
+        const { data } = await sb.from('poll_config').select('version,removed_segments').order('id',{ascending:false}).limit(1).maybeSingle()
+        pollConfig = data || { version:1, removed_segments:[] }
+        if (hasVoted()) {
+          const lbl = document.getElementById('vote-card-label')
+          if (lbl) lbl.textContent = 'Se resultat'
+        }
+      } catch {}
+    })()
   </script>
 
 </body>
