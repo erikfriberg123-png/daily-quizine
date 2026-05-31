@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect, useRef } from 'react'
 import { User } from '@supabase/supabase-js'
 import { submitDailyScore } from '../lib/dailyScores'
+import { getNextPlayDayLabel } from '../lib/dailyUtils'
 import { Leaderboard } from '../components/Leaderboard'
 import { getSegmentConfig } from '../config/segments'
 import { LoginModal } from '../components/LoginModal'
@@ -31,12 +32,13 @@ function scoreEmoji(correct: number, total: number) {
 }
 
 function scoreMessage(correct: number, total: number) {
+  const nextDay = getNextPlayDayLabel()
   const pct = correct / total
   if (pct === 1) return 'Perfekt! Alla rätt!'
   if (pct >= 0.8) return 'Imponerande! Nästan perfekt!'
   if (pct >= 0.6) return 'Bra jobbat!'
-  if (pct >= 0.4) return 'Inte illa — öva mer imorgon!'
-  return 'Kom tillbaka imorgon och försök igen!'
+  if (pct >= 0.4) return `Inte illa — öva mer ${nextDay}!`
+  return `Kom tillbaka ${nextDay} och försök igen!`
 }
 
 const handleCreateBtnMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -56,6 +58,7 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const [leaderboardRefreshTrigger, setLeaderboardRefreshTrigger] = useState(0)
   const submittingRef = useRef(false)
 
   const seg = getSegmentConfig()
@@ -84,6 +87,7 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
         .finally(() => {
           setSubmitting(false)
           submittingRef.current = false
+          setLeaderboardRefreshTrigger(t => t + 1)
         })
     }
   }, [user, username, submitted, result])
@@ -104,6 +108,7 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
       setSubmitError('Kunde inte spara poängen. Försök igen.')
     } finally {
       setSubmitting(false)
+      setLeaderboardRefreshTrigger(t => t + 1)
     }
   }
 
@@ -315,11 +320,6 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
           </div>
         )}
 
-        {/* Feedback label */}
-        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-          Feedback?
-        </div>
-
         {/* Play more CTA */}
         <style>{`
           @keyframes cta-attract {
@@ -355,7 +355,7 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
         </a>
 
         {/* Leaderboard */}
-        <Leaderboard highlightUsername={username} key={String(submitted)} />
+        <Leaderboard highlightUsername={username} refreshTrigger={leaderboardRefreshTrigger} />
 
         {/* Actions */}
         <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>

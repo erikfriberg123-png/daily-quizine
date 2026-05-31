@@ -8,12 +8,14 @@
     "dev:it": "vite --config vite.config.it.ts",
     "dev:blaljus": "vite --config vite.config.blaljus.ts",
     "dev:handel": "vite --config vite.config.handel.ts",
+    "dev:hr_lon": "vite --config vite.config.hr_lon.ts",
     "build:quizine": "tsc -b && vite build",
     "build:voo": "vite build --config vite.config.voo.ts",
     "build:it": "vite build --config vite.config.it.ts",
     "build:blaljus": "vite build --config vite.config.blaljus.ts",
     "build:handel": "vite build --config vite.config.handel.ts",
-    "build": "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel",
+    "build:hr_lon": "vite build --config vite.config.hr_lon.ts",
+    "build": "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && npm run build:hr_lon",
     "preview": "vite preview"
   },
   "dependencies": {

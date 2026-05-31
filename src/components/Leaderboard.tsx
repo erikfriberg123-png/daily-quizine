@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import { getWeeklyLeaderboard, LeaderboardEntry } from '../lib/dailyScores'
 import { getParisDate } from '../lib/dailyUtils'
 import { HallOfFameModal } from './HallOfFameModal'
@@ -16,6 +16,7 @@ function lastPlayedLabel(lastPlayedDate: string): string {
 
 interface Props {
   highlightUsername?: string | null
+  refreshTrigger?: number
 }
 
 const MEDALS = ['🥇', '🥈', '🥉']
@@ -89,18 +90,36 @@ function EntryRow({ entry, highlightUsername }: { entry: LeaderboardEntry; highl
   )
 }
 
-export function Leaderboard({ highlightUsername }: Props) {
+export function Leaderboard({ highlightUsername, refreshTrigger = 0 }: Props) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [showHallOfFame, setShowHallOfFame] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const hasFetchedOnce = useRef(false)
 
   useEffect(() => {
+    let cancelled = false
+    const isInitial = !hasFetchedOnce.current
+    if (isInitial) setLoading(true)
+
     getWeeklyLeaderboard()
-      .then(setEntries)
-      .catch(() => setEntries([]))
-      .finally(() => setLoading(false))
-  }, [])
+      .then(data => {
+        if (!cancelled) {
+          setEntries(data)
+          if (isInitial) setLoading(false)
+          hasFetchedOnce.current = true
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setEntries([])
+          if (isInitial) setLoading(false)
+          hasFetchedOnce.current = true
+        }
+      })
+
+    return () => { cancelled = true }
+  }, [refreshTrigger])
 
   const top3 = entries.slice(0, COLLAPSED_COUNT)
   const rest = entries.slice(COLLAPSED_COUNT)

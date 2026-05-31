@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && cp landing-page.html dist/index.html"
+  command = "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && npm run build:hr_lon && cp landing-page.html dist/index.html"
   publish = "dist"
 
 # Never cache HTML files — they reference hashed JS/CSS bundles.
@@ -64,6 +64,16 @@
 [[redirects]]
   from = "/handel/*"
   to = "/handel/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/hr_lon"
+  to = "/hr_lon/"
+  status = 301
+
+[[redirects]]
+  from = "/hr_lon/*"
+  to = "/hr_lon/index.html"
   status = 200
 
 [[redirects]]

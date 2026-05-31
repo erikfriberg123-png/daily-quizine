@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
-import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate, pickDailyQuestions, getCachedDailySelection, cacheDailySelection } from '../lib/dailyUtils'
+import { isWeekend, getNextMondayLabel, getTodayPlayedData, getParisDate, pickDailyQuestions, getCachedDailySelection, cacheDailySelection, getNextPlayDayLabel } from '../lib/dailyUtils'
 import { fetchDailyQuestions } from '../lib/questions'
 import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
@@ -484,7 +484,7 @@ function AlreadyPlayedView({
           </div>
         </div>
         <div style={{ marginTop: 16, fontSize: 13, color: 'var(--text-muted)', textAlign: 'center' }}>
-          Kom tillbaka imorgon för ett nytt quiz!
+          Kom tillbaka {getNextPlayDayLabel()} för ett nytt quiz!
         </div>
       </div>
     </div>

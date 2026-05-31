@@ -33,6 +33,8 @@
       --it-glow:           rgba(0,255,100,0.35);
       --handel:            #FF6B2B;
       --handel-glow:       rgba(255,107,43,0.35);
+      --hr-lon:            #FFB830;
+      --hr-lon-glow:       rgba(255,184,48,0.35);
     }
 
     html, body {
@@ -249,12 +251,6 @@
       text-align: center;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
     .grid-industries {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -304,6 +300,7 @@
     .card.blaljus:hover      { border-color: rgba(255,26,60,0.4);  box-shadow: 0 8px 40px var(--blaljus-glow); }
     .card.it:hover           { border-color: rgba(0,255,100,0.4);  box-shadow: 0 8px 40px var(--it-glow); }
     .card.handel:hover       { border-color: rgba(255,107,43,0.4); box-shadow: 0 8px 40px var(--handel-glow); }
+    .card.hr-lon:hover       { border-color: rgba(255,184,48,0.4); box-shadow: 0 8px 40px var(--hr-lon-glow); }
 
     /* Badge */
     .card-badge {
@@ -384,6 +381,7 @@
     .blaljus      .card-footer-label { color: var(--blaljus); }
     .it           .card-footer-label { color: var(--it); }
     .handel       .card-footer-label { color: var(--handel); }
+    .hr-lon       .card-footer-label { color: var(--hr-lon); }
 
     /* Dimmed for coming soon */
     .card.coming-soon {
@@ -658,12 +656,13 @@
     <!-- SEGMENT GRID -->
     <p class="segment-label">Välj din bransch</p>
 
-    <!-- FEATURED: Krog & Hotell -->
-    <div class="grid fade-in" style="animation-delay:0.1s">
-      <a class="card hospitality" href="/quizine/" style="grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 24px;">
-        <div class="card-badge badge-live">● Live</div>
+    <!-- 4-column grid — all segments, uniform size -->
+    <div class="grid-industries fade-in" style="animation-delay:0.1s">
 
-        <div class="card-icon" style="flex-shrink:0">
+      <!-- KROG & HOTELL -->
+      <a class="card hospitality" href="/quizine/">
+        <div class="card-badge badge-live">● Live</div>
+        <div class="card-icon">
           <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="neon-svg" style="color:#9B59B6">
             <line x1="8" y1="8" x2="26" y2="34" stroke="#9B59B6" stroke-width="2" stroke-linecap="round"/>
             <line x1="44" y1="8" x2="26" y2="34" stroke="#9B59B6" stroke-width="2" stroke-linecap="round"/>
@@ -672,21 +671,13 @@
             <text x="26" y="27" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" fill="#9B59B6">?</text>
           </svg>
         </div>
-
-        <div style="flex:1; min-width:0">
-          <div class="card-name">Krog &amp; Hotell</div>
-          <div class="card-tagline" style="margin-top:6px">Restauranger, barer &amp; hotell — visa vad du går för.</div>
-        </div>
-
-        <div class="card-footer" style="margin-top:0; padding-top:0; border-top:none; flex-shrink:0">
-          <span class="card-footer-label">Spela dagens quiz</span>
-          <span class="card-arrow" style="margin-left:8px">→</span>
+        <div class="card-name">Krog &amp; Hotell</div>
+        <div class="card-tagline">Restauranger, barer &amp; hotell.</div>
+        <div class="card-footer">
+          <span class="card-footer-label">Spela</span>
+          <span class="card-arrow">→</span>
         </div>
       </a>
-    </div>
-
-    <!-- 4-column industry grid -->
-    <div class="grid-industries fade-in" style="animation-delay:0.18s">
 
       <!-- HEALTHCARE -->
       <a class="card healthcare" href="/voo/">
@@ -765,6 +756,26 @@
         </div>
       </a>
 
+      <!-- HR LÖN -->
+      <a class="card hr-lon" href="/hr_lon/">
+        <div class="card-badge badge-soon-yellow">Snart</div>
+        <div class="card-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="filter: drop-shadow(0 0 5px #FFE033) drop-shadow(0 0 10px rgba(255,224,51,0.4))">
+            <path d="M26 6 L40 11 L40 27 Q40 37 26 42 Q12 37 12 27 L12 11 Z"
+              stroke="#FFE033" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+            <path d="M26 12 L36 16 L36 27 Q36 34 26 38 Q16 34 16 27 L16 16 Z"
+              stroke="#FFE033" stroke-width="1" stroke-linejoin="round" fill="none" opacity="0.35"/>
+            <text x="26" y="33" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="18" font-weight="800" fill="#FFE033">?</text>
+          </svg>
+        </div>
+        <div class="card-name">HR &amp; Lön</div>
+        <div class="card-tagline">HR-proffs &amp; löneadministratörer.</div>
+        <div class="card-footer">
+          <span class="card-footer-label" style="color:var(--hr-lon)">Kommer snart</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
 
     </div><!-- /grid-industries -->
 

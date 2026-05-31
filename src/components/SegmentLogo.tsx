@@ -73,6 +73,33 @@ export function SegmentLogo() {
     )
   }
 
+  if (SEGMENT === 'hr_lon') {
+    return (
+      <div style={{
+        width: 38, height: 38,
+        background: 'var(--bg-card-2)',
+        border: '1px solid var(--border-light)',
+        borderRadius: 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 14px var(--gold-glow)',
+        flexShrink: 0,
+      }}>
+        <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
+          style={{ filter: 'drop-shadow(0 0 5px #FFE033) drop-shadow(0 0 10px rgba(255,224,51,0.4))' }}>
+          {/* Outer shield */}
+          <path d="M26 6 L40 11 L40 27 Q40 37 26 42 Q12 37 12 27 L12 11 Z"
+            stroke="#FFE033" strokeWidth="2.5" strokeLinejoin="round" fill="none"/>
+          {/* Inner shield ring */}
+          <path d="M26 12 L36 16 L36 27 Q36 34 26 38 Q16 34 16 27 L16 16 Z"
+            stroke="#FFE033" strokeWidth="1" strokeLinejoin="round" fill="none" opacity="0.35"/>
+          {/* Question mark */}
+          <text x="26" y="33" textAnchor="middle" fontFamily="DM Sans,sans-serif"
+            fontSize="18" fontWeight="800" fill="#FFE033">?</text>
+        </svg>
+      </div>
+    )
+  }
+
   if (SEGMENT === 'voo') {
     return (
       <div style={{

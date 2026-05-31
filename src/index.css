@@ -150,6 +150,34 @@ html[data-segment="it"] {
   --timer-tip:    #00FF64;
 }
 
+/* ── HR Lön theme ── */
+html[data-segment="hr_lon"] {
+  --bg:           #08060A;
+  --bg-card:      #110E14;
+  --bg-card-2:    #181420;
+  --border:       #26202E;
+  --border-light: #332940;
+
+  --gold:         #FFB830;
+  --gold-light:   #FFD580;
+  --gold-glow:    rgba(255, 184, 48, 0.25);
+  --rust:         #FF8C00;
+  --rust-light:   #FFA030;
+  --cream:        #F5EFE8;
+  --white:        #F5EFE8;
+
+  --orange:       #FFB830;
+  --orange-light: #FFD580;
+  --orange-dark:  #FF8C00;
+  --orange-glow:  rgba(255, 184, 48, 0.25);
+
+  --text-muted:   #6B5F4A;
+  --text-dim:     #3A3028;
+
+  --timer-bar:    linear-gradient(90deg, #FF8C00 0%, #FFB830 80%, #FFD580 100%);
+  --timer-tip:    #FFB830;
+}
+
 /* ── Handel & Butik theme ── */
 html[data-segment="handel"] {
   --bg:           #0A080C;

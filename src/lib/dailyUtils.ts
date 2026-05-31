@@ -41,6 +41,13 @@ export function isWeekend(): boolean {
   return parisMs === 0 || parisMs === 6
 }
 
+export function getNextPlayDayLabel(): string {
+  const day = new Date(
+    new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })
+  ).getDay()
+  return day === 5 ? 'på måndag' : 'imorgon'  // 5 = Friday
+}
+
 export function getNextMondayLabel(): string {
   const now = new Date(
     new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })
