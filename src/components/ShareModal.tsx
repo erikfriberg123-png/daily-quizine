@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabaseUrl, supabaseAnonKey } from '../lib/supabase'
 import { getSegmentConfig } from '../config/segments'
 
 interface Props {
@@ -26,15 +26,20 @@ export function ShareModal({ senderName, onClose }: Props) {
     setSending(true)
     setError('')
     try {
-      const { error: fnErr } = await supabase.functions.invoke('send-invite', {
-        body: {
+      const res = await fetch(`${supabaseUrl}/functions/v1/send-invite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+        },
+        body: JSON.stringify({
           senderName: senderName || 'En spelkollega',
           recipientEmail: trimmed,
           segmentName,
           segmentUrl,
-        },
+        }),
       })
-      if (fnErr) throw fnErr
+      if (!res.ok) throw new Error(`${res.status}`)
       setSent(true)
     } catch {
       setError('Något gick fel. Kontrollera e-postadressen och försök igen.')
