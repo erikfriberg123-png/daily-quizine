@@ -98,6 +98,8 @@ export function SegmentLogo() {
           {/* Inner curve */}
           <path d="M14.6 31.6 Q14.6 30.6 26 30.1 Q37.4 30.6 37.4 31.6"
             stroke="#F5E0B0" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+          <text x="26" y="30" textAnchor="middle" fontFamily="DM Sans,sans-serif"
+            fontSize="13" fontWeight="800" fill="#F5E0B0">?</text>
         </svg>
       </div>
     )
