@@ -6,7 +6,7 @@ import { LoginModal } from '../components/LoginModal'
 import { Leaderboard } from '../components/Leaderboard'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
 import { StoryModal } from '../components/StoryModal'
-import { ServerPlayed } from '../App'
+import { ServerPlayed, CategoryMap } from '../App'
 import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
 import { getSegmentConfig, SegmentConfig } from '../config/segments'
 import { SegmentLogo } from '../components/SegmentLogo'
@@ -25,6 +25,7 @@ interface Props {
   serverPlayed: ServerPlayed | null
   serverPlayedChecked: boolean
   justCompleted: boolean
+  dbCategories: CategoryMap
   onStartQuiz: () => void
   onAuthChange: (user: User | null) => void
   onUsernameChange: (name: string) => void
@@ -34,7 +35,7 @@ const TODAY_WEEKDAY = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fre
   new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Paris' })).getDay()
 ]
 
-export default function HomePage({ user, sessionChecked, username, isAdmin, serverPlayed, serverPlayedChecked, justCompleted, onStartQuiz, onAuthChange, onUsernameChange }: Props) {
+export default function HomePage({ user, sessionChecked, username, isAdmin, serverPlayed, serverPlayedChecked, justCompleted, dbCategories, onStartQuiz, onAuthChange, onUsernameChange }: Props) {
   const [loginVisible, setLoginVisible] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
@@ -140,6 +141,7 @@ export default function HomePage({ user, sessionChecked, username, isAdmin, serv
             onStart={onStartQuiz}
             onLogin={() => setLoginVisible(true)}
             seg={seg}
+            dbCategories={dbCategories}
           />
         )}
 
@@ -498,6 +500,7 @@ function StartView({
   onStart,
   onLogin,
   seg,
+  dbCategories,
 }: {
   user: User | null
   username: string | null
@@ -505,6 +508,7 @@ function StartView({
   onStart: () => void
   onLogin: () => void
   seg: SegmentConfig
+  dbCategories: CategoryMap
 }) {
   const weekday = TODAY_WEEKDAY
   const [menuItems, setMenuItems] = useState<Array<{ name: string; emoji: string; desc: string }>>([])
@@ -524,10 +528,14 @@ function StartView({
           daily = pickDailyQuestions(all, dateStr, 3)
           cacheDailySelection(dateStr, daily.map(q => q.id))
         }
-        setMenuItems(daily.map(q => CATEGORY_DISPLAY[q.categoryId] ?? { name: q.categoryId, emoji: '❓', desc: '' }))
+        // DB categories take priority over static CATEGORY_DISPLAY so new segments
+        // show correct icons immediately after the wizard runs, before packages/config is updated.
+        setMenuItems(daily.map(q =>
+          dbCategories[q.categoryId] ?? CATEGORY_DISPLAY[q.categoryId] ?? { name: q.categoryId, emoji: '❓', desc: '' }
+        ))
       })
       .catch(() => {})
-  }, [dateStr])
+  }, [dateStr, dbCategories])
 
   return (
     <div className="fade-in">

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
-import { supabase } from './lib/supabase'
+import { supabase, anonSupabase } from './lib/supabase'
 import { getMyTodayScore } from './lib/dailyScores'
 import { getParisDate } from './lib/dailyUtils'
-import { getSegmentConfig } from './config/segments'
+import { getSegmentConfig, SEGMENT } from './config/segments'
+
+export type CategoryMap = Record<string, { name: string; emoji: string; desc: string }>
 import HomePage from './pages/HomePage'
 import QuizPage from './pages/QuizPage'
 import ResultsPage from './pages/ResultsPage'
@@ -88,6 +90,26 @@ export default function App() {
   const [serverPlayedChecked, setServerPlayedChecked] = useState(false)
   const [justCompleted, setJustCompleted] = useState(false)
   const [authHashError, setAuthHashError] = useState<string | null>(null)
+  const [dbCategories, setDbCategories] = useState<CategoryMap>({})
+
+  // Fetch this segment's categories from the DB so icons work even for
+  // segments not yet added to packages/config (e.g. right after wizard runs).
+  useEffect(() => {
+    anonSupabase
+      .from('segments')
+      .select('categories')
+      .eq('id', SEGMENT)
+      .single()
+      .then(({ data }) => {
+        const cats = (data?.categories ?? []) as Array<{ id: string; name: string; icon: string }>
+        if (cats.length) {
+          setDbCategories(Object.fromEntries(
+            cats.map(c => [c.id, { name: c.name, emoji: c.icon.replace(/^[\s.,;:!?·•–—]+/, '').trim(), desc: '' }])
+          ))
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -191,6 +213,7 @@ export default function App() {
           serverPlayed={serverPlayed}
           serverPlayedChecked={serverPlayedChecked}
           justCompleted={justCompleted}
+          dbCategories={dbCategories}
           onStartQuiz={() => setView('quiz')}
           onAuthChange={handleAuthChange}
           onUsernameChange={(name) => setUsername(name)}
