@@ -170,7 +170,6 @@ const CONFIGS: Record<string, SegmentConfig> = {
     questionsTable: 'hr_lon_remote_questions',
     storyButtonText: '👩‍💼 Berätta en HR-historia',
     tablePrefix: 'hr_lon_',
-    disabled: true,
   },
 }
 
