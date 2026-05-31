@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && npm run build:hr_lon && npm run build:bygg && cp landing-page.html dist/index.html && cp robots.txt dist/robots.txt && cp sitemap.xml dist/sitemap.xml && cp googleeb6d579b21cb60c1.html dist/googleeb6d579b21cb60c1.html"
+  command = "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && npm run build:hr_lon && npm run build:bygg && cp landing-page.html dist/index.html && cp robots.txt dist/robots.txt && cp sitemap.xml dist/sitemap.xml && cp googleeb6d579b21cb60c1.html dist/googleeb6d579b21cb60c1.html && cp public/neon-question-mark.png dist/neon-question-mark.png"
   publish = "dist"
 
 # Never cache HTML files — they reference hashed JS/CSS bundles.
