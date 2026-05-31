@@ -152,7 +152,7 @@ export function VotePollCard() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" flexShrink={0}
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
             style={{ flexShrink: 0, filter: 'drop-shadow(0 0 3px #FFE566) drop-shadow(0 0 9px #C9922A) drop-shadow(0 0 20px rgba(201,146,42,0.55))' }}>
             <text x="22" y="34" textAnchor="middle" fontSize="34" fontWeight="900" fill="#FFF8CC" fontFamily="Georgia, serif">?</text>
           </svg>
