@@ -152,15 +152,10 @@ export function VotePollCard() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-          <img
-            src={`${import.meta.env.BASE_URL}neon-question-mark.png`}
-            alt="Nästa branch"
-            style={{
-              width: 44, height: 44, borderRadius: 12,
-              objectFit: 'cover', flexShrink: 0,
-              background: '#000',
-            }}
-          />
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" flexShrink={0}
+            style={{ flexShrink: 0, filter: 'drop-shadow(0 0 3px #FFE566) drop-shadow(0 0 9px #C9922A) drop-shadow(0 0 20px rgba(201,146,42,0.55))' }}>
+            <text x="22" y="34" textAnchor="middle" fontSize="34" fontWeight="900" fill="#FFF8CC" fontFamily="Georgia, serif">?</text>
+          </svg>
           <div>
             <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--white)', lineHeight: 1.2 }}>
               Rösta på nästa branch
