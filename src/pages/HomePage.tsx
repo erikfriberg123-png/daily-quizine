@@ -14,6 +14,7 @@ import { FeedbackModal } from '../components/FeedbackModal'
 import { ShareModal } from '../components/ShareModal'
 import { UserMenu } from '../components/UserMenu'
 import { BellMenu } from '../components/BellMenu'
+import { VotePollCard } from '../components/VotePollCard'
 
 const QUESTION_COUNT = 3
 
@@ -145,8 +146,13 @@ export default function HomePage({ user, sessionChecked, username, isAdmin, serv
           />
         )}
 
+        {/* Vote on next segment */}
+        <div style={{ marginTop: 20 }}>
+          <VotePollCard />
+        </div>
+
         {/* Create question button — always visible */}
-        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <button
             onClick={() => setCreateVisible(true)}
             style={{
