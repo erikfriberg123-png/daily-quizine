@@ -15,7 +15,9 @@
     "build:blaljus": "vite build --config vite.config.blaljus.ts",
     "build:handel": "vite build --config vite.config.handel.ts",
     "build:hr_lon": "vite build --config vite.config.hr_lon.ts",
-    "build": "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && npm run build:hr_lon",
+    "dev:bygg": "vite --config vite.config.bygg.ts",
+    "build:bygg": "vite build --config vite.config.bygg.ts",
+    "build": "npm run build:quizine && npm run build:voo && npm run build:it && npm run build:blaljus && npm run build:handel && npm run build:hr_lon && npm run build:bygg",
     "preview": "vite preview"
   },
   "dependencies": {

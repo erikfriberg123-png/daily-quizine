@@ -150,6 +150,34 @@ html[data-segment="it"] {
   --timer-tip:    #00FF64;
 }
 
+/* ── Bygg & Konstruktion theme ── */
+html[data-segment="bygg"] {
+  --bg:           #080705;
+  --bg-card:      #100E08;
+  --bg-card-2:    #181410;
+  --border:       #242018;
+  --border-light: #302A1E;
+
+  --gold:         #F5E0B0;
+  --gold-light:   #FFF3DC;
+  --gold-glow:    rgba(245, 224, 176, 0.25);
+  --rust:         #E8C97A;
+  --rust-light:   #F5E0B0;
+  --cream:        #FDF6E8;
+  --white:        #FDF6E8;
+
+  --orange:       #F5E0B0;
+  --orange-light: #FFF3DC;
+  --orange-dark:  #E8C97A;
+  --orange-glow:  rgba(245, 224, 176, 0.25);
+
+  --text-muted:   #5A4E30;
+  --text-dim:     #2A2018;
+
+  --timer-bar:    linear-gradient(90deg, #E8C97A 0%, #F5E0B0 80%, #FFF3DC 100%);
+  --timer-tip:    #F5E0B0;
+}
+
 /* ── HR Lön theme ── */
 html[data-segment="hr_lon"] {
   --bg:           #08060A;

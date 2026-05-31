@@ -70,6 +70,8 @@
       --handel-glow:       rgba(255,107,43,0.35);
       --hr-lon:            #FFB830;
       --hr-lon-glow:       rgba(255,184,48,0.35);
+      --bygg:              #F5E0B0;
+      --bygg-glow:         rgba(245,224,176,0.35);
     }
 
     html, body {
@@ -336,6 +338,7 @@
     .card.it:hover           { border-color: rgba(0,255,100,0.4);  box-shadow: 0 8px 40px var(--it-glow); }
     .card.handel:hover       { border-color: rgba(255,107,43,0.4); box-shadow: 0 8px 40px var(--handel-glow); }
     .card.hr-lon:hover       { border-color: rgba(255,184,48,0.4); box-shadow: 0 8px 40px var(--hr-lon-glow); }
+    .card.bygg:hover         { border-color: rgba(245,224,176,0.4); box-shadow: 0 8px 40px var(--bygg-glow); }
 
     /* Badge */
     .card-badge {
@@ -787,6 +790,26 @@
         <div class="card-tagline">Utvecklare, DevOps &amp; IT-proffs.</div>
         <div class="card-footer">
           <span class="card-footer-label">Spela</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- BYGG -->
+      <a class="card bygg coming-soon" href="/bygg/">
+        <div class="card-badge badge-soon-yellow">Snart</div>
+        <div class="card-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="filter: drop-shadow(0 0 5px #F5E0B0) drop-shadow(0 0 10px rgba(245,224,176,0.4))">
+            <path d="M13 31.6 Q13 21.7 26 18.3 Q39 21.7 39 31.6" stroke="#F5E0B0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M8.9 33 Q8.9 31.6 13 31.6 L39 31.6 Q43 31.6 43 33 Q43 34.7 39 34.7 L13 34.7 Q8.9 34.7 8.9 33Z" stroke="#F5E0B0" stroke-width="2" stroke-linejoin="round" fill="none"/>
+            <line x1="26" y1="18.3" x2="26" y2="31.6" stroke="#F5E0B0" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+            <path d="M14.6 31.6 Q14.6 30.6 26 30.1 Q37.4 30.6 37.4 31.6" stroke="#F5E0B0" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="card-name">Bygg &amp; Konstruktion</div>
+        <div class="card-tagline">Byggare, hantverkare &amp; platschefer.</div>
+        <div class="card-footer">
+          <span class="card-footer-label" style="color:#F5E0B0">Kommer snart</span>
           <span class="card-arrow">→</span>
         </div>
       </a>

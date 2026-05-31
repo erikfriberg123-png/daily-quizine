@@ -73,6 +73,36 @@ export function SegmentLogo() {
     )
   }
 
+  if (SEGMENT === 'bygg') {
+    return (
+      <div style={{
+        width: 38, height: 38,
+        background: 'var(--bg-card-2)',
+        border: '1px solid var(--border-light)',
+        borderRadius: 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 14px var(--gold-glow)',
+        flexShrink: 0,
+      }}>
+        <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
+          style={{ filter: 'drop-shadow(0 0 5px #F5E0B0) drop-shadow(0 0 10px rgba(245,224,176,0.4))' }}>
+          {/* Hard hat dome */}
+          <path d="M13 31.6 Q13 21.7 26 18.3 Q39 21.7 39 31.6"
+            stroke="#F5E0B0" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+          {/* Brim */}
+          <path d="M8.9 33 Q8.9 31.6 13 31.6 L39 31.6 Q43 31.6 43 33 Q43 34.7 39 34.7 L13 34.7 Q8.9 34.7 8.9 33Z"
+            stroke="#F5E0B0" strokeWidth="2" strokeLinejoin="round" fill="none"/>
+          {/* Center rib */}
+          <line x1="26" y1="18.3" x2="26" y2="31.6"
+            stroke="#F5E0B0" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+          {/* Inner curve */}
+          <path d="M14.6 31.6 Q14.6 30.6 26 30.1 Q37.4 30.6 37.4 31.6"
+            stroke="#F5E0B0" strokeWidth="1.2" strokeLinecap="round" opacity="0.4"/>
+        </svg>
+      </div>
+    )
+  }
+
   if (SEGMENT === 'hr_lon') {
     return (
       <div style={{
