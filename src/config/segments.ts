@@ -173,6 +173,34 @@ const CONFIGS: Record<string, SegmentConfig> = {
   },
 }
 
+// Shown for any segment that has been built but not yet added to CONFIGS.
+// disabled: true triggers the "Kommer snart" page in App.tsx automatically.
+const FALLBACK_CONFIG: SegmentConfig = {
+  id: SEGMENT,
+  name: 'Quizine Daily',
+  subtitle: 'Kommer snart',
+  icon: '🚧',
+  heroLine1: 'Kommer snart',
+  heroLine2Start: '',
+  heroEm: '',
+  heroCopyLine1: '',
+  heroCopyLine2: '',
+  cardTitle: '',
+  cardIcon: '🚧',
+  startBtnIcon: '🚧',
+  showStoryButton: false,
+  showBackLink: true,
+  showCta: false,
+  localStoragePrefix: `${SEGMENT}_`,
+  showEkg: false,
+  ctaUrl: 'https://quizine.se',
+  ctaLabel: '',
+  questionsTable: `${SEGMENT}_remote_questions`,
+  storyButtonText: '',
+  tablePrefix: `${SEGMENT}_`,
+  disabled: true,
+}
+
 export function getSegmentConfig(): SegmentConfig {
-  return CONFIGS[SEGMENT] ?? CONFIGS.quizine
+  return CONFIGS[SEGMENT] ?? FALLBACK_CONFIG
 }
