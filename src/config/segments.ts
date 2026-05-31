@@ -194,7 +194,6 @@ const CONFIGS: Record<string, SegmentConfig> = {
     questionsTable: 'bygg_remote_questions',
     storyButtonText: '🏗️ Berätta en bygghistoria',
     tablePrefix: 'bygg_',
-    disabled: true,
   },
 }
 
