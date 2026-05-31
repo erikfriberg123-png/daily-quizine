@@ -95,20 +95,21 @@ export default function App() {
   // Fetch this segment's categories from the DB so icons work even for
   // segments not yet added to packages/config (e.g. right after wizard runs).
   useEffect(() => {
-    anonSupabase
-      .from('segments')
-      .select('categories')
-      .eq('id', SEGMENT)
-      .single()
-      .then(({ data }) => {
+    void (async () => {
+      try {
+        const { data } = await anonSupabase
+          .from('segments')
+          .select('categories')
+          .eq('id', SEGMENT)
+          .single()
         const cats = (data?.categories ?? []) as Array<{ id: string; name: string; icon: string }>
         if (cats.length) {
           setDbCategories(Object.fromEntries(
             cats.map(c => [c.id, { name: c.name, emoji: c.icon.replace(/^[\s.,;:!?·•–—]+/, '').trim(), desc: '' }])
           ))
         }
-      })
-      .catch(() => {})
+      } catch {}
+    })()
   }, [])
 
   useEffect(() => {
