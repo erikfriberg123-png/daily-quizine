@@ -32,6 +32,12 @@ export async function submitDailyScore(params: {
     throw new Error('Ogiltig poäng.')
   }
 
+  // Use raw fetch — same pattern as getMyTodayScore — so we never wait on
+  // the supabase-js auth lock, which can silently block the request forever.
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error('Inte inloggad.')
+  const jwt = session.access_token
+
   const row = {
     user_id: params.userId,
     username: params.username,
@@ -41,24 +47,37 @@ export async function submitDailyScore(params: {
     segment: SEGMENT,
   }
 
-  // INSERT first. If the row already exists (unique violation, code 23505),
-  // fall back to UPDATE — the upsert onConflict approach doesn't work with
-  // partial unique indexes (WHERE user_id IS NOT NULL).
-  const { error: insertError } = await supabase.from('daily_scores').insert(row)
-  if (!insertError) return
+  const headers = {
+    apikey: supabaseAnonKey,
+    Authorization: `Bearer ${jwt}`,
+    'Content-Type': 'application/json',
+    Prefer: 'return=minimal',
+  }
 
-  if (insertError.code === '23505') {
-    const { error: updateError } = await supabase
-      .from('daily_scores')
-      .update({ score: params.score, correct: params.correct, username: params.username })
-      .eq('user_id', params.userId)
-      .eq('date', params.date)
-      .eq('segment', SEGMENT)
-    if (updateError) throw updateError
+  // INSERT first; fall back to PATCH on 409 conflict (already played today).
+  const insertRes = await fetch(`${supabaseUrl}/rest/v1/daily_scores`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(row),
+  })
+  if (insertRes.ok) return
+
+  if (insertRes.status === 409) {
+    const q = new URLSearchParams([
+      ['user_id', `eq.${params.userId}`],
+      ['date',    `eq.${params.date}`],
+      ['segment', `eq.${SEGMENT}`],
+    ])
+    const updateRes = await fetch(`${supabaseUrl}/rest/v1/daily_scores?${q}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({ score: params.score, correct: params.correct, username: params.username }),
+    })
+    if (!updateRes.ok) throw new Error(`Score-uppdatering misslyckades (${updateRes.status})`)
     return
   }
 
-  throw insertError
+  throw new Error(`Kunde inte spara poängen (${insertRes.status})`)
 }
 
 export async function getWeeklyLeaderboard(): Promise<LeaderboardEntry[]> {
