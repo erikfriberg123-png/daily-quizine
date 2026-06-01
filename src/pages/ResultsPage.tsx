@@ -83,7 +83,10 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
         correct: result.correct,
       })
         .then(() => setSubmitted(true))
-        .catch(() => {})
+        .catch((err) => {
+          console.error('[submitDailyScore]', err)
+          setSubmitError('Kunde inte spara poängen. Försök igen eller kontakta support.')
+        })
         .finally(() => {
           setSubmitting(false)
           submittingRef.current = false
