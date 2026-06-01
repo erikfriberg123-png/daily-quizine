@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
-import { supabase, anonSupabase } from './lib/supabase'
+import { supabase, anonSupabase, supabaseUrl, supabaseAnonKey } from './lib/supabase'
 import { getMyTodayScore } from './lib/dailyScores'
 import { getParisDate } from './lib/dailyUtils'
 import { getSegmentConfig, SEGMENT } from './config/segments'
@@ -137,7 +137,7 @@ export default function App() {
         // fetchUsername queries supabase.from('profiles') which can hang if the
         // auth lock is contended, and that would keep serverPlayedChecked=false forever.
         if (event !== 'TOKEN_REFRESHED') fetchServerPlayed(session.user.id)
-        const name = await fetchUsername(session.user.id)
+        const name = await fetchUsername(session.user.id, session.access_token)
         if (event === 'SIGNED_IN') {
           const redirect = localStorage.getItem('postAuthRedirect')
           localStorage.removeItem('postAuthRedirect')
@@ -156,14 +156,26 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const fetchUsername = async (uid: string): Promise<string | null> => {
-    setUsernameChecked(false)  // Reset so modal never shows while fetch is in progress or on error
-    const { data, error } = await supabase.from('profiles').select('username').eq('id', uid).maybeSingle()
-    if (error) return null
-    const name = (data?.username as string | null) ?? null
-    setUsername(name)
-    setUsernameChecked(true)
-    return name
+  const fetchUsername = async (uid: string, accessToken?: string): Promise<string | null> => {
+    setUsernameChecked(false)
+    try {
+      // Use raw fetch with the session token to avoid the supabase-js auth lock,
+      // which is held during onAuthStateChange and would cause this to hang.
+      const jwt = accessToken ?? (await supabase.auth.getSession()).data.session?.access_token
+      if (!jwt) return null
+      const q = new URLSearchParams([['select', 'username'], ['id', `eq.${uid}`], ['limit', '1']])
+      const res = await fetch(`${supabaseUrl}/rest/v1/profiles?${q}`, {
+        headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${jwt}` },
+      })
+      if (!res.ok) return null
+      const rows = await res.json() as { username: string | null }[]
+      const name = rows[0]?.username ?? null
+      setUsername(name)
+      setUsernameChecked(true)
+      return name
+    } catch {
+      return null
+    }
   }
 
   const fetchServerPlayed = async (uid: string) => {

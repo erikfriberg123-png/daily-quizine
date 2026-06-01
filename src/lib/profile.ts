@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, anonSupabase, supabaseUrl, supabaseAnonKey } from './supabase'
 
 const USERNAME_RE = /^[A-Za-zÅÄÖåäö0-9 _-]+$/
 
@@ -10,16 +10,28 @@ export function validateUsername(value: string): string | null {
   return null
 }
 
+// Availability is a public check — use anonSupabase to avoid the auth lock.
 export async function checkUsernameAvailable(username: string, excludeUserId?: string): Promise<boolean> {
-  let query = supabase.from('profiles').select('id').eq('username', username.trim())
+  let query = anonSupabase.from('profiles').select('id').eq('username', username.trim())
   if (excludeUserId) query = query.neq('id', excludeUserId)
   const { data } = await query.maybeSingle()
   return !data
 }
 
+// Use raw fetch + session JWT so we never wait on the supabase-js auth lock.
 export async function saveUsername(userId: string, username: string): Promise<void> {
-  const { error } = await supabase
-    .from('profiles')
-    .upsert({ id: userId, username: username.trim() }, { onConflict: 'id' })
-  if (error) throw error
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error('Inte inloggad.')
+
+  const res = await fetch(`${supabaseUrl}/rest/v1/profiles`, {
+    method: 'POST',
+    headers: {
+      apikey: supabaseAnonKey,
+      Authorization: `Bearer ${session.access_token}`,
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=merge-duplicates,return=minimal',
+    },
+    body: JSON.stringify({ id: userId, username: username.trim() }),
+  })
+  if (!res.ok) throw new Error(`Kunde inte spara smeknamnet (${res.status})`)
 }
