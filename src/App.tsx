@@ -234,6 +234,7 @@ export default function App() {
             setServerPlayedChecked(true)
           }}
           onExit={() => setView('home')}
+          onAuthChange={handleAuthChange}
           onUsernameChange={(name) => setUsername(name)}
         />
       )}

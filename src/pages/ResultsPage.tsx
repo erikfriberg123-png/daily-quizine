@@ -154,12 +154,28 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
           </div>
           <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--white)' }}>Quizine Daily</div>
         </div>
-        {sessionChecked && user && (
+        {sessionChecked && (user ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <BellMenu user={user} />
             <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />
           </div>
-        )}
+        ) : (
+          <button
+            onClick={() => setLoginVisible(true)}
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: 'var(--gold-light)',
+              background: 'rgba(201,146,42,0.1)',
+              padding: '7px 14px',
+              border: '1px solid rgba(201,146,42,0.3)',
+              borderRadius: 10,
+              cursor: 'pointer',
+            }}
+          >
+            Logga in
+          </button>
+        ))}
       </header>
 
       <main

@@ -9,6 +9,7 @@ import { CATEGORY_DISPLAY, CATEGORY_COLORS } from '../lib/categories'
 import { UserMenu } from '../components/UserMenu'
 import { BellMenu } from '../components/BellMenu'
 import { FeedbackModal } from '../components/FeedbackModal'
+import { LoginModal } from '../components/LoginModal'
 
 const QUESTION_COUNT = 3
 const TIMER_SECONDS = 25
@@ -20,11 +21,12 @@ interface Props {
   onComplete: (result: { score: number; correct: number; total: number; dateStr: string }) => void
   onExit: () => void
   onUsernameChange: (name: string) => void
+  onAuthChange: (user: User | null) => void
 }
 
 type AnswerState = 'idle' | 'correct' | 'wrong' | 'disabled'
 
-export default function QuizPage({ user, sessionChecked, username, onComplete, onExit, onUsernameChange }: Props) {
+export default function QuizPage({ user, sessionChecked, username, onComplete, onExit, onUsernameChange, onAuthChange }: Props) {
   const [questions, setQuestions] = useState<DailyQuestion[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -37,6 +39,7 @@ export default function QuizPage({ user, sessionChecked, username, onComplete, o
   const [answerStates, setAnswerStates] = useState<AnswerState[]>(['idle', 'idle', 'idle', 'idle'])
   const [showNext, setShowNext] = useState(false)
   const [feedbackVisible, setFeedbackVisible] = useState(false)
+  const [loginVisible, setLoginVisible] = useState(false)
 
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -283,6 +286,24 @@ export default function QuizPage({ user, sessionChecked, username, onComplete, o
           {sessionChecked && user && (
             <UserMenu user={user} username={username} onUsernameChange={onUsernameChange} />
           )}
+          {sessionChecked && !user && (
+            <button
+              onClick={() => setLoginVisible(true)}
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: 'var(--gold-light)',
+                background: 'rgba(201,146,42,0.1)',
+                padding: '5px 10px',
+                border: '1px solid rgba(201,146,42,0.3)',
+                borderRadius: 8,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Logga in
+            </button>
+          )}
         </div>
       </div>
 
@@ -426,6 +447,17 @@ export default function QuizPage({ user, sessionChecked, username, onComplete, o
 
       {feedbackVisible && (
         <FeedbackModal user={user} username={username} onClose={() => setFeedbackVisible(false)} />
+      )}
+
+      {loginVisible && (
+        <LoginModal
+          hint="Logga in för att spara din poäng på topplistan!"
+          onSuccess={(u) => {
+            setLoginVisible(false)
+            onAuthChange(u)
+          }}
+          onClose={() => setLoginVisible(false)}
+        />
       )}
     </div>
   )
