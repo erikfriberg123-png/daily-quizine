@@ -1,6 +1,21 @@
 import { supabaseUrl, supabaseAnonKey } from './supabase'
 import { getSegmentConfig } from '../config/segments'
 
+function shuffleAnswers(
+  answers: [string, string, string, string],
+  correctIndex: number,
+): { answers: [string, string, string, string]; correctIndex: 0 | 1 | 2 | 3 } {
+  const arr = answers.map((text, i) => ({ text, correct: i === correctIndex }))
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return {
+    answers: arr.map(a => a.text) as [string, string, string, string],
+    correctIndex: arr.findIndex(a => a.correct) as 0 | 1 | 2 | 3,
+  }
+}
+
 export interface DailyQuestion {
   id: string
   question: string
@@ -38,13 +53,19 @@ export async function fetchDailyQuestions(): Promise<DailyQuestion[]> {
       Array.isArray((row as Record<string, unknown>).answers) &&
       ((row as Record<string, unknown>).answers as unknown[]).length === 4
     )
-    .map((row) => ({
-      id: row.id as string,
-      question: row.question as string,
-      answers: row.answers as [string, string, string, string],
-      correctIndex: row.correct_index as 0 | 1 | 2 | 3,
-      categoryId: row.category_id as string,
-      ...(row.image_url ? { imageUrl: row.image_url as string } : {}),
-      ...(row.forklaring ? { forklaring: row.forklaring as string } : {}),
-    }))
+    .map((row) => {
+      const { answers, correctIndex } = shuffleAnswers(
+        row.answers as [string, string, string, string],
+        row.correct_index as number,
+      )
+      return {
+        id: row.id as string,
+        question: row.question as string,
+        answers,
+        correctIndex,
+        categoryId: row.category_id as string,
+        ...(row.image_url ? { imageUrl: row.image_url as string } : {}),
+        ...(row.forklaring ? { forklaring: row.forklaring as string } : {}),
+      }
+    })
 }
