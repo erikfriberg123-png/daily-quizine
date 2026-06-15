@@ -686,6 +686,38 @@
       box-shadow: 0 0 45px rgba(91,200,255,0.92), 0 0 110px rgba(14,165,233,0.68), 0 20px 130px rgba(14,165,233,0.55) !important;
       border-color: rgba(210,245,255,0.92) !important;
     }
+
+    /* ── FOTBOLL INTERACTIVE BALL & GOAL ── */
+    .fotboll-pitch-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .fotboll-mini-goal {
+      position: absolute;
+      bottom: 20px;
+      right: 14px;
+      filter: drop-shadow(0 0 4px rgba(91,200,255,0.5));
+      opacity: 0.65;
+      transition: filter 0.15s, opacity 0.15s;
+    }
+    .fotboll-mini-goal.goal-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 10px rgba(91,200,255,1)) drop-shadow(0 0 22px rgba(14,165,233,0.8));
+    }
+    .fotboll-ball-el {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      left: 14%;
+      top: 68%;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 5px rgba(91,200,255,0.9));
+      will-change: left, top;
+    }
   </style>
 </head>
 <body>
@@ -813,6 +845,39 @@
           <div class="card-footer">
             <span class="card-footer-label">Spela nu</span>
             <span class="card-arrow">→</span>
+          </div>
+          <!-- Interactive ball & goal overlay -->
+          <div class="fotboll-pitch-overlay" aria-hidden="true">
+            <div class="fotboll-mini-goal" id="fotboll-goal">
+              <svg width="48" height="38" viewBox="0 0 48 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="2" y1="1" x2="2" y2="36" stroke="#5BC8FF" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="46" y1="1" x2="46" y2="36" stroke="#5BC8FF" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="2" y1="1" x2="46" y2="1" stroke="#5BC8FF" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="2" y1="10" x2="46" y2="10" stroke="#fff" stroke-width="0.7" opacity="0.18"/>
+                <line x1="2" y1="19" x2="46" y2="19" stroke="#fff" stroke-width="0.7" opacity="0.18"/>
+                <line x1="2" y1="28" x2="46" y2="28" stroke="#fff" stroke-width="0.7" opacity="0.18"/>
+                <line x1="13" y1="1" x2="13" y2="36" stroke="#fff" stroke-width="0.7" opacity="0.18"/>
+                <line x1="24" y1="1" x2="24" y2="36" stroke="#fff" stroke-width="0.7" opacity="0.18"/>
+                <line x1="35" y1="1" x2="35" y2="36" stroke="#fff" stroke-width="0.7" opacity="0.18"/>
+                <line x1="0" y1="36" x2="48" y2="36" stroke="#5BC8FF" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+              </svg>
+            </div>
+            <div class="fotboll-ball-el" id="fotboll-ball">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="9.5" stroke="#5BC8FF" stroke-width="1.5" fill="rgba(11,32,54,0.55)"/>
+                <polygon points="11,5.5 15.1,8.5 13.5,13.2 8.5,13.2 6.9,8.5" stroke="#5BC8FF" stroke-width="1" fill="none" stroke-linejoin="round"/>
+                <line x1="11" y1="5.5" x2="11" y2="1.5" stroke="#5BC8FF" stroke-width="0.8"/>
+                <line x1="15.1" y1="8.5" x2="18.9" y2="7.4" stroke="#5BC8FF" stroke-width="0.8"/>
+                <line x1="13.5" y1="13.2" x2="16.1" y2="17" stroke="#5BC8FF" stroke-width="0.8"/>
+                <line x1="8.5" y1="13.2" x2="5.9" y2="17" stroke="#5BC8FF" stroke-width="0.8"/>
+                <line x1="6.9" y1="8.5" x2="3.1" y2="7.4" stroke="#5BC8FF" stroke-width="0.8"/>
+                <line x1="11" y1="3.5" x2="16.8" y2="7.8" stroke="#fff" stroke-width="0.6" opacity="0.45"/>
+                <line x1="16.8" y1="7.8" x2="14.6" y2="14.7" stroke="#fff" stroke-width="0.6" opacity="0.45"/>
+                <line x1="14.6" y1="14.7" x2="7.4" y2="14.7" stroke="#fff" stroke-width="0.6" opacity="0.45"/>
+                <line x1="7.4" y1="14.7" x2="5.2" y2="7.8" stroke="#fff" stroke-width="0.6" opacity="0.45"/>
+                <line x1="5.2" y1="7.8" x2="11" y2="3.5" stroke="#fff" stroke-width="0.6" opacity="0.45"/>
+              </svg>
+            </div>
           </div>
         </a>
       </div>
@@ -1513,6 +1578,87 @@
         }
       } catch {}
     })()
+  </script>
+
+  <!-- Fotboll interactive ball -->
+  <script>
+    (function () {
+      var card = document.querySelector('.fotboll-featured');
+      var ball = document.getElementById('fotboll-ball');
+      var goal = document.getElementById('fotboll-goal');
+      if (!card || !ball || !goal) return;
+
+      var ballX = 14, ballY = 68;
+      var targetX = 14, targetY = 68;
+      var startX = 14, startY = 68;
+      var rotation = 0;
+      var raf = null;
+      var goalPct = null;
+      var MAX_DIST = 320;
+
+      function calcGoalPct() {
+        var cr = card.getBoundingClientRect();
+        var gr = goal.getBoundingClientRect();
+        return {
+          x: ((gr.left + gr.width * 0.5) - cr.left) / cr.width * 100,
+          y: ((gr.top + gr.height * 0.5) - cr.top) / cr.height * 100
+        };
+      }
+
+      function onMouseMove(e) {
+        if (!goalPct) goalPct = calcGoalPct();
+        var cr = card.getBoundingClientRect();
+        var mx = e.clientX, my = e.clientY;
+        var inside = mx >= cr.left && mx <= cr.right && my >= cr.top && my <= cr.bottom;
+
+        if (inside) {
+          // Ball follows mouse within card, leave some padding from edges
+          targetX = Math.max(8, Math.min(88, (mx - cr.left) / cr.width * 100));
+          targetY = Math.max(8, Math.min(85, (my - cr.top) / cr.height * 100));
+        } else {
+          // Distance from cursor to nearest point on card edge
+          var cx = Math.max(cr.left, Math.min(cr.right, mx));
+          var cy = Math.max(cr.top, Math.min(cr.bottom, my));
+          var dist = Math.sqrt(Math.pow(mx - cx, 2) + Math.pow(my - cy, 2));
+          // t=0 at card edge (ball near goal), t=1 far away (ball at start)
+          var t = Math.min(dist / MAX_DIST, 1);
+          targetX = goalPct.x * (1 - t) + startX * t;
+          targetY = goalPct.y * (1 - t) + startY * t;
+        }
+
+        if (!raf) raf = requestAnimationFrame(tick);
+      }
+
+      function tick() {
+        var dx = targetX - ballX;
+        var dy = targetY - ballY;
+        ballX += dx * 0.11;
+        ballY += dy * 0.11;
+
+        // Roll: rotate proportional to movement distance
+        var speed = Math.sqrt(dx * dx + dy * dy);
+        rotation += speed * 2.8;
+
+        ball.style.left = ballX + '%';
+        ball.style.top = ballY + '%';
+        ball.querySelector('svg').style.transform = 'rotate(' + rotation + 'deg)';
+
+        // Light up the goal when the ball reaches it
+        if (goalPct) {
+          var dg = Math.sqrt(Math.pow(ballX - goalPct.x, 2) + Math.pow(ballY - goalPct.y, 2));
+          goal.classList.toggle('goal-active', dg < 7);
+        }
+
+        if (Math.abs(dx) > 0.04 || Math.abs(dy) > 0.04) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          raf = null;
+        }
+      }
+
+      window.addEventListener('resize', function () { goalPct = null; }, { passive: true });
+      document.addEventListener('mousemove', onMouseMove, { passive: true });
+    })();
   </script>
 
 </body>
