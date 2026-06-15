@@ -234,32 +234,33 @@ html[data-segment="handel"] {
   --timer-tip:    #FF6B2B;
 }
 
-/* ── Fotboll theme (light) ── */
+/* ── Fotboll theme (dark navy) ── */
 html[data-segment="fotboll"] {
-  --bg:           #EAF6FF;
-  --bg-card:      #FFFFFF;
-  --bg-card-2:    #F6FBFF;
-  --border:       #C8E6F8;
-  --border-light: #A8D8F0;
+  --bg:           #05111E;
+  --bg-card:      #0C1F30;
+  --bg-card-2:    #112438;
+
+  --border:       rgba(14, 165, 233, 0.20);
+  --border-light: rgba(91, 200, 255, 0.32);
 
   --gold:         #0EA5E9;
   --gold-light:   #38BDF8;
-  --gold-glow:    rgba(14, 165, 233, 0.20);
+  --gold-glow:    rgba(14, 165, 233, 0.28);
   --rust:         #0369A1;
   --rust-light:   #0EA5E9;
-  --cream:        #0B2036;
-  --white:        #0B2036;
+  --cream:        #D6EFFC;
+  --white:        #EDF7FF;
 
   --orange:       #0EA5E9;
   --orange-light: #38BDF8;
   --orange-dark:  #0369A1;
-  --orange-glow:  rgba(14, 165, 233, 0.20);
+  --orange-glow:  rgba(14, 165, 233, 0.28);
 
-  --text-muted:   #7AAECC;
-  --text-dim:     #B8D9EE;
+  --text-muted:   #5A9DBF;
+  --text-dim:     #2E6080;
 
   --timer-bar:    linear-gradient(90deg, #0369A1 0%, #0EA5E9 80%, #38BDF8 100%);
-  --timer-tip:    #0EA5E9;
+  --timer-tip:    #38BDF8;
 }
 
 html, body, #root {
