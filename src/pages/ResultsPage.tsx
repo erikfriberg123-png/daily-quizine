@@ -412,7 +412,7 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
               cursor: 'pointer',
             }}
           >
-            🍽️  Berätta en kroghistoria
+            {seg.storyButtonText}
           </button>
 
           <button
