@@ -21,6 +21,7 @@ const SEGMENT_CATEGORIES: Record<string, string[]> = {
   handel:  ['kundservice','kassa_betalning','arbetsratt','lager_logistik','forsaljningsteknik','forlustforebyggande','detaljhandelsekonomi','halsa_sakerhet','produktkunskap','roligt'],
   hr_lon:  ['anstallning_och_personalregister','arbetstid_schema_och_narvaro','loneberakning_och_lonekorning','semester_och_ledighet','kollektivavtal_och_arbetsratt','skatt_arbetsgivaravgifter_och_myndighetsrapporterin','ersattningar_och_formaner','bemanning_och_personalplanering','rapporter_analys_och_uppfoljning','system_integrationer_och_administration','spannande_fakta_och_roligt'],
   bygg:    ['vvs_rordragning_varme_avlopp_och_ventilation','arbetsmiljo_sakerhet','lyftteknik_maskiner_kranar_truckar_och_sakra_lyft','mark_grundlaggning_schakt_sprangning_och_grundkonstruktion','film_serier','el_och_watt_elektriker','betong_cement','snickare','malare','roligt_och_intressant'],
+  fotboll: ['vm_historia','champions_league','svensk_fotboll','fotbollslegender','taktik_formationer','domarregler_regelkunskap','klubbmarken_arenor','transfers_fotbollsekonomi','statistik_rekord','fotbollskultur','roligt_spannande'],
 }
 
 const CATEGORIES = (SEGMENT_CATEGORIES[segmentId] ?? SEGMENT_CATEGORIES.quizine).map((id) => ({

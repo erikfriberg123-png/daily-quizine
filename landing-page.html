@@ -72,6 +72,8 @@
       --hr-lon-glow:       rgba(255,184,48,0.35);
       --bygg:              #F5E0B0;
       --bygg-glow:         rgba(245,224,176,0.35);
+      --fotboll:           #0EA5E9;
+      --fotboll-glow:      rgba(14,165,233,0.35);
       --blue-light:        #5DA4F6;
       --vote:              #C9922A;
       --vote-glow:         rgba(201,146,42,0.35);
@@ -342,6 +344,7 @@
     .card.handel:hover       { border-color: rgba(255,107,43,0.4); box-shadow: 0 8px 40px var(--handel-glow); }
     .card.hr-lon:hover       { border-color: rgba(255,184,48,0.4); box-shadow: 0 8px 40px var(--hr-lon-glow); }
     .card.bygg:hover         { border-color: rgba(245,224,176,0.4); box-shadow: 0 8px 40px var(--bygg-glow); }
+    .card.fotboll:hover      { border-color: rgba(14,165,233,0.5);  box-shadow: 0 8px 40px var(--fotboll-glow); }
     .card.vote-card:hover    { border-color: rgba(201,146,42,0.45); box-shadow: 0 8px 40px var(--vote-glow); }
 
     /* Badge */
@@ -424,6 +427,7 @@
     .it           .card-footer-label { color: var(--it); }
     .handel       .card-footer-label { color: var(--handel); }
     .hr-lon       .card-footer-label { color: var(--hr-lon); }
+    .fotboll      .card-footer-label { color: var(--fotboll); }
 
     /* Dimmed for coming soon */
     .card.coming-soon {
@@ -693,6 +697,39 @@
         <span class="dot"></span>
         Välkommen tillbaka, <strong id="username-label">Alex</strong> — välj ditt quiz nedan
       </div>
+    </div>
+
+    <!-- FEATURED: FOTBOLL -->
+    <div style="display:flex;justify-content:center;margin-bottom:40px;">
+      <a class="card fotboll fade-in" href="/fotboll/" style="width:100%;max-width:420px;animation-delay:0.05s;position:relative;">
+        <div class="card-badge" style="background:rgba(14,165,233,0.15);color:#38BDF8;border:1px solid rgba(14,165,233,0.35);">✦ Nytt</div>
+        <div class="card-icon">
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+            style="filter: drop-shadow(0 0 6px #5BC8FF) drop-shadow(0 0 14px rgba(91,200,255,0.55))">
+            <circle cx="26" cy="26" r="16" stroke="#5BC8FF" stroke-width="1.8" fill="none"/>
+            <polygon points="26,17 34.5,23.3 31.2,33.2 20.8,33.2 17.6,23.3"
+                     stroke="#5BC8FF" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+            <line x1="26" y1="17" x2="26" y2="10" stroke="#5BC8FF" stroke-width="1.1"/>
+            <line x1="34.5" y1="23.3" x2="41.4" y2="21.2" stroke="#5BC8FF" stroke-width="1.1"/>
+            <line x1="31.2" y1="33.2" x2="35.3" y2="38.9" stroke="#5BC8FF" stroke-width="1.1"/>
+            <line x1="20.8" y1="33.2" x2="16.7" y2="38.9" stroke="#5BC8FF" stroke-width="1.1"/>
+            <line x1="17.6" y1="23.3" x2="10.6" y2="21.2" stroke="#5BC8FF" stroke-width="1.1"/>
+            <line x1="26" y1="14.2" x2="37.2" y2="22.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+            <line x1="37.2" y1="22.4" x2="32.8" y2="35.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+            <line x1="32.8" y1="35.4" x2="19.2" y2="35.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+            <line x1="19.2" y1="35.4" x2="14.9" y2="22.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+            <line x1="14.9" y1="22.4" x2="26" y2="14.2" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+            <text x="26" y="31" text-anchor="middle" font-family="DM Sans,sans-serif"
+              font-size="11" font-weight="900" fill="#5BC8FF">?</text>
+          </svg>
+        </div>
+        <div class="card-name">Fotboll</div>
+        <div class="card-tagline">VM, Champions League, legender, taktik & mer.</div>
+        <div class="card-footer">
+          <span class="card-footer-label">Spela nu</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
     </div>
 
     <!-- SEGMENT GRID -->

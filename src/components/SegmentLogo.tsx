@@ -132,6 +132,44 @@ export function SegmentLogo() {
     )
   }
 
+  if (SEGMENT === 'fotboll') {
+    return (
+      <div style={{
+        width: 38, height: 38,
+        background: 'var(--bg-card-2)',
+        border: '1px solid var(--border-light)',
+        borderRadius: 10,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 14px var(--gold-glow)',
+        flexShrink: 0,
+      }}>
+        <svg width="24" height="24" viewBox="0 0 52 52" fill="none"
+          style={{ filter: 'drop-shadow(0 0 5px #5BC8FF) drop-shadow(0 0 10px rgba(91,200,255,0.4))' }}>
+          {/* Outer ball circle */}
+          <circle cx="26" cy="26" r="16" stroke="#5BC8FF" strokeWidth="1.2" fill="none"/>
+          {/* Centre pentagon */}
+          <polygon points="26,17 34.5,23.3 31.2,33.2 20.8,33.2 17.6,23.3"
+                   stroke="#5BC8FF" strokeWidth="1" strokeLinejoin="round" fill="none"/>
+          {/* 5 radial seam lines */}
+          <line x1="26" y1="17" x2="26" y2="10" stroke="#5BC8FF" strokeWidth="0.8"/>
+          <line x1="34.5" y1="23.3" x2="41.4" y2="21.2" stroke="#5BC8FF" strokeWidth="0.8"/>
+          <line x1="31.2" y1="33.2" x2="35.3" y2="38.9" stroke="#5BC8FF" strokeWidth="0.8"/>
+          <line x1="20.8" y1="33.2" x2="16.7" y2="38.9" stroke="#5BC8FF" strokeWidth="0.8"/>
+          <line x1="17.6" y1="23.3" x2="10.6" y2="21.2" stroke="#5BC8FF" strokeWidth="0.8"/>
+          {/* 5 cross-seam lines */}
+          <line x1="26" y1="14.2" x2="37.2" y2="22.4" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.55"/>
+          <line x1="37.2" y1="22.4" x2="32.8" y2="35.4" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.55"/>
+          <line x1="32.8" y1="35.4" x2="19.2" y2="35.4" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.55"/>
+          <line x1="19.2" y1="35.4" x2="14.9" y2="22.4" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.55"/>
+          <line x1="14.9" y1="22.4" x2="26" y2="14.2" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.55"/>
+          {/* Question mark */}
+          <text x="26" y="31" textAnchor="middle" fontFamily="DM Sans,sans-serif"
+            fontSize="11" fontWeight="900" fill="#5BC8FF">?</text>
+        </svg>
+      </div>
+    )
+  }
+
   if (SEGMENT === 'voo') {
     return (
       <div style={{
