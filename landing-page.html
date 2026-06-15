@@ -603,6 +603,89 @@
 
     /* Neon SVG icon shared styles */
     .neon-svg { filter: drop-shadow(0 0 6px currentColor); }
+
+    /* ── FOTBOLL FEATURED CARD ── */
+    .fotboll-featured-wrap {
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+    }
+
+    .fotboll-smoke {
+      position: absolute;
+      bottom: -22px;
+      left: 8%;
+      right: 8%;
+      height: 44px;
+      background: radial-gradient(ellipse at center, rgba(91,200,255,0.45) 0%, rgba(14,165,233,0.14) 50%, transparent 70%);
+      filter: blur(18px);
+      animation: fotboll-smoke 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .card.fotboll-featured {
+      overflow: visible;
+      animation: fotboll-lightning 2.8s ease-in-out infinite;
+    }
+
+    @keyframes fotboll-lightning {
+      0%, 100% {
+        box-shadow: 0 0 14px rgba(14,165,233,0.6), 0 0 36px rgba(91,200,255,0.24), 0 14px 55px rgba(14,165,233,0.26);
+        border-color: rgba(14,165,233,0.52);
+      }
+      18% {
+        box-shadow: 0 0 28px rgba(91,200,255,0.98), 0 0 68px rgba(14,165,233,0.6), 0 14px 85px rgba(14,165,233,0.5);
+        border-color: rgba(91,200,255,0.95);
+      }
+      20% {
+        box-shadow: 0 0 5px rgba(14,165,233,0.2), 0 0 12px rgba(91,200,255,0.06), 0 14px 24px rgba(14,165,233,0.09);
+        border-color: rgba(14,165,233,0.14);
+      }
+      22% {
+        box-shadow: 0 0 35px rgba(91,200,255,1), 0 0 88px rgba(14,165,233,0.75), 0 14px 110px rgba(14,165,233,0.6);
+        border-color: rgba(210,245,255,0.96);
+      }
+      52% {
+        box-shadow: 0 0 10px rgba(14,165,233,0.42), 0 0 26px rgba(91,200,255,0.14), 0 14px 40px rgba(14,165,233,0.17);
+        border-color: rgba(14,165,233,0.38);
+      }
+      73% {
+        box-shadow: 0 0 24px rgba(91,200,255,0.8), 0 0 52px rgba(14,165,233,0.48), 0 14px 70px rgba(14,165,233,0.36);
+        border-color: rgba(91,200,255,0.78);
+      }
+      75% {
+        box-shadow: 0 0 5px rgba(14,165,233,0.2), 0 0 12px rgba(91,200,255,0.06), 0 14px 24px rgba(14,165,233,0.09);
+        border-color: rgba(14,165,233,0.14);
+      }
+    }
+
+    @keyframes fotboll-smoke {
+      0%, 100% { opacity: 0.5; transform: scaleX(1); }
+      50% { opacity: 0.9; transform: scaleX(1.32); }
+    }
+
+    @keyframes fotboll-vibrate {
+      0%  { transform: translate(0, -3px); }
+      8%  { transform: translate(-3px, -5px) rotate(-0.7deg); }
+      16% { transform: translate(4px, -2px) rotate(0.8deg); }
+      24% { transform: translate(-4px, -5px) rotate(-1deg); }
+      32% { transform: translate(3px, -3px) rotate(0.7deg); }
+      40% { transform: translate(-2px, -6px) rotate(-0.5deg); }
+      48% { transform: translate(4px, -2px) rotate(1deg); }
+      56% { transform: translate(-3px, -5px) rotate(-0.8deg); }
+      64% { transform: translate(3px, -3px) rotate(0.8deg); }
+      72% { transform: translate(-4px, -5px) rotate(-1deg); }
+      80% { transform: translate(4px, -2px) rotate(0.6deg); }
+      88% { transform: translate(-2px, -6px) rotate(-0.8deg); }
+      96% { transform: translate(3px, -3px) rotate(0.7deg); }
+    }
+
+    .card.fotboll-featured:hover {
+      animation: fotboll-vibrate 0.08s linear infinite !important;
+      box-shadow: 0 0 45px rgba(91,200,255,0.92), 0 0 110px rgba(14,165,233,0.68), 0 20px 130px rgba(14,165,233,0.55) !important;
+      border-color: rgba(210,245,255,0.92) !important;
+    }
   </style>
 </head>
 <body>
@@ -700,36 +783,39 @@
     </div>
 
     <!-- FEATURED: FOTBOLL -->
-    <div style="display:flex;justify-content:center;margin-bottom:40px;">
-      <a class="card fotboll fade-in" href="/fotboll/" style="width:100%;max-width:420px;animation-delay:0.05s;position:relative;">
-        <div class="card-badge" style="background:rgba(14,165,233,0.15);color:#38BDF8;border:1px solid rgba(14,165,233,0.35);">✦ Nytt</div>
-        <div class="card-icon">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="filter: drop-shadow(0 0 6px #5BC8FF) drop-shadow(0 0 14px rgba(91,200,255,0.55))">
-            <circle cx="26" cy="26" r="16" stroke="#5BC8FF" stroke-width="1.8" fill="none"/>
-            <polygon points="26,17 34.5,23.3 31.2,33.2 20.8,33.2 17.6,23.3"
-                     stroke="#5BC8FF" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
-            <line x1="26" y1="17" x2="26" y2="10" stroke="#5BC8FF" stroke-width="1.1"/>
-            <line x1="34.5" y1="23.3" x2="41.4" y2="21.2" stroke="#5BC8FF" stroke-width="1.1"/>
-            <line x1="31.2" y1="33.2" x2="35.3" y2="38.9" stroke="#5BC8FF" stroke-width="1.1"/>
-            <line x1="20.8" y1="33.2" x2="16.7" y2="38.9" stroke="#5BC8FF" stroke-width="1.1"/>
-            <line x1="17.6" y1="23.3" x2="10.6" y2="21.2" stroke="#5BC8FF" stroke-width="1.1"/>
-            <line x1="26" y1="14.2" x2="37.2" y2="22.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
-            <line x1="37.2" y1="22.4" x2="32.8" y2="35.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
-            <line x1="32.8" y1="35.4" x2="19.2" y2="35.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
-            <line x1="19.2" y1="35.4" x2="14.9" y2="22.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
-            <line x1="14.9" y1="22.4" x2="26" y2="14.2" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
-            <text x="26" y="31" text-anchor="middle" font-family="DM Sans,sans-serif"
-              font-size="11" font-weight="900" fill="#5BC8FF">?</text>
-          </svg>
-        </div>
-        <div class="card-name">Fotboll</div>
-        <div class="card-tagline">VM, Champions League, legender, taktik & mer.</div>
-        <div class="card-footer">
-          <span class="card-footer-label">Spela nu</span>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
+    <div class="fade-in" style="display:flex;justify-content:center;margin-bottom:48px;animation-delay:0.05s;">
+      <div class="fotboll-featured-wrap">
+        <div class="fotboll-smoke"></div>
+        <a class="card fotboll fotboll-featured" href="/fotboll/">
+          <div class="card-badge" style="background:rgba(14,165,233,0.15);color:#38BDF8;border:1px solid rgba(14,165,233,0.35);">✦ Nytt</div>
+          <div class="card-icon">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="filter: drop-shadow(0 0 6px #5BC8FF) drop-shadow(0 0 14px rgba(91,200,255,0.55))">
+              <circle cx="26" cy="26" r="16" stroke="#5BC8FF" stroke-width="1.8" fill="none"/>
+              <polygon points="26,17 34.5,23.3 31.2,33.2 20.8,33.2 17.6,23.3"
+                       stroke="#5BC8FF" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+              <line x1="26" y1="17" x2="26" y2="10" stroke="#5BC8FF" stroke-width="1.1"/>
+              <line x1="34.5" y1="23.3" x2="41.4" y2="21.2" stroke="#5BC8FF" stroke-width="1.1"/>
+              <line x1="31.2" y1="33.2" x2="35.3" y2="38.9" stroke="#5BC8FF" stroke-width="1.1"/>
+              <line x1="20.8" y1="33.2" x2="16.7" y2="38.9" stroke="#5BC8FF" stroke-width="1.1"/>
+              <line x1="17.6" y1="23.3" x2="10.6" y2="21.2" stroke="#5BC8FF" stroke-width="1.1"/>
+              <line x1="26" y1="14.2" x2="37.2" y2="22.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+              <line x1="37.2" y1="22.4" x2="32.8" y2="35.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+              <line x1="32.8" y1="35.4" x2="19.2" y2="35.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+              <line x1="19.2" y1="35.4" x2="14.9" y2="22.4" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+              <line x1="14.9" y1="22.4" x2="26" y2="14.2" stroke="#FFFFFF" stroke-width="0.8" opacity="0.55"/>
+              <text x="26" y="31" text-anchor="middle" font-family="DM Sans,sans-serif"
+                font-size="11" font-weight="900" fill="#5BC8FF">?</text>
+            </svg>
+          </div>
+          <div class="card-name">Fotboll</div>
+          <div class="card-tagline">VM, Champions League, legender, taktik &amp; mer.</div>
+          <div class="card-footer">
+            <span class="card-footer-label">Spela nu</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </a>
+      </div>
     </div>
 
     <!-- SEGMENT GRID -->
