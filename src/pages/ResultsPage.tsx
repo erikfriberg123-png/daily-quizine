@@ -8,7 +8,6 @@ import { LoginModal } from '../components/LoginModal'
 import { CreateQuestionModal } from '../components/CreateQuestionModal'
 import { FeedbackModal } from '../components/FeedbackModal'
 import { StoryModal } from '../components/StoryModal'
-import { ShareModal } from '../components/ShareModal'
 import { UserMenu } from '../components/UserMenu'
 import { BellMenu } from '../components/BellMenu'
 
@@ -53,7 +52,6 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
   const [createVisible, setCreateVisible] = useState(false)
   const [feedbackVisible, setFeedbackVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
-  const [shareVisible, setShareVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -379,29 +377,6 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
         {/* Actions */}
         <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <button
-            onClick={() => setShareVisible(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              padding: '14px',
-              background: 'transparent',
-              color: 'var(--gold-light)',
-              border: '1.5px solid rgba(201,146,42,0.4)',
-              borderRadius: 14,
-              fontSize: 15,
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,146,42,0.08)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-          >
-            📨  Tipsa en kollega
-          </button>
-
-          <button
             onClick={() => setCreateVisible(true)}
             style={{
               display: 'flex',
@@ -503,13 +478,6 @@ export default function ResultsPage({ result, user, sessionChecked, username, on
           user={user}
           username={username}
           onClose={() => setFeedbackVisible(false)}
-        />
-      )}
-
-      {shareVisible && (
-        <ShareModal
-          senderName={username}
-          onClose={() => setShareVisible(false)}
         />
       )}
 

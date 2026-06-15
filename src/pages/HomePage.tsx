@@ -11,7 +11,6 @@ import { CATEGORY_DISPLAY, ROMAN } from '../lib/categories'
 import { getSegmentConfig, SegmentConfig } from '../config/segments'
 import { SegmentLogo } from '../components/SegmentLogo'
 import { FeedbackModal } from '../components/FeedbackModal'
-import { ShareModal } from '../components/ShareModal'
 import { UserMenu } from '../components/UserMenu'
 import { BellMenu } from '../components/BellMenu'
 import { VotePollCard } from '../components/VotePollCard'
@@ -41,7 +40,6 @@ export default function HomePage({ user, sessionChecked, username, isAdmin, serv
   const [createVisible, setCreateVisible] = useState(false)
   const [storyVisible, setStoryVisible] = useState(false)
   const [feedbackVisible, setFeedbackVisible] = useState(false)
-  const [shareVisible, setShareVisible] = useState(false)
   const [loginThenCreate, setLoginThenCreate] = useState(false)
   const seg = getSegmentConfig()
   const weekend = isWeekend() && !isAdmin
@@ -242,35 +240,6 @@ export default function HomePage({ user, sessionChecked, username, isAdmin, serv
           >
             💬  Lämna feedback
           </button>
-          <button
-            onClick={() => setShareVisible(true)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              width: '100%',
-              padding: '13px',
-              background: 'transparent',
-              color: 'var(--text-muted)',
-              border: '1px solid var(--border)',
-              borderRadius: 14,
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--orange)'
-              e.currentTarget.style.color = 'var(--orange)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border)'
-              e.currentTarget.style.color = 'var(--text-muted)'
-            }}
-          >
-            📨  Tipsa en kollega
-          </button>
         </div>
 
         {/* Play more CTA + back link */}
@@ -365,12 +334,6 @@ export default function HomePage({ user, sessionChecked, username, isAdmin, serv
         />
       )}
 
-      {shareVisible && (
-        <ShareModal
-          senderName={username}
-          onClose={() => setShareVisible(false)}
-        />
-      )}
     </div>
   )
 }
